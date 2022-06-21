@@ -1,27 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:ja_app/app/inject_dependencies.dart';
+import 'package:ja_app/app/my_app.dart';
+import 'package:ja_app/app/ui/routes/app_routes.dart';
 
-import 'homePage.dart';
+import 'app/ui/routes/routes.dart';
+import 'pages/homePage.dart';
 
-void main() {
-  runApp(const BlogApp());
-}
-
-class BlogApp extends StatelessWidget {
-  const BlogApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return MaterialApp(
-      title: "Blog App",
-      theme: ThemeData(
-        textTheme: GoogleFonts.mitrTextTheme(
-            TextTheme(bodyText1: TextStyle(fontWeight: FontWeight.bold))),
-        primaryColor: Colors.blueAccent,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-    );
-  }
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  injectDependencies();
+  runApp(const MyApp());
 }

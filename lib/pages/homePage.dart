@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ja_app/photoUpload.dart';
+import 'package:ja_app/pages/photoUpload.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
