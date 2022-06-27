@@ -12,7 +12,7 @@ import 'pages/homePage.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+
   injectDependencies();
   runApp(const MyApp());
 }

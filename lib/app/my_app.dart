@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/ui.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ja_app/app/ui/routes/app_routes.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
         ),
         primaryColor: Colors.blueAccent,
       ),
+      navigatorKey: router.navigatorKey,
       initialRoute: Routes.SPLASH,
       routes: appRoutes,
       navigatorObservers: [router.observer],
