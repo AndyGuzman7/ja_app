@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
+import 'package:ja_app/app/ui/gobal_widgets/custom_button.dart';
 import 'package:ja_app/app/ui/gobal_widgets/custom_input_field.dart';
 import 'package:ja_app/app/ui/pages/login/controller/login_controller.dart';
 import 'package:ja_app/app/ui/pages/login/utils/send_login_form.dart';
@@ -17,6 +18,14 @@ class LoginPage extends StatelessWidget {
   final _controller = loginProvider.read;
   @override
   Widget build(BuildContext context) {
+    final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+      primary: Colors.black87,
+      minimumSize: Size(88, 36),
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(2.0)),
+      ),
+    );
     return ProviderListener<LoginController>(
         provider: loginProvider,
         builder: (_, controller) {
@@ -36,6 +45,7 @@ class LoginPage extends StatelessWidget {
                     children: [
                       CustomImputField(
                         label: "email",
+                        icon: const Icon(Icons.email),
                         onChanged: controller.onEmailChanged,
                         inputType: TextInputType.emailAddress,
                         validator: (text) {
@@ -50,6 +60,7 @@ class LoginPage extends StatelessWidget {
                         height: 20,
                       ),
                       CustomImputField(
+                        icon: Icon(Icons.security_outlined),
                         label: "Password",
                         onChanged: controller.onPasswordChanged,
                         isPassword: true,
@@ -81,6 +92,10 @@ class LoginPage extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
+                      CustomButton(
+                        textButton: 'Sign in',
+                        onPressed: () => sendLoginForm(context),
+                      ),
                       ElevatedButton(
                         onPressed: () {
                           router.pushNamed(Routes.REGISTER);
@@ -90,6 +105,11 @@ class LoginPage extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
+                      TextButton(
+                        style: flatButtonStyle,
+                        onPressed: () {},
+                        child: Text('Looks like a FlatButton'),
+                      )
                     ],
                   ),
                 ),

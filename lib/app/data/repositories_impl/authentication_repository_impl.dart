@@ -62,7 +62,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   Future<ResetPasswordResponse?> sendResetPasswordLink(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
-      //print("!-----------------------asasdasdasd");
+
       return ResetPasswordResponse.ok;
     } on FirebaseException catch (e) {
       print(e.code);

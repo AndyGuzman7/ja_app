@@ -16,12 +16,14 @@ class RegisterController extends StateNotifier<RegisterState> {
   final _signUpRepository = Get.find<SignUpRepository>();
 
   Future<SignUpResponse> submit() async {
-    final response = await _signUpRepository.register(SignUpData(
-      name: state.name,
-      lastName: state.lastName,
-      email: state.email,
-      password: state.password,
-    ));
+    final response = await _signUpRepository.register(
+      SignUpData(
+          name: state.name,
+          lastName: state.lastName,
+          email: state.email,
+          password: state.password,
+          photoURL: ''),
+    );
 
     if (response.error == null) {
       _sessionController.setUser(response.user!);
@@ -47,5 +49,11 @@ class RegisterController extends StateNotifier<RegisterState> {
 
   void onVPasswordChanged(String text) {
     state = state.copyWith(vPassword: text);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 }

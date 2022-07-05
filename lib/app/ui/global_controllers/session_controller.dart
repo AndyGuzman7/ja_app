@@ -7,7 +7,6 @@ class SessionController extends SimpleNotifier {
   User? get user => _user;
 
   final _auth = Get.find<AuthenticationRepository>();
-  final AuthenticationRepository _authenticationRepository = Get.find();
 
   void setUser(User user) {
     _user = user;
@@ -20,5 +19,7 @@ class SessionController extends SimpleNotifier {
   }
 }
 
-final sessionProvider =
-    SimpleProvider((_) => SessionController(), autoDispose: false);
+final sessionProvider = SimpleProvider(
+  (_) => SessionController(),
+  autoDispose: false,
+);

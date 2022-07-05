@@ -7,11 +7,13 @@ class CustomImputField extends StatefulWidget {
   final TextInputType? inputType;
   final bool isPassword;
   final String? Function(String?)? validator;
+  final Icon? icon;
   const CustomImputField(
       {Key? key,
       this.onChanged,
       required this.label,
       this.inputType,
+      this.icon,
       this.isPassword = false,
       this.validator})
       : super(key: key);
@@ -37,45 +39,75 @@ class _CustomImputFieldState extends State<CustomImputField> {
         initialValue: '',
         autovalidateMode: AutovalidateMode.onUserInteraction,
         builder: (state) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextField(
-                obscureText: _obscureText,
-                keyboardType: widget.inputType,
-                decoration: InputDecoration(
-                  suffixIcon: widget.isPassword
-                      ? CupertinoButton(
-                          child: Icon(_obscureText
-                              ? Icons.visibility
-                              : Icons.visibility_off),
-                          onPressed: () {
-                            _obscureText = !_obscureText;
-                            setState(() {});
-                          })
-                      : Container(
-                          width: 0,
-                        ),
-                  labelText: widget.label,
-                  border: OutlineInputBorder(),
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              //mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  obscureText: _obscureText,
+                  keyboardType: widget.inputType,
+                  decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(
+                              width: 1.7,
+                              style: BorderStyle.solid,
+                              color: Color.fromARGB(255, 218, 218, 218))),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(
+                              width: 1.7,
+                              style: BorderStyle.solid,
+                              color: Color.fromARGB(255, 218, 218, 218))),
+                      prefixIcon: widget.icon != null
+                          ? Icon(
+                              widget.icon!.icon,
+                              color: Colors.black,
+                            )
+                          : null,
+                      suffixIcon: widget.isPassword
+                          ? CupertinoButton(
+                              child: Icon(_obscureText
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                _obscureText = !_obscureText;
+                                setState(() {});
+                              })
+                          : Container(
+                              width: 0,
+                            ),
+                      hintText: widget.label
+                      //labelText: widget.label,
+                      /*border: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),*/
+                      ),
+                  onChanged: (text) {
+                    if (widget.validator != null) {
+                      // ignore: invalid_use_of_protected_member
+                      state.setValue(text);
+                      state.validate();
+                    }
+                    if (widget.onChanged != null) {
+                      widget.onChanged!(text);
+                    }
+                  },
                 ),
-                onChanged: (text) {
-                  if (widget.validator != null) {
-                    // ignore: invalid_use_of_protected_member
-                    state.setValue(text);
-                    state.validate();
-                  }
-                  if (widget.onChanged != null) {
-                    widget.onChanged!(text);
-                  }
-                },
-              ),
-              if (state.hasError)
-                Text(
-                  state.errorText!,
-                  style: const TextStyle(color: Colors.redAccent),
-                )
-            ],
+                if (state.hasError)
+                  Text(
+                    state.errorText!,
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 194, 18, 18)),
+                  )
+              ],
+            ),
           );
         });
   }
