@@ -1,11 +1,50 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ja_app/components/Button_app.dart';
 import 'package:ja_app/components/CustomTextFieldv2.dart';
 import 'package:ja_app/components/CustomTextFiled.dart';
+import 'package:path_provider/path_provider.dart';
+
+class CustomImageProvider {
+  final void Function(File)? onChanged;
+  File? sampleImage;
+
+  CustomImageProvider(this.onChanged);
+
+  Future getImageGallery() async {
+    var tempImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+    await setStateImage(tempImage);
+    onChanged!(sampleImage!);
+  }
+
+  Future getImageCamera() async {
+    var tempImage = await ImagePicker().pickImage(source: ImageSource.camera);
+    await setStateImage(tempImage);
+    onChanged!(sampleImage!);
+  }
+
+  Future<void> setStateImage(var pickedFile) async {
+    if (pickedFile != null) {
+      sampleImage = File(pickedFile.path);
+    }
+
+    sampleImage ??= await imageToFile();
+  }
+
+  Future<File> imageToFile() async {
+    // Image.asset('assets/images/1743165.jpg');
+    var bytes = await rootBundle.load('assets/images/user.png');
+    String tempPath = (await getTemporaryDirectory()).path;
+    File file = File('$tempPath/user.png');
+    await file.writeAsBytes(
+        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+    return file;
+  }
+}
 
 class PhotoUpload extends StatefulWidget {
   const PhotoUpload({Key? key}) : super(key: key);

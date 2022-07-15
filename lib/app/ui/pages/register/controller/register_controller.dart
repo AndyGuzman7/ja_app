@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:ja_app/app/domain/inputs/sign_up.dart';
@@ -16,13 +19,16 @@ class RegisterController extends StateNotifier<RegisterState> {
   final _signUpRepository = Get.find<SignUpRepository>();
 
   Future<SignUpResponse> submit() async {
+    await uploadPfp(state.photo!);
     final response = await _signUpRepository.register(
       SignUpData(
-          name: state.name,
-          lastName: state.lastName,
-          email: state.email,
-          password: state.password,
-          photoURL: ''),
+        name: state.name,
+        lastName: state.lastName,
+        email: state.email,
+        password: state.password,
+        photoURL: state.photoURL,
+        birthDate: state.birthDate,
+      ),
     );
 
     if (response.error == null) {
@@ -31,8 +37,34 @@ class RegisterController extends StateNotifier<RegisterState> {
     return response;
   }
 
+  Future<void> uploadPfp(File file) async {
+    File uploadFile = file;
+    String path;
+
+    await FirebaseStorage.instance
+        .ref('uploads/${uploadFile.path}')
+        .putFile(uploadFile)
+        .then((p0) async {
+      await p0.ref.getDownloadURL().then((value) {
+        onImageURLChanged(value);
+      });
+    });
+  }
+
   void onNameChanged(String text) {
     state = state.copyWith(name: text);
+  }
+
+  void onPhotoChanged(File file) {
+    state = state.copyWith(photo: file);
+  }
+
+  void onBirthDateChanged(String text) {
+    state = state.copyWith(birthDate: text);
+  }
+
+  void onImageURLChanged(String text) {
+    state = state.copyWith(photoURL: text);
   }
 
   void onlastNameChanged(String text) {

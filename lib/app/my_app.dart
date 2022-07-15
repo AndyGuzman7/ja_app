@@ -15,14 +15,11 @@ class MyApp extends StatelessWidget {
       title: "Blog App",
       theme: ThemeData(
         //brightness: Brightness.light,
-        primaryColor: Colors.amber,
-        textTheme: GoogleFonts.mitrTextTheme(
-          const TextTheme(
-            bodyText1: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
+
+        textTheme: GoogleFonts.ubuntuTextTheme(),
         primarySwatch: CustomColorPrimary().materialColor,
       ),
+
       navigatorKey: router.navigatorKey,
       initialRoute: Routes.SPLASH,
       routes: appRoutes,

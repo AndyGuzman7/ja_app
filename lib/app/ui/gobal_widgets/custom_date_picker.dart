@@ -1,28 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class CustomImputField extends StatefulWidget {
-  final void Function(String)? onChanged;
+class CustomImputDatePicker extends StatefulWidget {
+  final void Function(DateTime)? onChanged;
   final String label;
   final TextInputType? inputType;
   final bool isPassword;
-  final String? Function(String?)? validator;
-  final Icon? icon;
-  const CustomImputField(
+  final String? Function(DateTime?)? validator;
+
+  const CustomImputDatePicker(
       {Key? key,
       this.onChanged,
       required this.label,
       this.inputType,
-      this.icon,
       this.isPassword = false,
       this.validator})
       : super(key: key);
 
   @override
-  State<CustomImputField> createState() => _CustomImputFieldState();
+  State<CustomImputDatePicker> createState() => _CustomImputDatePickerState();
 }
 
-class _CustomImputFieldState extends State<CustomImputField> {
+class _CustomImputDatePickerState extends State<CustomImputDatePicker> {
   late bool _obscureText;
 
   @override
@@ -34,11 +34,12 @@ class _CustomImputFieldState extends State<CustomImputField> {
 
   @override
   Widget build(BuildContext context) {
-    return FormField<String>(
+    return FormField<DateTime>(
         validator: widget.validator,
-        initialValue: '',
+        //initialValue: DateTime.now(),
         autovalidateMode: AutovalidateMode.onUserInteraction,
         builder: (state) {
+          DateTime? value = state.value;
           return Padding(
             padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
             child: Column(
@@ -49,11 +50,14 @@ class _CustomImputFieldState extends State<CustomImputField> {
                 SizedBox(
                   height: 65,
                   child: TextField(
+                    controller: value != null
+                        ? TextEditingController(
+                            text: DateFormat.yMMMEd().format(value),
+                          )
+                        : null,
                     obscureText: _obscureText,
                     keyboardType: widget.inputType,
                     decoration: InputDecoration(
-
-                        //isDense: true,
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: const BorderSide(
@@ -66,24 +70,10 @@ class _CustomImputFieldState extends State<CustomImputField> {
                                 width: 1.7,
                                 style: BorderStyle.solid,
                                 color: Color.fromARGB(255, 218, 218, 218))),
-                        prefixIcon: widget.icon != null
-                            ? Icon(
-                                widget.icon!.icon,
-                                color: Colors.black,
-                              )
-                            : null,
-                        suffixIcon: widget.isPassword
-                            ? CupertinoButton(
-                                child: Icon(_obscureText
-                                    ? Icons.visibility
-                                    : Icons.visibility_off),
-                                onPressed: () {
-                                  _obscureText = !_obscureText;
-                                  setState(() {});
-                                })
-                            : Container(
-                                width: 0,
-                              ),
+                        prefixIcon: const Icon(
+                          Icons.date_range_outlined,
+                          color: Colors.black,
+                        ),
                         hintText: widget.label
                         //labelText: widget.label,
                         /*border: const OutlineInputBorder(
@@ -93,15 +83,25 @@ class _CustomImputFieldState extends State<CustomImputField> {
                         ),
                       ),*/
                         ),
-                    onChanged: (text) {
-                      if (widget.validator != null) {
-                        // ignore: invalid_use_of_protected_member
-                        state.setValue(text);
-                        state.validate();
-                      }
-                      if (widget.onChanged != null) {
-                        widget.onChanged!(text);
-                      }
+                    onTap: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+
+                      showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1980),
+                        lastDate: DateTime(2222),
+                      ).then((value) {
+                        // print(value!.toIso8601String());
+                        if (widget.validator != null) {
+                          // ignore: invalid_use_of_protected_member
+                          state.setValue(value!);
+                          state.validate();
+                        }
+                        if (widget.onChanged != null) {
+                          widget.onChanged!(value!);
+                        }
+                      });
                     },
                   ),
                 ),

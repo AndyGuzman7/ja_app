@@ -27,8 +27,8 @@ dependencies:
   freezed: ^2.0.3+1
   cloud_firestore: ^3.1.14
   firebase_core_platform_interface: ^4.4.0
-  
-  
+  path_provider: ^2.0.11
+
   
   
 
@@ -40,7 +40,9 @@ dev_dependencies:
   flutter_lints: ^1.0.0
 
 
-
+dependency_overrides:
+  image_picker_android: 0.8.4+13
+  
 flutter:
 
  
@@ -48,6 +50,7 @@ flutter:
   
   assets:
     - assets/icon/
+    - assets/images/
   #   - images/a_dot_ham.jpeg
  
   # fonts:

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:image_picker/image_picker.dart';
 
 part 'register_state.freezed.dart';
 
@@ -10,6 +13,10 @@ class RegisterState with _$RegisterState {
       @Default('') String vPassword,
       @Default('') String name,
       @Default('') String lastName,
+      @Default('') String birthDate,
+      @Default('') String photoURL,
+      File? photo,
       @Default(false) bool termsOk}) = _RegisterState;
+
   static RegisterState get initialState => RegisterState();
 }

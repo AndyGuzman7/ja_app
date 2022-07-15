@@ -21,6 +21,9 @@ mixin _$RegisterState {
   String get vPassword => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get lastName => throw _privateConstructorUsedError;
+  String get birthDate => throw _privateConstructorUsedError;
+  String get photoURL => throw _privateConstructorUsedError;
+  File? get photo => throw _privateConstructorUsedError;
   bool get termsOk => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -39,6 +42,9 @@ abstract class $RegisterStateCopyWith<$Res> {
       String vPassword,
       String name,
       String lastName,
+      String birthDate,
+      String photoURL,
+      File? photo,
       bool termsOk});
 }
 
@@ -58,6 +64,9 @@ class _$RegisterStateCopyWithImpl<$Res>
     Object? vPassword = freezed,
     Object? name = freezed,
     Object? lastName = freezed,
+    Object? birthDate = freezed,
+    Object? photoURL = freezed,
+    Object? photo = freezed,
     Object? termsOk = freezed,
   }) {
     return _then(_value.copyWith(
@@ -81,6 +90,18 @@ class _$RegisterStateCopyWithImpl<$Res>
           ? _value.lastName
           : lastName // ignore: cast_nullable_to_non_nullable
               as String,
+      birthDate: birthDate == freezed
+          ? _value.birthDate
+          : birthDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      photoURL: photoURL == freezed
+          ? _value.photoURL
+          : photoURL // ignore: cast_nullable_to_non_nullable
+              as String,
+      photo: photo == freezed
+          ? _value.photo
+          : photo // ignore: cast_nullable_to_non_nullable
+              as File?,
       termsOk: termsOk == freezed
           ? _value.termsOk
           : termsOk // ignore: cast_nullable_to_non_nullable
@@ -102,6 +123,9 @@ abstract class _$$_RegisterStateCopyWith<$Res>
       String vPassword,
       String name,
       String lastName,
+      String birthDate,
+      String photoURL,
+      File? photo,
       bool termsOk});
 }
 
@@ -123,6 +147,9 @@ class __$$_RegisterStateCopyWithImpl<$Res>
     Object? vPassword = freezed,
     Object? name = freezed,
     Object? lastName = freezed,
+    Object? birthDate = freezed,
+    Object? photoURL = freezed,
+    Object? photo = freezed,
     Object? termsOk = freezed,
   }) {
     return _then(_$_RegisterState(
@@ -146,6 +173,18 @@ class __$$_RegisterStateCopyWithImpl<$Res>
           ? _value.lastName
           : lastName // ignore: cast_nullable_to_non_nullable
               as String,
+      birthDate: birthDate == freezed
+          ? _value.birthDate
+          : birthDate // ignore: cast_nullable_to_non_nullable
+              as String,
+      photoURL: photoURL == freezed
+          ? _value.photoURL
+          : photoURL // ignore: cast_nullable_to_non_nullable
+              as String,
+      photo: photo == freezed
+          ? _value.photo
+          : photo // ignore: cast_nullable_to_non_nullable
+              as File?,
       termsOk: termsOk == freezed
           ? _value.termsOk
           : termsOk // ignore: cast_nullable_to_non_nullable
@@ -163,6 +202,9 @@ class _$_RegisterState implements _RegisterState {
       this.vPassword = '',
       this.name = '',
       this.lastName = '',
+      this.birthDate = '',
+      this.photoURL = '',
+      this.photo,
       this.termsOk = false});
 
   @override
@@ -182,11 +224,19 @@ class _$_RegisterState implements _RegisterState {
   final String lastName;
   @override
   @JsonKey()
+  final String birthDate;
+  @override
+  @JsonKey()
+  final String photoURL;
+  @override
+  final File? photo;
+  @override
+  @JsonKey()
   final bool termsOk;
 
   @override
   String toString() {
-    return 'RegisterState(email: $email, password: $password, vPassword: $vPassword, name: $name, lastName: $lastName, termsOk: $termsOk)';
+    return 'RegisterState(email: $email, password: $password, vPassword: $vPassword, name: $name, lastName: $lastName, birthDate: $birthDate, photoURL: $photoURL, photo: $photo, termsOk: $termsOk)';
   }
 
   @override
@@ -199,6 +249,9 @@ class _$_RegisterState implements _RegisterState {
             const DeepCollectionEquality().equals(other.vPassword, vPassword) &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.lastName, lastName) &&
+            const DeepCollectionEquality().equals(other.birthDate, birthDate) &&
+            const DeepCollectionEquality().equals(other.photoURL, photoURL) &&
+            const DeepCollectionEquality().equals(other.photo, photo) &&
             const DeepCollectionEquality().equals(other.termsOk, termsOk));
   }
 
@@ -210,6 +263,9 @@ class _$_RegisterState implements _RegisterState {
       const DeepCollectionEquality().hash(vPassword),
       const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(lastName),
+      const DeepCollectionEquality().hash(birthDate),
+      const DeepCollectionEquality().hash(photoURL),
+      const DeepCollectionEquality().hash(photo),
       const DeepCollectionEquality().hash(termsOk));
 
   @JsonKey(ignore: true)
@@ -225,6 +281,9 @@ abstract class _RegisterState implements RegisterState {
       final String vPassword,
       final String name,
       final String lastName,
+      final String birthDate,
+      final String photoURL,
+      final File? photo,
       final bool termsOk}) = _$_RegisterState;
 
   @override
@@ -237,6 +296,12 @@ abstract class _RegisterState implements RegisterState {
   String get name => throw _privateConstructorUsedError;
   @override
   String get lastName => throw _privateConstructorUsedError;
+  @override
+  String get birthDate => throw _privateConstructorUsedError;
+  @override
+  String get photoURL => throw _privateConstructorUsedError;
+  @override
+  File? get photo => throw _privateConstructorUsedError;
   @override
   bool get termsOk => throw _privateConstructorUsedError;
   @override

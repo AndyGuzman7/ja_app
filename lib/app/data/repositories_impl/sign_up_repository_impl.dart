@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ja_app/app/domain/inputs/sign_up.dart';
 import 'package:ja_app/app/domain/repositories/sign_up_repository.dart';
@@ -23,6 +24,10 @@ class SignUpRepositoryImpl extends SignUpRepository {
 
       user = _auth.currentUser;
 
+      if (userCredential != null) {
+        await addUserInfoToDB(user!.uid, data.toJson());
+      }
+
       return SignUpResponse(null, user);
     } on FirebaseAuthException catch (e) {
       return SignUpResponse(parseStringToSignUpError(e.code), null);
@@ -34,5 +39,16 @@ class SignUpRepositoryImpl extends SignUpRepository {
     await userCredential.user!.updateDisplayName(name);
     print(userCredential.user!.displayName);
     return userCredential;
+  }
+
+  Future addUserInfoToDB(String userId, Map<String, dynamic> userInfoMap) {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .set(userInfoMap);
+  }
+
+  Future<DocumentSnapshot> getUserFromDB(String userId) async {
+    return FirebaseFirestore.instance.collection("users").doc(userId).get();
   }
 }
