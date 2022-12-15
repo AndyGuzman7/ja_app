@@ -15,12 +15,15 @@ class ButtonApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
+    return ElevatedButton(
       onPressed: () {
         onPressed();
       },
-      color: color,
-      textColor: textColor,
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(color),
+          textStyle: MaterialStateProperty.all(TextStyle(color: textColor)),
+          shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)))),
       child: Stack(
         children: [
           Align(
@@ -35,7 +38,6 @@ class ButtonApp extends StatelessWidget {
           ),
         ],
       ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
     );
   }
 }

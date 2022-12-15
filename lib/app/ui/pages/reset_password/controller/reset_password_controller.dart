@@ -1,5 +1,5 @@
 import 'package:flutter_meedu/meedu.dart';
-import 'package:ja_app/app/domain/repositories/authentication_repository.dart';
+import 'package:ja_app/app/data/repositories/user_impl/login_impl/authentication_repository.dart';
 import 'package:ja_app/app/domain/responses/reset_password_response.dart';
 import 'package:ja_app/app/ui/pages/reset_password/reset_password_page.dart';
 

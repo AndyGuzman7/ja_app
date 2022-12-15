@@ -20,6 +20,9 @@ mixin _$ProjectManaState {
   bool get isExistBrochureSubscripcion => throw _privateConstructorUsedError;
   String get idBrochure => throw _privateConstructorUsedError;
   String get canceledAmount => throw _privateConstructorUsedError;
+  Brochure? get brochure => throw _privateConstructorUsedError;
+  BrochureSubscription? get brochureSubscription =>
+      throw _privateConstructorUsedError;
   List<String> get listCanceledAmountHistory =>
       throw _privateConstructorUsedError;
 
@@ -38,6 +41,8 @@ abstract class $ProjectManaStateCopyWith<$Res> {
       bool isExistBrochureSubscripcion,
       String idBrochure,
       String canceledAmount,
+      Brochure? brochure,
+      BrochureSubscription? brochureSubscription,
       List<String> listCanceledAmountHistory});
 }
 
@@ -56,6 +61,8 @@ class _$ProjectManaStateCopyWithImpl<$Res>
     Object? isExistBrochureSubscripcion = freezed,
     Object? idBrochure = freezed,
     Object? canceledAmount = freezed,
+    Object? brochure = freezed,
+    Object? brochureSubscription = freezed,
     Object? listCanceledAmountHistory = freezed,
   }) {
     return _then(_value.copyWith(
@@ -75,6 +82,14 @@ class _$ProjectManaStateCopyWithImpl<$Res>
           ? _value.canceledAmount
           : canceledAmount // ignore: cast_nullable_to_non_nullable
               as String,
+      brochure: brochure == freezed
+          ? _value.brochure
+          : brochure // ignore: cast_nullable_to_non_nullable
+              as Brochure?,
+      brochureSubscription: brochureSubscription == freezed
+          ? _value.brochureSubscription
+          : brochureSubscription // ignore: cast_nullable_to_non_nullable
+              as BrochureSubscription?,
       listCanceledAmountHistory: listCanceledAmountHistory == freezed
           ? _value.listCanceledAmountHistory
           : listCanceledAmountHistory // ignore: cast_nullable_to_non_nullable
@@ -95,6 +110,8 @@ abstract class _$$_ProjectManaStateCopyWith<$Res>
       bool isExistBrochureSubscripcion,
       String idBrochure,
       String canceledAmount,
+      Brochure? brochure,
+      BrochureSubscription? brochureSubscription,
       List<String> listCanceledAmountHistory});
 }
 
@@ -115,6 +132,8 @@ class __$$_ProjectManaStateCopyWithImpl<$Res>
     Object? isExistBrochureSubscripcion = freezed,
     Object? idBrochure = freezed,
     Object? canceledAmount = freezed,
+    Object? brochure = freezed,
+    Object? brochureSubscription = freezed,
     Object? listCanceledAmountHistory = freezed,
   }) {
     return _then(_$_ProjectManaState(
@@ -134,6 +153,14 @@ class __$$_ProjectManaStateCopyWithImpl<$Res>
           ? _value.canceledAmount
           : canceledAmount // ignore: cast_nullable_to_non_nullable
               as String,
+      brochure: brochure == freezed
+          ? _value.brochure
+          : brochure // ignore: cast_nullable_to_non_nullable
+              as Brochure?,
+      brochureSubscription: brochureSubscription == freezed
+          ? _value.brochureSubscription
+          : brochureSubscription // ignore: cast_nullable_to_non_nullable
+              as BrochureSubscription?,
       listCanceledAmountHistory: listCanceledAmountHistory == freezed
           ? _value._listCanceledAmountHistory
           : listCanceledAmountHistory // ignore: cast_nullable_to_non_nullable
@@ -150,6 +177,8 @@ class _$_ProjectManaState implements _ProjectManaState {
       this.isExistBrochureSubscripcion = false,
       this.idBrochure = '',
       this.canceledAmount = '',
+      this.brochure = null,
+      this.brochureSubscription = null,
       final List<String> listCanceledAmountHistory = const []})
       : _listCanceledAmountHistory = listCanceledAmountHistory;
 
@@ -165,6 +194,12 @@ class _$_ProjectManaState implements _ProjectManaState {
   @override
   @JsonKey()
   final String canceledAmount;
+  @override
+  @JsonKey()
+  final Brochure? brochure;
+  @override
+  @JsonKey()
+  final BrochureSubscription? brochureSubscription;
   final List<String> _listCanceledAmountHistory;
   @override
   @JsonKey()
@@ -175,7 +210,7 @@ class _$_ProjectManaState implements _ProjectManaState {
 
   @override
   String toString() {
-    return 'ProjectManaState(idUser: $idUser, isExistBrochureSubscripcion: $isExistBrochureSubscripcion, idBrochure: $idBrochure, canceledAmount: $canceledAmount, listCanceledAmountHistory: $listCanceledAmountHistory)';
+    return 'ProjectManaState(idUser: $idUser, isExistBrochureSubscripcion: $isExistBrochureSubscripcion, idBrochure: $idBrochure, canceledAmount: $canceledAmount, brochure: $brochure, brochureSubscription: $brochureSubscription, listCanceledAmountHistory: $listCanceledAmountHistory)';
   }
 
   @override
@@ -191,6 +226,9 @@ class _$_ProjectManaState implements _ProjectManaState {
                 .equals(other.idBrochure, idBrochure) &&
             const DeepCollectionEquality()
                 .equals(other.canceledAmount, canceledAmount) &&
+            const DeepCollectionEquality().equals(other.brochure, brochure) &&
+            const DeepCollectionEquality()
+                .equals(other.brochureSubscription, brochureSubscription) &&
             const DeepCollectionEquality().equals(
                 other._listCanceledAmountHistory, _listCanceledAmountHistory));
   }
@@ -202,6 +240,8 @@ class _$_ProjectManaState implements _ProjectManaState {
       const DeepCollectionEquality().hash(isExistBrochureSubscripcion),
       const DeepCollectionEquality().hash(idBrochure),
       const DeepCollectionEquality().hash(canceledAmount),
+      const DeepCollectionEquality().hash(brochure),
+      const DeepCollectionEquality().hash(brochureSubscription),
       const DeepCollectionEquality().hash(_listCanceledAmountHistory));
 
   @JsonKey(ignore: true)
@@ -216,6 +256,8 @@ abstract class _ProjectManaState implements ProjectManaState {
       final bool isExistBrochureSubscripcion,
       final String idBrochure,
       final String canceledAmount,
+      final Brochure? brochure,
+      final BrochureSubscription? brochureSubscription,
       final List<String> listCanceledAmountHistory}) = _$_ProjectManaState;
 
   @override
@@ -226,6 +268,11 @@ abstract class _ProjectManaState implements ProjectManaState {
   String get idBrochure => throw _privateConstructorUsedError;
   @override
   String get canceledAmount => throw _privateConstructorUsedError;
+  @override
+  Brochure? get brochure => throw _privateConstructorUsedError;
+  @override
+  BrochureSubscription? get brochureSubscription =>
+      throw _privateConstructorUsedError;
   @override
   List<String> get listCanceledAmountHistory =>
       throw _privateConstructorUsedError;

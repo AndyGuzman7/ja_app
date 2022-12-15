@@ -1,8 +1,10 @@
 class Brochure {
-  final String name, price, spanish, id;
-  final String? age;
+  String? name, price, spanish, id;
+  String? age;
 
   Brochure(this.name, this.price, this.age, this.spanish, this.id);
+
+  Brochure.init();
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'name': name,

@@ -7,7 +7,9 @@ abstract class ProjectManaRepository {
 
   Future<BrochureSubscription?> getBrochureSubscription(String idUser);
 
-  Future<List<Brochure>?> getBrochures();
+  Future<List<BrochureSubscription>> getBrochureSubscriptions();
+
+  Future<List<Brochure>> getBrochures();
 
   Future<Brochure?> getBrochure(String id);
 }

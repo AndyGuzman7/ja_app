@@ -125,7 +125,7 @@ class _PhotoUploadState extends State<PhotoUpload> {
               text: "sadasd",
             ),
             TextFormField(
-              cursorColor: Theme.of(context).cursorColor,
+              cursorColor: Theme.of(context).backgroundColor,
               initialValue: 'Input text',
               maxLength: 20,
               decoration: InputDecoration(

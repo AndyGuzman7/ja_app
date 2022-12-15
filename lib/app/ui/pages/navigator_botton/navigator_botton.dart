@@ -31,7 +31,7 @@ class HomeState extends State<Home> {
           Align(
             alignment: FractionalOffset.center,
             //in this demo, only the button text is updated based on the bottom app bar clicks
-            child: RaisedButton(
+            child: ElevatedButton(
               child: Text(text),
               onPressed: () {},
             ),

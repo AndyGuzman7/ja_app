@@ -1,12 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
 import 'package:ja_app/app/ui/gobal_widgets/side_menu/controller/side_menu_controller.dart';
+import 'package:ja_app/app/ui/gobal_widgets/side_menu/controller/side_menu_state.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
 
-final sideMenuProvider = SimpleProvider(
+final sideMenuProvider = StateProvider<SideMenuController, SideMenuState>(
     (_) => SideMenuController(sessionProvider.read),
     autoDispose: true);
 
@@ -15,6 +18,7 @@ class NavigatorDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("si se inicia");
     return SizedBox(
       width: MediaQuery.of(context).size.width *
           0.80, // 75% of screen will be occupied

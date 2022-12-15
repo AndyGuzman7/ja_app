@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/ui.dart';
+import 'package:ja_app/app/domain/models/sign_up.dart';
 
 class ItemMember extends StatelessWidget {
-  const ItemMember({Key? key}) : super(key: key);
+  SignUpData user;
+  ItemMember(this.user, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +32,21 @@ class ItemMember extends StatelessWidget {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
-                  "Juan Perez",
+                  user.name + " " + user.lastName,
                   style: TextStyle(fontSize: 16),
                 ),
+                Padding(
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    child: Text(
+                      user.email + " " + user.lastName,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromARGB(255, 123, 123, 123)),
+                    )),
                 Text(
-                  "Miembro Espacio Joven",
+                  "Usuario registrado",
                   style: TextStyle(color: Color.fromARGB(255, 13, 97, 167)),
                 )
               ],

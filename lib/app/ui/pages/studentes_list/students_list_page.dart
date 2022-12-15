@@ -1,9 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ja_app/app/ui/gobal_widgets/custom_input_field.dart';
+import 'package:flutter_meedu/meedu.dart';
+import 'package:ja_app/app/domain/models/sign_up.dart';
+import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
+import 'package:ja_app/app/ui/pages/studentes_list/controller/students_list_controller.dart';
 import 'package:ja_app/app/ui/pages/studentes_list/widgets/item_header.dart';
 import 'package:ja_app/app/ui/pages/studentes_list/widgets/item_member.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
+
+final studentListProvider = SimpleProvider(
+  (_) => StudentsListController(sessionProvider.read),
+);
 
 class StudentsListPage extends StatelessWidget {
   const StudentsListPage({Key? key}) : super(key: key);
@@ -22,42 +29,58 @@ class StudentsListPage extends StatelessWidget {
           color: Colors.transparent,
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 0, top: 20),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+          child: FutureBuilder(
+            future: studentListProvider.read.getUsers(),
+            builder: (context, AsyncSnapshot<List<SignUpData?>> snapshot) {
+              if (snapshot.hasData) {
+                return Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 0, right: 0, top: 20),
-                      child: CupertinoButton(
-                        child: const Text("Sign out"),
-                        onPressed: () async {},
-                        color: CustomColorPrimary().materialColor,
+                      padding: EdgeInsets.only(left: 20, right: 0, top: 20),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding:
+                                EdgeInsets.only(left: 0, right: 0, top: 20),
+                            child: CupertinoButton(
+                              child: const Text("Sign out"),
+                              onPressed: () async {},
+                              color: CustomColorPrimary().materialColor,
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  EdgeInsets.only(left: 20, right: 20, top: 20),
+                              child: ItemHeader(),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-                        child: ItemHeader(),
-                      ),
+                      child: ListView.builder(
+                          padding: const EdgeInsets.only(top: 20),
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ItemMember(snapshot.data![index]!);
+                          }),
                     ),
                   ],
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.only(top: 20),
-                  children: [
-                    ItemMember(),
-                    ItemMember(),
-                    ItemMember(),
-                    ItemMember()
-                  ],
-                ),
-              ),
-            ],
+                );
+              } else {
+                return WillPopScope(
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                      alignment: Alignment.center,
+                      child: const CircularProgressIndicator(),
+                    ),
+                    onWillPop: () async => false);
+              }
+            },
           ),
         ),
       ),

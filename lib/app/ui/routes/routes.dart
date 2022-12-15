@@ -6,4 +6,5 @@ abstract class Routes {
   static const String RESET_PASSWORD = '/reset-password';
   static const String LIST_ESTUDENTS = '/student-list';
   static const String PROJECTS = '/projects-page';
+  static const String EESS = '/eess-page';
 }

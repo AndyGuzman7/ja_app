@@ -1,7 +1,9 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ja_app/app/domain/models/brochure.dart';
 import 'package:ja_app/app/domain/models/brochureSubscription.dart';
-import 'package:ja_app/app/domain/repositories/project_mana_repository.dart';
+import 'package:ja_app/app/data/repositories/project_mana_impl/project_mana_repository.dart';
 
 import 'package:firebase_database/firebase_database.dart';
 
@@ -41,6 +43,7 @@ class ProjectManaRepositoryImpl implements ProjectManaRepository {
           .get();
 
       if (value.exists) {
+        log(value.data().toString());
         BrochureSubscription brochureSubscription =
             BrochureSubscription.fromJson(value.data()!);
         return brochureSubscription;
@@ -52,7 +55,7 @@ class ProjectManaRepositoryImpl implements ProjectManaRepository {
   }
 
   @override
-  Future<List<Brochure>?> getBrochures() async {
+  Future<List<Brochure>> getBrochures() async {
     List<Brochure>? listBrochures = [];
     try {
       DocumentSnapshot<Map<String, dynamic>> value = await _firestore
@@ -69,9 +72,9 @@ class ProjectManaRepositoryImpl implements ProjectManaRepository {
         return listBrochures;
       }
     } on FirebaseFirestore catch (e) {
-      return null;
+      return listBrochures;
     }
-    return null;
+    return listBrochures;
   }
 
   @override
@@ -85,13 +88,33 @@ class ProjectManaRepositoryImpl implements ProjectManaRepository {
       dynamic nested = value.get(FieldPath([id]));
 
       print(nested);
-      if (nested.exists) {
-        return Brochure.fromJson(nested);
-      }
+      return Brochure.fromJson(nested);
     } on FirebaseFirestore catch (e) {
       return null;
     }
-    return null;
+  }
+
+  @override
+  Future<List<BrochureSubscription>> getBrochureSubscriptions() async {
+    try {
+      List<BrochureSubscription> listBrochureSubscription = [];
+
+      QuerySnapshot<Map<String, dynamic>> response = await _firestore
+          .collection(NameFirebaseFirestoreProjects.PROJECT_MAIN)
+          .doc(NameFirebaseFirestoreProjects.PROJECT_MANA)
+          .collection("brochureSubscription")
+          .get();
+
+      response.docs.forEach((element) {
+        print(element.data());
+        listBrochureSubscription
+            .add(BrochureSubscription.fromJson(element.data()));
+      });
+
+      return listBrochureSubscription;
+    } on FirebaseFirestore catch (e) {
+      return [];
+    }
   }
 }
 

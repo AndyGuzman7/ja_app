@@ -5,7 +5,7 @@ import 'package:ja_app/app/domain/responses/reset_password_response.dart';
 import 'package:ja_app/app/domain/responses/sign_in_response.dart';
 import 'package:ja_app/app/ui/pages/reset_password/controller/reset_password_controller.dart';
 
-import '../../domain/repositories/authentication_repository.dart';
+import '../../../repositories/user_impl/login_impl/authentication_repository.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   late final FirebaseAuth _auth;

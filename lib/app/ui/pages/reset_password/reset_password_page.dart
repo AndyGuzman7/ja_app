@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/domain/responses/reset_password_response.dart';
-import 'package:ja_app/app/ui/gobal_widgets/custom_input_field.dart';
+
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/dialogs.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/progress_dialog.dart';
+import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_input_field.dart';
 import 'package:ja_app/app/ui/pages/reset_password/controller/reset_password_controller.dart';
 import 'package:ja_app/app/utils/email_validator.dart';
 import 'package:ja_app/app/utils/name_validator.dart';

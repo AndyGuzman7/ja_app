@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_meedu/ui.dart';
-import 'package:ja_app/app/domain/inputs/sign_up.dart';
+import 'package:ja_app/app/domain/models/sign_up.dart';
 import 'package:ja_app/app/domain/responses/sign_up_response.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/dialogs.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/progress_dialog.dart';

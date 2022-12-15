@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
-import 'package:ja_app/app/domain/repositories/authentication_repository.dart';
+import 'package:ja_app/app/data/repositories/user_impl/login_impl/authentication_repository.dart';
+import 'package:ja_app/app/domain/models/sign_up.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
 import 'package:ja_app/app/ui/gobal_widgets/side_menu/side_menu.dart';
 import 'package:ja_app/app/ui/pages/home/controller/home_controller.dart';
@@ -12,7 +14,7 @@ import 'package:ja_app/app/ui/pages/home/widgets/item_button.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
 
 final homeProvider = SimpleProvider(
-  (_) => HomeController(),
+  (_) => HomeController(sessionProvider.read),
 );
 
 class HomePage extends StatelessWidget {
@@ -23,6 +25,8 @@ class HomePage extends StatelessWidget {
     /*ProviderListener<HomeController>(provider: homeProvider, builder: (_, controller){
       return
     })*/
+
+    List<Widget> listWidgets = [];
     return Scaffold(
       drawer: NavigatorDrawer(),
       appBar: AppBar(
@@ -40,84 +44,138 @@ class HomePage extends StatelessWidget {
           color: const Color.fromARGB(255, 253, 254, 255),
           width: double.infinity,
           height: double.infinity,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Consumer(
-                builder: (_, watch, __) {
-                  final user = watch.watch(sessionProvider).user!;
-                  return Container(
-                    margin: EdgeInsets.all(20),
-                    padding: const EdgeInsets.all(20),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15),
-                      ),
-                      gradient: LinearGradient(
-                        colors: [
-                          Color.fromARGB(255, 102, 133, 230),
-                          Color.fromARGB(255, 127, 159, 229)
-                        ],
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          title: Text(
-                            "Welcome ${user.displayName ?? ''}",
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          subtitle: const Text(
-                            "Secretary",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        CupertinoButton(
-                            color: Colors.white,
-                            child: const Text(
-                              "View perfil",
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 13, 43, 68)),
+          child: FutureBuilder(
+            future: homeProvider.read.getUser(),
+            builder: (context, AsyncSnapshot<SignUpData?> snapshot) {
+              if (snapshot.hasData) {
+                String permissonType =
+                    snapshot.data!.listPermisson.contains("A") ? "A" : "F";
+                log(snapshot.data!.listPermisson.first);
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Consumer(
+                      builder: (_, watch, __) {
+                        final user = watch.watch(sessionProvider).user!;
+                        return Container(
+                          margin: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(20),
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(15),
                             ),
-                            onPressed: () {})
-                      ],
+                            gradient: LinearGradient(
+                              colors: [
+                                Color.fromARGB(255, 102, 133, 230),
+                                Color.fromARGB(255, 127, 159, 229)
+                              ],
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  "Bienvenido ${user.displayName ?? ''}",
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                subtitle: const Text(
+                                  "Que Dios te bendiga",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                              CupertinoButton(
+                                  color: Colors.white,
+                                  child: const Text(
+                                    "View perfil",
+                                    style: TextStyle(
+                                        color: Color.fromARGB(255, 13, 43, 68)),
+                                  ),
+                                  onPressed: () {})
+                            ],
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-              Flexible(
-                flex: 2,
-                child: GridView.count(
-                  padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 20,
-                  crossAxisCount: 2,
-                  children: const [
-                    ItemButton(
-                      textTitle: "Add Members",
-                      pageRoute: Routes.LIST_ESTUDENTS,
-                      textSubTitle: '29 students',
-                      iconButtonItem: Icon(Icons.verified_user_outlined),
+                    Flexible(
+                      flex: 2,
+                      child: GridView.count(
+                        padding:
+                            const EdgeInsets.only(top: 20, left: 20, right: 20),
+                        mainAxisSpacing: 20,
+                        crossAxisSpacing: 20,
+                        crossAxisCount: 2,
+                        children:
+                            getItemButtons(searchPermisson(snapshot.data!)),
+                      ),
                     ),
+                    const Text("Home page"),
+                    CupertinoButton(
+                      child: const Text("Sign out"),
+                      onPressed: () async {
+                        await sessionProvider.read.signOut();
+                        router.pushNamedAndRemoveUntil(Routes.LOGIN);
+                      },
+                      color: Colors.blue,
+                    )
                   ],
-                ),
-              ),
-              const Text("Home page"),
-              CupertinoButton(
-                child: const Text("Sign out"),
-                onPressed: () async {
-                  await sessionProvider.read.signOut();
-                  router.pushNamedAndRemoveUntil(Routes.LOGIN);
-                },
-                color: Colors.blue,
-              )
-            ],
+                );
+              } else {
+                return WillPopScope(
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                      alignment: Alignment.center,
+                      child: const CircularProgressIndicator(),
+                    ),
+                    onWillPop: () async => false);
+              }
+            },
           ),
         ),
       ),
     );
+  }
+
+  List<Widget> getItemButtons(String permisonType) {
+    List<Widget> list = [];
+    switch (permisonType) {
+      case "A":
+        list = [
+          const ItemButton(
+            textTitle: "Miembros",
+            pageRoute: Routes.LIST_ESTUDENTS,
+            textSubTitle: '5 registrados',
+            iconButtonItem: Icon(Icons.supervised_user_circle),
+          ),
+          const ItemButton(
+            textTitle: "EESS",
+            pageRoute: Routes.EESS,
+            textSubTitle: 'Escuela sábatica',
+            iconButtonItem: Icon(
+              Icons.school,
+              color: Colors.blue,
+            ),
+          )
+        ];
+        break;
+      default:
+    }
+
+    return list;
+  }
+
+  String searchPermisson(SignUpData signUpData) {
+    String permissonType = signUpData.listPermisson.contains("A") ? "A" : "F";
+
+    permissonType =
+        signUpData.listPermisson.contains("B") ? "B" : permissonType;
+    permissonType =
+        signUpData.listPermisson.contains("c") ? "B" : permissonType;
+
+    return permissonType;
   }
 }
 

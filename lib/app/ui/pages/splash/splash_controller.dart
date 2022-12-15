@@ -1,10 +1,10 @@
 import 'package:flutter_meedu/meedu.dart';
-import 'package:ja_app/app/domain/repositories/authentication_repository.dart';
+import 'package:ja_app/app/data/repositories/user_impl/login_impl/authentication_repository.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
 
 class SplashController extends SimpleNotifier {
-  SessionController _sessionController;
+  final SessionController _sessionController;
   String? _routeName;
   String? get routeName => _routeName;
   final _authRepository = Get.find<AuthenticationRepository>();

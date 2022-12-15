@@ -50,11 +50,11 @@ class ItemButton extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(left: 20, top: 20, right: 20),
                   child: CircleAvatar(
                     backgroundColor: Color.fromARGB(255, 243, 242, 242),
-                    child: Icon(Icons.person),
+                    child: iconButtonItem,
                   ),
                 ),
                 Padding(

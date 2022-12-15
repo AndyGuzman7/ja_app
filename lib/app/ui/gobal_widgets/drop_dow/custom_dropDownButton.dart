@@ -38,7 +38,7 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
               (Brochure valueItem) {
                 return DropdownMenuItem<Brochure>(
                   value: valueItem,
-                  child: Text(valueItem.spanish + " " + (valueItem.age ?? '')),
+                  child: Text(valueItem.spanish! + " " + (valueItem.age ?? '')),
                 );
               },
             ).toList(),

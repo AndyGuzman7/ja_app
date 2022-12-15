@@ -2,20 +2,20 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
+import 'package:ja_app/app/domain/models/sign_up.dart';
 import 'package:ja_app/app/domain/models/brochure.dart';
 import 'package:ja_app/app/domain/models/brochureSubscription.dart';
-import 'package:ja_app/app/domain/repositories/project_mana_repository.dart';
+import 'package:ja_app/app/data/repositories/project_mana_impl/project_mana_repository.dart';
+import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
 import 'package:ja_app/app/ui/pages/projects/controller/project_mana_state.dart';
 
 class ProjectManaController extends StateNotifier<ProjectManaState> {
   final SessionController _sessonController;
-  String? idUser, idBrochure, canceledAmount;
-  bool? isExistBrochureSubscripcion;
-  List<String>? listCanceledAmountHistory;
-  Brochure? brochure;
 
   final _projectManaRepository = Get.find<ProjectManaRepository>();
+  final _userRepository = Get.find<UserRepository>();
+
   ProjectManaController(this._sessonController)
       : super(ProjectManaState.initialState) {
     onIdUserChanged(_sessonController.user!.uid);
@@ -39,51 +39,55 @@ class ProjectManaController extends StateNotifier<ProjectManaState> {
       ),
     )
         .then((value) async {
-      await verificationBrochureSubscription();
+      await getSubscription();
     });
   }
 
-  Future<void> verificationBrochureSubscription() async {
-    await getSubscription();
-  }
-
-  Future<void> getSubscription() async {
+  Future<bool> getSubscription() async {
     BrochureSubscription? brochureSubscription =
         await _projectManaRepository.getBrochureSubscription(state.idUser);
 
     if (brochureSubscription != null) {
+      onIdBrochure(brochureSubscription.idBrochure!);
+      onCanceledAmount(brochureSubscription.canceledAmount!);
+      onIdUserChanged(brochureSubscription.idUser!);
+      onListCanceledAmount(brochureSubscription.listCanceledAmountHistory!);
+
+      final brochure =
+          await _projectManaRepository.getBrochure(state.idBrochure);
+      onBrochure(brochure!);
+      onBrochureSubscription(brochureSubscription);
       onIsExistBrochureSubscripcion(true);
-      onIdBrochure(brochureSubscription.idBrochure);
-      onCanceledAmount(brochureSubscription.canceledAmount);
-      onIdUserChanged(brochureSubscription.idUser);
-      onListCanceledAmount(brochureSubscription.listCanceledAmountHistory);
-      print(idBrochure!);
-      brochure = await _projectManaRepository.getBrochure(idBrochure!);
+      return true;
     }
+    return false;
+  }
+
+  void onBrochureSubscription(BrochureSubscription brochureSubscription) {
+    state = state.copyWith(brochureSubscription: brochureSubscription);
   }
 
   void onIdUserChanged(String text) {
-    idUser = text;
-    state = state.copyWith(idUser: idUser!);
+    state = state.copyWith(idUser: text);
   }
 
   void onIsExistBrochureSubscripcion(bool text) {
-    isExistBrochureSubscripcion = text;
     state = state.copyWith(isExistBrochureSubscripcion: text);
   }
 
   void onCanceledAmount(String text) {
-    canceledAmount = text;
     state = state.copyWith(canceledAmount: text);
   }
 
+  void onBrochure(Brochure brochure) {
+    state = state.copyWith(brochure: brochure);
+  }
+
   void onIdBrochure(String text) {
-    idBrochure = text;
     state = state.copyWith(idBrochure: text);
   }
 
   void onListCanceledAmount(List<String> text) {
-    listCanceledAmountHistory = text;
     state = state.copyWith(listCanceledAmountHistory: text);
   }
 }

@@ -6,10 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
-import 'package:ja_app/app/ui/gobal_widgets/custom_button.dart';
-import 'package:ja_app/app/ui/gobal_widgets/custom_date_picker.dart';
-import 'package:ja_app/app/ui/gobal_widgets/custom_input_field.dart';
-import 'package:ja_app/app/ui/gobal_widgets/custom_title.dart';
+import 'package:ja_app/app/ui/gobal_widgets/container_image/container_image.dart';
+import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_button.dart';
+import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_date_picker.dart';
+import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_input_field.dart';
+import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
 import 'package:ja_app/app/ui/pages/register/controller/register_controller.dart';
 import 'package:ja_app/app/ui/pages/register/controller/register_state.dart';
 import 'package:ja_app/app/ui/pages/register/utils/send_register_form.dart';
@@ -156,6 +157,7 @@ class RegisterPage extends StatelessWidget {
                       ),
                       CustomImputDatePicker(
                         label: 'Date birth day',
+                        onChanged: controller.onBirthDateChanged,
                         validator: (text) {
                           //print(text);
                           if (text == null) return "invalid last name";

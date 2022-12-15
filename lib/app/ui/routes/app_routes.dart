@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ja_app/app/ui/pages/eess/eess_page.dart';
 import 'package:ja_app/app/ui/pages/home/home_page.dart';
 import 'package:ja_app/app/ui/pages/login/login_page.dart';
 import 'package:ja_app/app/ui/pages/login/prueba.dart';
@@ -19,4 +20,5 @@ Map<String, Widget Function(BuildContext)> get appRoutes => {
       Routes.RESET_PASSWORD: (_) => ResetPasswordPage(),
       Routes.LIST_ESTUDENTS: (_) => StudentsListPage(),
       Routes.PROJECTS: (_) => ProjectManaPage(),
+      Routes.EESS: (_) => EeSsPage()
     };

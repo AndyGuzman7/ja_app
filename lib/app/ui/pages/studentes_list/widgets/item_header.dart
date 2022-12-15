@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:ja_app/app/ui/gobal_widgets/CustomTextField.dart';
-import 'package:ja_app/app/ui/gobal_widgets/custom_input_field.dart';
+import 'package:ja_app/app/ui/gobal_widgets/inputs/CustomTextField.dart';
 
 class ItemHeader extends StatelessWidget {
   const ItemHeader({Key? key}) : super(key: key);
