@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:ja_app/app/domain/models/sign_up.dart';
+import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/domain/responses/sign_in_response.dart';
 
 class SignUpResponse {
   final SignUpError? error;
   final User? user;
-  final SignUpData? signUpData;
+  final UserData? signUpData;
 
   SignUpResponse(this.error, this.user, this.signUpData);
 }

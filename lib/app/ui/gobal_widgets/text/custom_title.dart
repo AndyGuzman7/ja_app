@@ -52,7 +52,8 @@ class CustomTitle2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: const EdgeInsets.only(left: 0, right: 0),
+      contentPadding:
+          const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
       title: Text(
         title,
         textAlign: textAlignTitle,

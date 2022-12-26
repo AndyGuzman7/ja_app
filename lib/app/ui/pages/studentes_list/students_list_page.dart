@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
-import 'package:ja_app/app/domain/models/sign_up.dart';
+import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
 import 'package:ja_app/app/ui/pages/studentes_list/controller/students_list_controller.dart';
 import 'package:ja_app/app/ui/pages/studentes_list/widgets/item_header.dart';
@@ -31,7 +31,7 @@ class StudentsListPage extends StatelessWidget {
           height: MediaQuery.of(context).size.height,
           child: FutureBuilder(
             future: studentListProvider.read.getUsers(),
-            builder: (context, AsyncSnapshot<List<SignUpData?>> snapshot) {
+            builder: (context, AsyncSnapshot<List<UserData?>> snapshot) {
               if (snapshot.hasData) {
                 return Column(
                   children: [

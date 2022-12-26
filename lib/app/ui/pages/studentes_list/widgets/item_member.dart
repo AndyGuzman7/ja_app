@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/ui.dart';
-import 'package:ja_app/app/domain/models/sign_up.dart';
+import 'package:ja_app/app/domain/models/user_data.dart';
 
 class ItemMember extends StatelessWidget {
-  SignUpData user;
+  UserData user;
   ItemMember(this.user, {Key? key}) : super(key: key);
 
   @override

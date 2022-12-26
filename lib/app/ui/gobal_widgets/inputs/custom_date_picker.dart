@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -48,7 +50,7 @@ class _CustomImputDatePickerState extends State<CustomImputDatePicker> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
-                  height: 65,
+                  height: 48,
                   child: TextField(
                     controller: value != null
                         ? TextEditingController(
@@ -58,6 +60,8 @@ class _CustomImputDatePickerState extends State<CustomImputDatePicker> {
                     obscureText: _obscureText,
                     keyboardType: widget.inputType,
                     decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            right: 0, left: 10, top: 8.0, bottom: 8.0),
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: const BorderSide(
@@ -74,15 +78,7 @@ class _CustomImputDatePickerState extends State<CustomImputDatePicker> {
                           Icons.date_range_outlined,
                           color: Colors.black,
                         ),
-                        hintText: widget.label
-                        //labelText: widget.label,
-                        /*border: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),*/
-                        ),
+                        hintText: widget.label),
                     onTap: () {
                       FocusScope.of(context).requestFocus(FocusNode());
 
@@ -92,13 +88,13 @@ class _CustomImputDatePickerState extends State<CustomImputDatePicker> {
                         firstDate: DateTime(1980),
                         lastDate: DateTime(2222),
                       ).then((value) {
-                        // print(value!.toIso8601String());
                         if (widget.validator != null) {
-                          // ignore: invalid_use_of_protected_member
                           state.setValue(value!);
                           state.validate();
                         }
+
                         if (widget.onChanged != null) {
+                          log(value.toString());
                           widget.onChanged!(value!);
                         }
                       });

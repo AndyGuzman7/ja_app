@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_meedu/meedu.dart';
-import 'package:ja_app/app/domain/models/sign_up.dart';
+import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/domain/models/brochure.dart';
 import 'package:ja_app/app/domain/models/brochureSubscription.dart';
 import 'package:ja_app/app/domain/models/subscriptionProjectMana.dart';
@@ -23,7 +23,7 @@ class ProjectManaRepositorySubscription
     List<BrochureSubscription>? listBrochureSubscriptions =
         await _projectManaRepository.getBrochureSubscriptions();
 
-    List<SignUpData> listSignUpDatas = await _userRepository.getUsers();
+    List<UserData> listSignUpDatas = await _userRepository.getUsers();
 
     List<Brochure>? listBrochures = await _projectManaRepository.getBrochures();
 

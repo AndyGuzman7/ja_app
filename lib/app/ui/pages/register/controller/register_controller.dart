@@ -1,17 +1,27 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
-import 'package:ja_app/app/domain/models/sign_up.dart';
+import 'package:flutter_meedu/ui.dart';
+import 'package:ja_app/app/domain/models/country.dart';
+import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/domain/models/resources.dart';
 import 'package:ja_app/app/data/repositories/user_impl/login_impl/authentication_repository.dart';
 import 'package:ja_app/app/data/repositories/resources_impl/resources_repository.dart';
 import 'package:ja_app/app/data/repositories/user_impl/register_impl/sign_up_repository.dart';
+import 'package:ja_app/app/domain/models/userAvatar.dart';
 import 'package:ja_app/app/domain/responses/sign_up_response.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
+import 'package:ja_app/app/ui/gobal_widgets/dialogs/dialogs.dart';
+import 'package:ja_app/app/ui/gobal_widgets/dialogs/progress_dialog.dart';
+import 'package:ja_app/app/ui/gobal_widgets/drop_dow/custom_dropDownButton%20copy.dart';
 import 'package:ja_app/app/ui/pages/register/controller/register_state.dart';
 import 'package:ja_app/app/ui/pages/register/utils/permisson_list.dart';
+import 'package:ja_app/app/ui/routes/routes.dart';
+
+import '../register_page_avatar.dart';
 
 class RegisterController extends StateNotifier<RegisterState> {
   final SessionController _sessionController;
@@ -23,23 +33,45 @@ class RegisterController extends StateNotifier<RegisterState> {
 
   final _resourcesRepository = Get.find<ResourcesRepository>();
 
-  Future<SignUpResponse> submit() async {
-    if (state.photo != null) {
-      await uploadPfp(state.photo!);
-    } else {
-      Resources listResources = await _resourcesRepository.getImagesLink();
-      onImageURLChanged(listResources.images[0]);
+  List<UserAvatar> listAvatar = [];
+
+  getAvatar() {
+    List<UserAvatar> listAvatar = [];
+    String url =
+        "https://firebasestorage.googleapis.com/v0/b/ja-app-6430b.appspot.com/o/uploads%2Fdata%2Fuser%2F0%2Fcom.example.ja_app%2Fcache%2Fphoto_user%2F";
+    String newUrl;
+
+    for (var i = 0; i <= 18; i++) {
+      String name = "user_" + i.toString();
+      newUrl = url +
+          name +
+          ".png?alt=media&token=08b2edd7-f904-4d61-b59f-97520e4000b3";
+      var user = UserAvatar(name, newUrl, i == 0 ? true : false);
+
+      if (user.isSelect == true) onUserAvatarChanged(user);
+      listAvatar.add(user);
     }
 
+    onListAvatarChanged(listAvatar);
+  }
+
+  Future<SignUpResponse> submit() async {
     final response = await _signUpRepository.register(
-      SignUpData(
+      UserData(
         name: state.name,
         lastName: state.lastName,
+        lastNameSecond: state.lastNameSecond,
+        nameSecond: state.nameSecond,
+        phone: state.phone,
+        userName: state.userName,
         email: state.email,
         password: state.password,
-        photoURL: state.photoURL,
-        birthDate: state.birthDate,
+        photoURL: state.userAvatar!.url,
+        birthDate: state.birthDate!,
         listPermisson: [PermissonList.C],
+        bautizated: state.bautizatedCharacter.toString(),
+        country: state.country!,
+        gender: state.singingCharacter.toString(),
       ),
     );
 
@@ -47,6 +79,44 @@ class RegisterController extends StateNotifier<RegisterState> {
       _sessionController.setUser(response.user!);
     }
     return response;
+  }
+
+  Future<void> sendRegisterForm(BuildContext context) async {
+    final isValidForm = formKey.currentState!.validate();
+
+    if (isValidForm) {
+      ProgressDialog.show(context);
+      final response = await submit();
+      router.pop();
+      if (response.error != null) {
+        late String content;
+
+        switch (response.error) {
+          case SignUpError.tooManyRequests:
+            content = "Too many Requests";
+            break;
+          case SignUpError.emailAlreadyInUse:
+            content = "Email already in use";
+            break;
+          case SignUpError.weakPassword:
+            content = "weak password";
+            break;
+          case SignUpError.unknown:
+            content = "error unknown";
+            break;
+          case SignUpError.networkRequestFailed:
+            content = "network Request Failed";
+            break;
+          default:
+            break;
+        }
+        Dialogs.alert(context, title: "ERROR", content: content);
+      } else {
+        router.pushNamedAndRemoveUntil(Routes.HOME);
+      }
+    } else {
+      Dialogs.alert(context, title: "ERROR", content: "Invalid fields");
+    }
   }
 
   Future<void> uploadPfp(File file) async {
@@ -63,8 +133,40 @@ class RegisterController extends StateNotifier<RegisterState> {
     });
   }
 
+  void onNameUserChanged(String text) {
+    state = state.copyWith(userName: text);
+  }
+
   void onNameChanged(String text) {
     state = state.copyWith(name: text);
+  }
+
+  void onNameSecondChanged(String text) {
+    state = state.copyWith(nameSecond: text == "" ? null : text);
+  }
+
+  void onLastNameChanged(String text) {
+    state = state.copyWith(lastName: text);
+  }
+
+  void onLastNameSecondChanged(String text) {
+    state = state.copyWith(lastNameSecond: text == "" ? null : text);
+  }
+
+  void onGenderChanged(SingingCharacter text) {
+    state = state.copyWith(singingCharacter: text);
+  }
+
+  void onCountryChanged(Country country) {
+    state = state.copyWith(country: country);
+  }
+
+  void onPhoneChanged(String phone) {
+    state = state.copyWith(phone: phone);
+  }
+
+  void onBautizatedChanged(BautizatedCharacter phone) {
+    state = state.copyWith(bautizatedCharacter: phone);
   }
 
   void onPhotoChanged(File file) {
@@ -72,7 +174,7 @@ class RegisterController extends StateNotifier<RegisterState> {
   }
 
   void onBirthDateChanged(DateTime text) {
-    state = state.copyWith(birthDate: text.toIso8601String());
+    state = state.copyWith(birthDate: text);
   }
 
   void onImageURLChanged(String text) {
@@ -93,6 +195,26 @@ class RegisterController extends StateNotifier<RegisterState> {
 
   void onVPasswordChanged(String text) {
     state = state.copyWith(vPassword: text);
+  }
+
+  void onTermsOkChanged(bool text) {
+    state = state.copyWith(termsOk: text);
+  }
+
+  void onListAvatarChanged(List<UserAvatar> list) {
+    state = state.copyWith(listAvatar: list);
+  }
+
+  void onUserAvatarChanged(UserAvatar userAvatar) {
+    state = state.copyWith(userAvatar: userAvatar);
+  }
+
+  void onSingingCharacterChanged(SingingCharacter singingCharacter) {
+    state = state.copyWith(singingCharacter: singingCharacter);
+  }
+
+  void nextPage() {
+    router.pushNamed(Routes.REGISTER);
   }
 
   @override

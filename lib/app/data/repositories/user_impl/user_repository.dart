@@ -1,6 +1,6 @@
-import 'package:ja_app/app/domain/models/sign_up.dart';
+import 'package:ja_app/app/domain/models/user_data.dart';
 
 abstract class UserRepository {
-  Future<SignUpData?> getUser(String id);
-  Future<List<SignUpData>> getUsers();
+  Future<UserData?> getUser(String id);
+  Future<List<UserData>> getUsers();
 }

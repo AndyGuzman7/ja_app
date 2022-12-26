@@ -176,7 +176,7 @@ class _$_ProjectManaState implements _ProjectManaState {
       {this.idUser = '',
       this.isExistBrochureSubscripcion = false,
       this.idBrochure = '',
-      this.canceledAmount = '',
+      this.canceledAmount = '0',
       this.brochure = null,
       this.brochureSubscription = null,
       final List<String> listCanceledAmountHistory = const []})

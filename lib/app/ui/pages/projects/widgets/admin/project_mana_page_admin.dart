@@ -4,7 +4,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
-import 'package:ja_app/app/domain/models/sign_up.dart';
+import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/domain/models/brochure.dart';
 import 'package:ja_app/app/domain/models/brochureSubscription.dart';
 import 'package:ja_app/app/domain/models/subscriptionProjectMana.dart';
@@ -146,7 +146,7 @@ class ProjectManaPageAdmin extends StatelessWidget {
 
   List<DataRow> _createRows(List<SubscriptionProjectMana> list) {
     return list.map((SubscriptionProjectMana subscriptionProjectMana) {
-      SignUpData? user = subscriptionProjectMana.signUpData;
+      UserData? user = subscriptionProjectMana.signUpData;
       Brochure? brochure = subscriptionProjectMana.brochure;
       BrochureSubscription? brochureSubscription =
           subscriptionProjectMana.brochureSubscription;

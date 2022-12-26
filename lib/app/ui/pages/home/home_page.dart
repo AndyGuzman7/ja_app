@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/data/repositories/user_impl/login_impl/authentication_repository.dart';
-import 'package:ja_app/app/domain/models/sign_up.dart';
+import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
 import 'package:ja_app/app/ui/gobal_widgets/side_menu/side_menu.dart';
 import 'package:ja_app/app/ui/pages/home/controller/home_controller.dart';
@@ -46,7 +46,7 @@ class HomePage extends StatelessWidget {
           height: double.infinity,
           child: FutureBuilder(
             future: homeProvider.read.getUser(),
-            builder: (context, AsyncSnapshot<SignUpData?> snapshot) {
+            builder: (context, AsyncSnapshot<UserData?> snapshot) {
               if (snapshot.hasData) {
                 String permissonType =
                     snapshot.data!.listPermisson.contains("A") ? "A" : "F";
@@ -167,7 +167,7 @@ class HomePage extends StatelessWidget {
     return list;
   }
 
-  String searchPermisson(SignUpData signUpData) {
+  String searchPermisson(UserData signUpData) {
     String permissonType = signUpData.listPermisson.contains("A") ? "A" : "F";
 
     permissonType =

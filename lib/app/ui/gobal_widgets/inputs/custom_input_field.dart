@@ -47,11 +47,13 @@ class _CustomImputFieldState extends State<CustomImputField> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
-                  height: 65,
+                  height: 48,
                   child: TextField(
                     obscureText: _obscureText,
                     keyboardType: widget.inputType,
                     decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            right: 0, left: 10, top: 8.0, bottom: 8.0),
 
                         //isDense: true,
                         enabledBorder: OutlineInputBorder(
@@ -81,9 +83,7 @@ class _CustomImputFieldState extends State<CustomImputField> {
                                   _obscureText = !_obscureText;
                                   setState(() {});
                                 })
-                            : Container(
-                                width: 0,
-                              ),
+                            : null,
                         hintText: widget.label
                         //labelText: widget.label,
                         /*border: const OutlineInputBorder(
