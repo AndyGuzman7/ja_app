@@ -11,68 +11,96 @@ import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
 import 'package:ja_app/app/ui/pages/register/register_page.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
 
-class RegisterPageAvatar extends StatelessWidget {
-  const RegisterPageAvatar({Key? key}) : super(key: key);
+import 'controller/register_controller.dart';
+import 'controller/register_state.dart';
+
+class RegisterPageAvatar extends StatefulWidget {
+  StateProvider<RegisterController, RegisterState> providerListener;
+  RegisterPageAvatar({
+    Key? key,
+    required this.providerListener,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    registerProvider.read.getAvatar();
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(15),
-        color: Colors.transparent,
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: [
-            const CustomTitle2(
-              title: "Selecciona tu avatar",
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Consumer(builder: (_, ref, __) {
-              List<UserAvatar> list =
-                  ref.select(registerProvider.select((_) => _.listAvatar!));
+  State<RegisterPageAvatar> createState() => _RegisterPageAvatarState();
+}
 
-              return Flexible(
-                flex: 3,
-                child: GridView.count(
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 20,
-                  crossAxisCount: 4,
-                  children: buildPhotoItem(list),
-                ),
+class _RegisterPageAvatarState extends State<RegisterPageAvatar>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    log("nuevamente");
+    widget.providerListener.read.getAvatar();
+    return Container(
+      padding: const EdgeInsets.all(15),
+      color: Colors.transparent,
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        children: [
+          const CustomTitle2(
+            title: "Hola, Bienvenido",
+            subTitle: "Selecciona un avatar para tu perfil",
+            colorSubTitle: Color.fromARGB(255, 117, 117, 117),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: Consumer(builder: (_, ref, __) {
+              List<UserAvatar> list = ref
+                  .select(widget.providerListener.select((_) => _.listAvatar!));
+
+              return GridView.count(
+                mainAxisSpacing: 20,
+                crossAxisSpacing: 20,
+                crossAxisCount: 4,
+                children: buildPhotoItem(list),
               );
             }),
-            CustomButton(
-              textButton: 'Siguiente',
-              onPressed: () => registerProvider.read.nextPage(),
-            )
-          ],
-        ),
+          ),
+          CustomButton(
+            height: 48,
+            textButton: 'Siguiente',
+            onPressed: () => widget.providerListener.read.nextPage(context),
+          )
+        ],
       ),
     );
   }
 
+/**
+ * 
+ * 
+ * Column(
+      children: <Widget>[
+        CardScrollWidget(currentPage),
+        Positioned.fill(
+          child: PageView.builder(
+            itemCount: images.length,
+            controller: controller,
+            reverse: true,
+            itemBuilder: (context, index) {
+              return Container();
+            },
+          ),
+        )
+      ],
+    );
+ * 
+ * 
+ */
   void selectUserAvatar(UserAvatar i, List<UserAvatar> list) {
     List<UserAvatar> listNew = [];
     for (var e in list) {
       if (e.isSelect == true && e.name != i.name) {
         e.isSelect = false;
       }
-
       if (e.name == i.name) {
         e.isSelect = true;
-        log("message");
       }
       UserAvatar f = UserAvatar(e.name, e.url, e.isSelect);
-      log(f.isSelect.toString() + " " + f.name);
-
       listNew.add(f);
     }
     registerProvider.read.onUserAvatarChanged(i);
@@ -93,21 +121,15 @@ class RegisterPageAvatar extends StatelessWidget {
           ),
           child: InkWell(
             onTap: () => selectUserAvatar(item, list),
-            child: Expanded(
-              child: Ink(
-                height: 100,
-                width: 100,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: item.isSelect
-                      ? Icon(
-                          Icons.check,
-                          size: 50,
-                          color: CustomColorPrimary().materialColor,
-                        )
-                      : null,
-                ),
-              ),
+            child: Align(
+              alignment: Alignment.center,
+              child: item.isSelect
+                  ? Icon(
+                      Icons.check_circle_outline,
+                      size: 40,
+                      color: CustomColorPrimary().materialColor,
+                    )
+                  : null,
             ),
           ),
         ),
@@ -115,4 +137,8 @@ class RegisterPageAvatar extends StatelessWidget {
     }
     return lisWidgets;
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

@@ -30,7 +30,7 @@ class LoginController extends SimpleNotifier {
     );
 
     if (response.error == null) {
-      _sessonController.setUser(response.user!);
+      _sessonController.setUser(response.user!, response.userData!);
       log(response.user!.displayName!);
     }
     return response;

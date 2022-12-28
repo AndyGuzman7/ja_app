@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ja_app/app/domain/models/country.dart';
 
 class UserData {
@@ -36,6 +37,11 @@ class UserData {
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) {
+    DateTime toDate(timestamp) {
+      Timestamp s = timestamp;
+      return s.toDate();
+    }
+
     return UserData(
         listPermisson: List<String>.from(json['listPermisson']),
         id: json['id'],
@@ -45,11 +51,11 @@ class UserData {
         lastName: json['lastName'],
         email: json['email'],
         password: json['password'],
-        birthDate: json['birthDate'],
+        birthDate: toDate(json['birthDate']),
         nameSecond: json['nameSecond'],
         lastNameSecond: json['lastNameSecond'],
         gender: json['gender'],
-        country: json['country'],
+        country: Country.fromJson(json['country']),
         phone: json['phone'],
         bautizated: json['bautizated']);
   }
@@ -67,7 +73,7 @@ class UserData {
         'nameSecond': nameSecond,
         'lastNameSecond': lastNameSecond,
         'gender': gender,
-        'country': country,
+        'country': country.toJson(),
         'bautizated': bautizated,
         'phone': phone
       };

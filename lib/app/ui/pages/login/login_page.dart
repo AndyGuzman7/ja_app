@@ -118,7 +118,7 @@ class LoginPage extends StatelessWidget {
                         CustomTextButton(
                           text: 'Sign Up',
                           onPressed: () {
-                            router.pushNamed(Routes.REGISTER_AVATAR);
+                            router.pushNamed(Routes.REGISTER);
                           },
                         ),
                       ],

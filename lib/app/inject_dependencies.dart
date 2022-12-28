@@ -16,7 +16,8 @@ import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
 
 void injectDependencies() {
   Get.lazyPut<AuthenticationRepository>(
-    () => AuthenticationRepositoryImpl(FirebaseAuth.instance),
+    () => AuthenticationRepositoryImpl(
+        FirebaseAuth.instance, FirebaseFirestore.instance),
   );
 
   Get.lazyPut<SignUpRepository>(

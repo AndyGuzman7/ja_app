@@ -18,6 +18,7 @@ import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
 import 'package:ja_app/app/ui/pages/register/controller/register_controller.dart';
 import 'package:ja_app/app/ui/pages/register/controller/register_state.dart';
 import 'package:ja_app/app/ui/pages/register/register_page.dart';
+import 'package:ja_app/app/utils/email_validator.dart';
 
 import 'package:ja_app/app/utils/name_validator.dart';
 import 'package:ja_app/pages/photoUpload.dart';
@@ -25,14 +26,24 @@ import 'package:ja_app/pages/photoUpload.dart';
 import '../../gobal_widgets/drop_dow/custom_dropDown.dart';
 import '../../gobal_widgets/inputs/custom_radioButton.dart';
 
-class RegisterPagePersonal extends StatelessWidget {
+class RegisterPagePersonal extends StatefulWidget {
   BuildContext context;
-  RegisterPagePersonal({required this.context, Key? key}) : super(key: key);
+  StateProvider<RegisterController, RegisterState> providerListener;
+  RegisterPagePersonal(
+      {required this.context, required this.providerListener, Key? key})
+      : super(key: key);
 
   @override
+  State<RegisterPagePersonal> createState() => _RegisterPagePersonalState();
+}
+
+class _RegisterPagePersonalState extends State<RegisterPagePersonal>
+    with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ProviderListener<RegisterController>(
-      provider: registerProvider,
+      provider: widget.providerListener,
       builder: (_, controller) {
         Row rowModel(widgetOne, widgetTwo) {
           return Row(
@@ -45,6 +56,21 @@ class RegisterPagePersonal extends StatelessWidget {
                 width: 15,
               ),
               Expanded(child: widgetTwo),
+            ],
+          );
+        }
+
+        Row rowModelLeft(widgetOne, widgetTwo) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: widgetOne,
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              widgetTwo,
             ],
           );
         }
@@ -71,14 +97,23 @@ class RegisterPagePersonal extends StatelessWidget {
         return GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
             child: Form(
-              //key: controller.formKey,
+              key: controller.formKeyOne,
               child: ListView(
                 padding: const EdgeInsets.all(15),
                 children: [
-                  const CustomTitle2(
-                    title: "Hola, Bienvenido de nuevo",
-                    subTitle: "Ingresa tu información personal",
-                    colorSubTitle: Color.fromARGB(255, 117, 117, 117),
+                  rowModelLeft(
+                    const CustomTitle2(
+                      title: "Hola, Bienvenido de nuevo",
+                      subTitle: "Ingresa tu información personal",
+                      colorSubTitle: Color.fromARGB(255, 117, 117, 117),
+                    ),
+                    Consumer(builder: (_, watch, __) {
+                      final s = watch.select(
+                        registerProvider.select((state) => state.userAvatar),
+                      );
+                      return Container(
+                          width: 50, height: 50, child: Image.network(s!.url));
+                    }),
                   ),
                   const SizedBox(
                     height: 10,
@@ -175,28 +210,54 @@ class RegisterPagePersonal extends StatelessWidget {
                   CustomImputDatePicker(
                     label: "01-01-2000",
                     onChanged: controller.onBirthDateChanged,
+                    validator: (text) {
+                      if (text == null) return "Es necesario una fecha";
+                    },
                   ),
-                  CustomDropDown<Country>(
-                    onChanged: (v) {},
+                  SettingsWidget(
+                    onChanged: (v) {
+                      controller.onCountryChanged(v);
+                      log(v.name);
+                    },
                     hint: 'Pais',
-                    lisItems: [Country("Bolivia", "+591")],
+                    items: [
+                      Country("Bolivia", "+591"),
+                      Country("Peru", "+51"),
+                      Country("Brasil", "+53")
+                    ],
                     validator: (text) {
-                      if (text == null) return "El email es necesario";
+                      if (text == null) return "El Pais es necesario";
+                      return null;
                     },
                   ),
-                  CustomImputField(
-                    icon: const Icon(Icons.phone),
-                    label: "Numero Celular",
-                    validator: (text) {
-                      if (text == "") return "El apellido es necesario";
-                      text = text!.replaceAll(" ", "");
-                      return isValidName(text) ? null : "Apellido Invalido";
+                  /* CustomDropDown(
+                    onChanged: (v) {
+                      controller.onCountryChanged(v);
                     },
-                    onChanged: controller.onlastNameChanged,
+                    hint: 'Pais',
+                    lisItems: [
+                      Country("Bolivia", "+591"),
+                      Country("Peru", "+51"),
+                      Country("Brasil", "+53")
+                    ],
+                    validator: (text) {
+                      if (text == null) return "El Pais es necesario";
+                      return null;
+                    },
+                  ),*/
+                  CustomImputField(
+                    onChanged: controller.onPhoneChanged,
+                    icon: const Icon(Icons.phone),
+                    label: "+591 67893456 (ejemplo)",
+                    validator: (text) {
+                      if (text == "") return "El celular es necesario";
+                      text = text!.replaceAll(" ", "");
+                      return isValidPhone(text) ? null : "Celular Invalido";
+                    },
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: const Text(
                       "Bautizado/a",
                       style: TextStyle(fontSize: 17),
                     ),
@@ -204,48 +265,43 @@ class RegisterPagePersonal extends StatelessWidget {
                   Consumer(builder: (_, watch, __) {
                     final s = watch.select(
                       registerProvider
-                          .select((state) => state.singingCharacter),
+                          .select((state) => state.bautizatedCharacter),
                     );
                     return rowModel(
-                      CustomRadioButtons<SingingCharacter>(
+                      CustomRadioButtons<BautizatedCharacter>(
                         value: s,
                         callback: (v) {
-                          registerProvider.read.onSingingCharacterChanged(v);
+                          registerProvider.read.onBautizatedChanged(v);
                         },
                         title: "Si",
-                        character: SingingCharacter.male,
+                        character: BautizatedCharacter.yes,
                       ),
-                      CustomRadioButtons<SingingCharacter>(
+                      CustomRadioButtons<BautizatedCharacter>(
                         value: s,
                         callback: (v) {
-                          registerProvider.read.onSingingCharacterChanged(v);
-                          log(v.name);
+                          registerProvider.read.onBautizatedChanged(v);
                         },
                         title: "No",
-                        character: SingingCharacter.female,
+                        character: BautizatedCharacter.no,
                       ),
                     );
                   }),
-                  /* CustomDropDownButtonv2(
-                    lisItems: ["asdasd", "fsdf"],
-                    onChanged: (p0) {},
-                  ),*/
-
-                  /*CustomImputDatePicker(
-                    label: 'Fecha de nacimiento',
-                    onChanged: controller.onBirthDateChanged,
-                    validator: (text) {
-                      //print(text);
-                      if (text == null) return "invalid last name";
-                    },
-                  ),*/
-
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButton(
-                    textButton: 'Registrar',
-                    onPressed: () => controller.sendRegisterForm(context),
+                  Divider(),
+                  rowModel(
+                    CustomButton(
+                      height: 48,
+                      colorButton: Color.fromARGB(255, 188, 188, 188),
+                      textButton: 'Anterior',
+                      onPressed: () => controller.lastPage(context),
+                    ),
+                    CustomButton(
+                      height: 48,
+                      textButton: 'Siguiente',
+                      onPressed: () => controller.nextPageSend(context),
+                    ),
                   )
                 ],
               ),
@@ -253,4 +309,8 @@ class RegisterPagePersonal extends StatelessWidget {
       },
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

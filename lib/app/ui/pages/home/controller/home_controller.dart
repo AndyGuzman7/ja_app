@@ -15,14 +15,15 @@ class HomeController extends SimpleNotifier {
 
   Future<UserData?> getUser() async {
     UserData? data;
-    try {
-      log(sessionController.user!.toString());
-      data = await userRepository.getUser(sessionController.user!.uid);
-
-      return data!;
-    } catch (e) {
-      return null;
-    }
+    //try {
+    log(sessionController.user!.uid.toString());
+    data = await userRepository.getUser(sessionController.user!.uid);
+    log("adadaddasdasd");
+    log(data.toString());
+    return data!;
+    //} catch (e) {
+    //  return null;
+    //}
   }
 
   @override

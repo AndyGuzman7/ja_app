@@ -8,9 +8,11 @@ class CustomImputField extends StatefulWidget {
   final bool isPassword;
   final String? Function(String?)? validator;
   final Icon? icon;
+  final String? value;
   const CustomImputField(
       {Key? key,
       this.onChanged,
+      this.value,
       required this.label,
       this.inputType,
       this.icon,

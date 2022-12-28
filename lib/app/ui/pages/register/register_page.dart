@@ -9,77 +9,75 @@ import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
 
 import 'package:ja_app/app/ui/pages/register/controller/register_controller.dart';
 import 'package:ja_app/app/ui/pages/register/controller/register_state.dart';
+import 'package:ja_app/app/ui/pages/register/register_page_avatar.dart';
 import 'package:ja_app/app/ui/pages/register/register_page_personal.dart';
+import 'package:ja_app/app/ui/pages/register/register_page_user.dart';
 
 final registerProvider = StateProvider<RegisterController, RegisterState>(
-  (_) => RegisterController(sessionProvider.read),
-);
+    (_) => RegisterController(sessionProvider.read));
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
   @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  @override
   Widget build(BuildContext context) {
+    //registerProvider.read.tabController = TabController(length: 3, );
+
     return ProviderListener<RegisterController>(
-        provider: registerProvider,
-        builder: (_, controller) {
-          Row rowModel(widgetOne, widgetTwo) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: widgetOne,
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Expanded(child: widgetTwo),
-              ],
-            );
-          }
+      provider: registerProvider,
+      builder: (_, controller) {
+        final one = RegisterPageAvatar(
+          providerListener: registerProvider,
+        );
 
-          log("otra vez");
+        final two = RegisterPagePersonal(
+          providerListener: registerProvider,
+          context: context,
+        );
 
-          return DefaultTabController(
-            length: 3,
-            child: Scaffold(
-              backgroundColor: Colors.white,
-              appBar: AppBar(
-                elevation: 0,
-                bottom: TabBar(tabs: [
-                  Tab(
-                    icon: Icon(Icons.person_outline_sharp),
-                  ),
-                  Tab(
-                    icon: Icon(Icons.domain_verification_sharp),
-                  ),
-                  Tab(icon: Icon(Icons.send))
-                ]),
-              ),
-              body: GestureDetector(
-                onTap: () => FocusScope.of(context).unfocus(),
-                child: TabBarView(
-                  children: [
-                    Expanded(
-                      child: RegisterPagePersonal(
-                        context: context,
-                      ),
+        final three = RegisterPageUser(
+          providerListener: registerProvider,
+          context: context,
+        );
+
+        return DefaultTabController(
+          length: 3,
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              elevation: 0,
+              bottom: const PreferredSize(
+                preferredSize: Size.fromHeight(40),
+                child: IgnorePointer(
+                  ignoring: true,
+                  child: TabBar(physics: NeverScrollableScrollPhysics(), tabs: [
+                    Tab(
+                      icon: Icon(Icons.person_outline_sharp),
                     ),
-                    Expanded(
-                      child: RegisterPagePersonal(
-                        context: context,
-                      ),
+                    Tab(
+                      icon: Icon(Icons.contact_page_rounded),
                     ),
-                    Expanded(
-                      child: RegisterPagePersonal(
-                        context: context,
-                      ),
-                    ),
-                  ],
+                    Tab(icon: Icon(Icons.person_pin_sharp))
+                  ]),
                 ),
               ),
             ),
-          );
-        });
+            body: TabBarView(
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                one,
+                two,
+                three,
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

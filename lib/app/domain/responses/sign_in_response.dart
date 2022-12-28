@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ja_app/app/domain/models/user_data.dart';
 
 class SignInResponse {
   final SignInError? error;
   final User? user;
+  final UserData? userData;
 
-  SignInResponse(this.error, this.user);
+  SignInResponse(this.error, this.user, this.userData);
 }
 
 enum SignInError {

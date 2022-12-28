@@ -97,7 +97,7 @@ class _CustomImputDatePickerState extends State<CustomImputDatePicker> {
                           log(value.toString());
                           widget.onChanged!(value!);
                         }
-                      });
+                      }).ignore();
                     },
                   ),
                 ),

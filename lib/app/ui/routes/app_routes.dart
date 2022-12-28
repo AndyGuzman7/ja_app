@@ -18,7 +18,6 @@ Map<String, Widget Function(BuildContext)> get appRoutes => {
       Routes.LOGIN: (_) => LoginPage(),
       Routes.HOME: (_) => const HomePage(),
       Routes.REGISTER: (_) => RegisterPage(),
-      Routes.REGISTER_AVATAR: (_) => RegisterPageAvatar(),
       Routes.RESET_PASSWORD: (_) => ResetPasswordPage(),
       Routes.LIST_ESTUDENTS: (_) => StudentsListPage(),
       Routes.PROJECTS: (_) => ProjectManaPage(),

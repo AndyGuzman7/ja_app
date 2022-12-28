@@ -27,7 +27,11 @@ class RegisterController extends StateNotifier<RegisterState> {
   final SessionController _sessionController;
   RegisterController(this._sessionController)
       : super(RegisterState.initialState);
-  final GlobalKey<FormState> formKey = GlobalKey();
+  final GlobalKey<FormState> formKeyOne = GlobalKey();
+
+  final GlobalKey<FormState> formKeyTwo = GlobalKey();
+
+  late TabController tabController; // =  TabController(length: 3, vsync: this);
 
   final _signUpRepository = Get.find<SignUpRepository>();
 
@@ -56,33 +60,34 @@ class RegisterController extends StateNotifier<RegisterState> {
   }
 
   Future<SignUpResponse> submit() async {
-    final response = await _signUpRepository.register(
-      UserData(
-        name: state.name,
-        lastName: state.lastName,
-        lastNameSecond: state.lastNameSecond,
-        nameSecond: state.nameSecond,
-        phone: state.phone,
-        userName: state.userName,
-        email: state.email,
-        password: state.password,
-        photoURL: state.userAvatar!.url,
-        birthDate: state.birthDate!,
-        listPermisson: [PermissonList.C],
-        bautizated: state.bautizatedCharacter.toString(),
-        country: state.country!,
-        gender: state.singingCharacter.toString(),
-      ),
+    final userData = UserData(
+      name: state.name,
+      lastName: state.lastName,
+      lastNameSecond: state.lastNameSecond,
+      nameSecond: state.nameSecond,
+      phone: state.phone,
+      userName: state.userName,
+      email: state.email,
+      password: state.password,
+      photoURL: state.userAvatar!.url,
+      birthDate: state.birthDate!,
+      listPermisson: [PermissonList.C],
+      bautizated: state.bautizatedCharacter.toString(),
+      country: state.country!,
+      gender: state.singingCharacter!.index.toString(),
     );
+    final response = await _signUpRepository.register(userData);
 
     if (response.error == null) {
-      _sessionController.setUser(response.user!);
+      _sessionController.setUser(response.user!, userData);
+      log("00");
+      log(response.user!.uid);
     }
     return response;
   }
 
   Future<void> sendRegisterForm(BuildContext context) async {
-    final isValidForm = formKey.currentState!.validate();
+    final isValidForm = formKeyTwo.currentState!.validate();
 
     if (isValidForm) {
       ProgressDialog.show(context);
@@ -213,8 +218,23 @@ class RegisterController extends StateNotifier<RegisterState> {
     state = state.copyWith(singingCharacter: singingCharacter);
   }
 
-  void nextPage() {
-    router.pushNamed(Routes.REGISTER);
+  void nextPage(BuildContext context) {
+    DefaultTabController.of(context)?.animateTo(1);
+  }
+
+  void nextPageSend(BuildContext context) {
+    final isValidForm = formKeyOne.currentState!.validate();
+    if (isValidForm) {
+      DefaultTabController.of(context)?.animateTo(2);
+    }
+  }
+
+  void lastPage(BuildContext context) {
+    DefaultTabController.of(context)?.animateTo(0);
+  }
+
+  void lastPagePersonal(BuildContext context) {
+    DefaultTabController.of(context)?.animateTo(1);
   }
 
   @override

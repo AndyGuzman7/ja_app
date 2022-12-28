@@ -47,16 +47,15 @@ class HomePage extends StatelessWidget {
           child: FutureBuilder(
             future: homeProvider.read.getUser(),
             builder: (context, AsyncSnapshot<UserData?> snapshot) {
+              log(snapshot.hasData.toString());
               if (snapshot.hasData) {
-                String permissonType =
-                    snapshot.data!.listPermisson.contains("A") ? "A" : "F";
                 log(snapshot.data!.listPermisson.first);
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Consumer(
                       builder: (_, watch, __) {
-                        final user = watch.watch(sessionProvider).user!;
+                        final user = snapshot.data;
                         return Container(
                           margin: const EdgeInsets.all(20),
                           padding: const EdgeInsets.all(20),
@@ -77,7 +76,7 @@ class HomePage extends StatelessWidget {
                               ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  "Bienvenido ${user.displayName ?? ''}",
+                                  "Bienvenido ${user!.name}",
                                   style: const TextStyle(color: Colors.white),
                                 ),
                                 subtitle: const Text(

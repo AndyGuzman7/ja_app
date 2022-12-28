@@ -1,19 +1,26 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_meedu/meedu.dart';
 import 'package:ja_app/app/domain/responses/reset_password_response.dart';
 import 'package:ja_app/app/domain/responses/sign_in_response.dart';
 import 'package:ja_app/app/ui/pages/reset_password/controller/reset_password_controller.dart';
 
 import '../../../repositories/user_impl/login_impl/authentication_repository.dart';
+import '../user_repository_impl.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   late final FirebaseAuth _auth;
+  late final FirebaseFirestore _firestore;
+  late final UserRepositoryImpl _userRepository;
   User? _user;
   final Completer<void> _completer = Completer();
 
-  AuthenticationRepositoryImpl(FirebaseAuth auth) {
+  AuthenticationRepositoryImpl(FirebaseAuth auth, FirebaseFirestore firestore) {
     _auth = auth;
+    _firestore = firestore;
+    _userRepository = UserRepositoryImpl(_firestore);
     auth.authStateChanges().listen((User? user) {
       if (user == null) {
         print('User is currently signed outsss!');
@@ -52,9 +59,11 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       final userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       final user = userCredential.user!;
-      return SignInResponse(null, user);
+      final userData = await _userRepository.getUser(user.uid);
+
+      return SignInResponse(null, user, userData);
     } on FirebaseAuthException catch (e) {
-      return SignInResponse(stringToSignInError(e.code), null);
+      return SignInResponse(stringToSignInError(e.code), null, null);
     }
   }
 

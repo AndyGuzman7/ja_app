@@ -112,15 +112,14 @@ class NavigatorDrawer extends StatelessWidget {
 
   builderHeader(BuildContext context) {
     return Consumer(builder: (_, watch, __) {
-      final user = watch.watch(sessionProvider).user!;
+      final user = watch.watch(sessionProvider).userData!;
       return DrawerHeader(
         child: Padding(
           padding: const EdgeInsets.only(top: 20, bottom: 20),
           child: Row(
             children: [
               Container(
-                child: Image.network(
-                    "https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png"),
+                child: Image.network(user.photoURL),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: CustomColorPrimary().materialColor,
@@ -131,11 +130,11 @@ class NavigatorDrawer extends StatelessWidget {
               Expanded(
                 child: ListTile(
                   title: Text(
-                    user.displayName ?? '',
+                    user.name,
                     style: TextStyle(fontSize: 16),
                   ),
                   subtitle: Text(
-                    user.email ?? '',
+                    user.email,
                     style: TextStyle(fontSize: 13),
                   ),
                 ),
