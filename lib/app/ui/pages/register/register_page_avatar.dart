@@ -40,7 +40,7 @@ class _RegisterPageAvatarState extends State<RegisterPageAvatar>
       child: Column(
         children: [
           const CustomTitle2(
-            title: "Hola, Bienvenido",
+            title: "Hola, Bienvenido/a",
             subTitle: "Selecciona un avatar para tu perfil",
             colorSubTitle: Color.fromARGB(255, 117, 117, 117),
           ),
@@ -56,7 +56,7 @@ class _RegisterPageAvatarState extends State<RegisterPageAvatar>
                 mainAxisSpacing: 20,
                 crossAxisSpacing: 20,
                 crossAxisCount: 4,
-                children: buildPhotoItem(list),
+                children: buildPhotoItem(list, widget.providerListener),
               );
             }),
           ),
@@ -91,7 +91,7 @@ class _RegisterPageAvatarState extends State<RegisterPageAvatar>
  * 
  * 
  */
-  void selectUserAvatar(UserAvatar i, List<UserAvatar> list) {
+  void selectUserAvatar(UserAvatar i, List<UserAvatar> list, provider) {
     List<UserAvatar> listNew = [];
     for (var e in list) {
       if (e.isSelect == true && e.name != i.name) {
@@ -103,11 +103,11 @@ class _RegisterPageAvatarState extends State<RegisterPageAvatar>
       UserAvatar f = UserAvatar(e.name, e.url, e.isSelect);
       listNew.add(f);
     }
-    registerProvider.read.onUserAvatarChanged(i);
-    registerProvider.read.onListAvatarChanged(listNew);
+    //provider.read.onUserAvatarChanged(i);
+    provider.read.onListAvatarChanged(listNew);
   }
 
-  List<Widget> buildPhotoItem(List<UserAvatar> list) {
+  List<Widget> buildPhotoItem(List<UserAvatar> list, provider) {
     List<Widget> lisWidgets = [];
     for (UserAvatar item in list) {
       lisWidgets.add(
@@ -120,7 +120,7 @@ class _RegisterPageAvatarState extends State<RegisterPageAvatar>
             ),
           ),
           child: InkWell(
-            onTap: () => selectUserAvatar(item, list),
+            onTap: () => selectUserAvatar(item, list, provider),
             child: Align(
               alignment: Alignment.center,
               child: item.isSelect

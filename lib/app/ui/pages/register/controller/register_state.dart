@@ -24,26 +24,29 @@ class RegisterState {
   final SingingCharacter? singingCharacter;
   final BautizatedCharacter? bautizatedCharacter;
   final Country? country;
+  final String? codeRegister;
 
-  RegisterState(
-      {required this.email,
-      required this.password,
-      required this.vPassword,
-      required this.name,
-      required this.lastName,
-      required this.birthDate,
-      required this.photoURL,
-      required this.photo,
-      required this.userAvatar,
-      required this.listAvatar,
-      required this.termsOk,
-      required this.singingCharacter,
-      required this.country,
-      required this.bautizatedCharacter,
-      required this.nameSecond,
-      required this.lastNameSecond,
-      required this.phone,
-      required this.userName});
+  RegisterState({
+    required this.email,
+    required this.password,
+    required this.vPassword,
+    required this.name,
+    required this.lastName,
+    required this.birthDate,
+    required this.photoURL,
+    required this.photo,
+    required this.userAvatar,
+    required this.listAvatar,
+    required this.termsOk,
+    required this.singingCharacter,
+    required this.country,
+    required this.bautizatedCharacter,
+    required this.nameSecond,
+    required this.lastNameSecond,
+    required this.phone,
+    required this.userName,
+    required this.codeRegister,
+  });
 
   static RegisterState get initialState => RegisterState(
         email: '',
@@ -64,6 +67,7 @@ class RegisterState {
         nameSecond: '',
         lastNameSecond: '',
         userName: '',
+        codeRegister: null,
       );
 
   RegisterState copyWith({
@@ -85,6 +89,7 @@ class RegisterState {
     String? lastNameSecond,
     String? phone,
     String? userName,
+    String? codeRegister,
   }) {
     return RegisterState(
         email: email ?? this.email,
@@ -104,6 +109,7 @@ class RegisterState {
         userName: userName ?? this.userName,
         nameSecond: nameSecond ?? this.nameSecond,
         lastNameSecond: lastNameSecond ?? this.lastNameSecond,
-        phone: phone ?? this.phone);
+        phone: phone ?? this.phone,
+        codeRegister: codeRegister ?? this.codeRegister);
   }
 }

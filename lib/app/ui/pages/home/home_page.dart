@@ -160,6 +160,7 @@ class HomePage extends StatelessWidget {
           )
         ];
         break;
+
       default:
     }
 

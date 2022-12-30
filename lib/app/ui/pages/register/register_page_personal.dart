@@ -95,21 +95,26 @@ class _RegisterPagePersonalState extends State<RegisterPagePersonal>
         }
 
         return GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
-            child: Form(
-              key: controller.formKeyOne,
-              child: ListView(
-                padding: const EdgeInsets.all(15),
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Form(
+            key: controller.formKeyOne,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                //padding: const EdgeInsets.all(15),
                 children: [
                   rowModelLeft(
                     const CustomTitle2(
-                      title: "Hola, Bienvenido de nuevo",
+                      title: "Hola, Bienvenido/a de nuevo",
                       subTitle: "Ingresa tu información personal",
                       colorSubTitle: Color.fromARGB(255, 117, 117, 117),
                     ),
                     Consumer(builder: (_, watch, __) {
                       final s = watch.select(
-                        registerProvider.select((state) => state.userAvatar),
+                        widget.providerListener
+                            .select((state) => state.userAvatar),
                       );
                       return Container(
                           width: 50, height: 50, child: Image.network(s!.url));
@@ -246,6 +251,7 @@ class _RegisterPagePersonalState extends State<RegisterPagePersonal>
                     },
                   ),*/
                   CustomImputField(
+                    inputType: TextInputType.phone,
                     onChanged: controller.onPhoneChanged,
                     icon: const Icon(Icons.phone),
                     label: "+591 67893456 (ejemplo)",
@@ -305,7 +311,9 @@ class _RegisterPagePersonalState extends State<RegisterPagePersonal>
                   )
                 ],
               ),
-            ));
+            ),
+          ),
+        );
       },
     );
   }

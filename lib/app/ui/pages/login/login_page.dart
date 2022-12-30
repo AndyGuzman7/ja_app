@@ -47,14 +47,14 @@ class LoginPage extends StatelessWidget {
                       children: [
                         const CustomTitle2(
                           isBoldTitle: true,
-                          title: 'Hey! Welcome back',
-                          subTitle: 'Sign in to your acount',
+                          title: 'Hola! Bienvenido de nuevo',
+                          subTitle: 'Inicie sesión en su cuenta',
                         ),
                         const SizedBox(
                           height: 20,
                         ),
                         CustomImputField(
-                          label: "email",
+                          label: "correo",
                           icon: const Icon(Icons.email),
                           onChanged: controller.onEmailChanged,
                           inputType: TextInputType.emailAddress,
@@ -63,7 +63,7 @@ class LoginPage extends StatelessWidget {
                               return null;
                             }
 
-                            return "Invalid email";
+                            return "Email Invalido";
                           },
                         ),
                         /*CustomImputDatePicker(
@@ -78,7 +78,7 @@ class LoginPage extends StatelessWidget {
                         ),
                         CustomImputField(
                           icon: Icon(Icons.security_outlined),
-                          label: "Password",
+                          label: "Contraseña",
                           onChanged: controller.onPasswordChanged,
                           isPassword: true,
                           validator: (text) {
@@ -86,7 +86,7 @@ class LoginPage extends StatelessWidget {
                               return null;
                             }
 
-                            return "Invalid password";
+                            return "Contraseña invalida";
                           },
                         ),
                         Row(
@@ -95,7 +95,7 @@ class LoginPage extends StatelessWidget {
                             TextButton(
                               onPressed: () =>
                                   router.pushNamed(Routes.RESET_PASSWORD),
-                              child: const Text("Forgot Password?"),
+                              child: const Text("Olvido su contraseña?"),
                             ),
                             const SizedBox(
                               width: 10,
@@ -106,17 +106,17 @@ class LoginPage extends StatelessWidget {
                           height: 20,
                         ),
                         CustomButton(
-                          textButton: 'Sign in',
+                          textButton: 'Iniciar Sesión',
                           onPressed: () => sendLoginForm(context),
                         ),
                         const SizedBox(
                           height: 50,
                         ),
                         const Text(
-                          'Don´t have an account?',
+                          'No tengo una cuenta?',
                         ),
                         CustomTextButton(
-                          text: 'Sign Up',
+                          text: 'Registrarse',
                           onPressed: () {
                             router.pushNamed(Routes.REGISTER);
                           },

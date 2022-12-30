@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -36,6 +38,8 @@ class _CustomImputFieldState extends State<CustomImputField> {
 
   @override
   Widget build(BuildContext context) {
+    log("asdasd");
+    log(widget.label);
     return FormField<String>(
         validator: widget.validator,
         initialValue: '',
@@ -98,6 +102,7 @@ class _CustomImputFieldState extends State<CustomImputField> {
                     onChanged: (text) {
                       if (widget.validator != null) {
                         // ignore: invalid_use_of_protected_member
+                        text = text.replaceAll(" ", "");
                         state.setValue(text);
                         state.validate();
                       }

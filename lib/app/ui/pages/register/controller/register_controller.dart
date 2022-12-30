@@ -21,6 +21,8 @@ import 'package:ja_app/app/ui/pages/register/controller/register_state.dart';
 import 'package:ja_app/app/ui/pages/register/utils/permisson_list.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
 
+import '../../../../data/repositories/church_impl/church_repository.dart';
+import '../../../../data/repositories_impl/church/church_repository_impl.dart';
 import '../register_page_avatar.dart';
 
 class RegisterController extends StateNotifier<RegisterState> {
@@ -36,6 +38,7 @@ class RegisterController extends StateNotifier<RegisterState> {
   final _signUpRepository = Get.find<SignUpRepository>();
 
   final _resourcesRepository = Get.find<ResourcesRepository>();
+  final _church = Get.find<ChurchRepository>();
 
   List<UserAvatar> listAvatar = [];
 
@@ -52,7 +55,7 @@ class RegisterController extends StateNotifier<RegisterState> {
           ".png?alt=media&token=08b2edd7-f904-4d61-b59f-97520e4000b3";
       var user = UserAvatar(name, newUrl, i == 0 ? true : false);
 
-      if (user.isSelect == true) onUserAvatarChanged(user);
+      //if (user.isSelect == true) onUserAvatarChanged(user);
       listAvatar.add(user);
     }
 
@@ -76,7 +79,8 @@ class RegisterController extends StateNotifier<RegisterState> {
       country: state.country!,
       gender: state.singingCharacter!.index.toString(),
     );
-    final response = await _signUpRepository.register(userData);
+    final response =
+        await _signUpRepository.register(userData, state.codeRegister!);
 
     if (response.error == null) {
       _sessionController.setUser(response.user!, userData);
@@ -218,8 +222,17 @@ class RegisterController extends StateNotifier<RegisterState> {
     state = state.copyWith(singingCharacter: singingCharacter);
   }
 
+  void onCodeRegisterChanged(String codeRegister) {
+    state = state.copyWith(codeRegister: codeRegister);
+  }
+
   void nextPage(BuildContext context) {
-    DefaultTabController.of(context)?.animateTo(1);
+    /*onUserAvatarChanged(
+        state.listAvatar!.firstWhere((element) => element.isSelect == true));
+    DefaultTabController.of(context)?.animateTo(1);*/
+
+    _church.registerMemberChurch(
+        "wJM5lbqzjmOvsXFe3fap", "wJM5lbqzjmOvsXFe3fap");
   }
 
   void nextPageSend(BuildContext context) {

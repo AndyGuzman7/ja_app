@@ -14,6 +14,9 @@ import 'package:ja_app/app/data/repositories/resources_impl/resources_repository
 import 'package:ja_app/app/data/repositories/user_impl/register_impl/sign_up_repository.dart';
 import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
 
+import 'data/repositories/church_impl/church_repository.dart';
+import 'data/repositories_impl/church/church_repository_impl.dart';
+
 void injectDependencies() {
   Get.lazyPut<AuthenticationRepository>(
     () => AuthenticationRepositoryImpl(
@@ -35,4 +38,6 @@ void injectDependencies() {
 
   Get.lazyPut<ResourcesRepository>(
       () => ResourcesRepositoryImpl(FirebaseFirestore.instance));
+  Get.lazyPut<ChurchRepository>(
+      () => ChurchRepositoryImpl(FirebaseFirestore.instance));
 }
