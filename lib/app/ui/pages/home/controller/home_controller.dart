@@ -6,24 +6,28 @@ import 'package:ja_app/app/data/repositories/user_impl/login_impl/authentication
 import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
+import 'package:ja_app/app/ui/pages/navigator_botton/navigator_botton.dart';
 
-class HomeController extends SimpleNotifier {
+import 'home_state.dart';
+
+class HomeController extends StateNotifier<HomeState> {
   final userRepository = Get.find<UserRepository>();
   final SessionController sessionController;
 
-  HomeController(this.sessionController) {}
+  HomeController(this.sessionController) : super(HomeState.initialState) {}
 
   Future<UserData?> getUser() async {
     UserData? data;
-    //try {
-    log(sessionController.user!.uid.toString());
-    data = await userRepository.getUser(sessionController.user!.uid);
-    log("adadaddasdasd");
-    log(data.toString());
-    return data!;
-    //} catch (e) {
-    //  return null;
-    //}
+    try {
+      data = await userRepository.getUser(sessionController.user!.uid);
+      return data!;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  void onChangedUser(UserData user) {
+    state = state.copyWith(user: user);
   }
 
   @override

@@ -17,7 +17,7 @@ import '../pages/splash/splash_page.dart';
 Map<String, Widget Function(BuildContext)> get appRoutes => {
       Routes.SPLASH: (_) => const SplashPage(),
       Routes.LOGIN: (_) => LoginPage(),
-      Routes.HOME: (_) => const HomePage(),
+      Routes.HOME: (_) => HomePage(),
       Routes.REGISTER: (_) => RegisterPage(),
       Routes.RESET_PASSWORD: (_) => ResetPasswordPage(),
       Routes.LIST_ESTUDENTS: (_) => StudentsListPage(),

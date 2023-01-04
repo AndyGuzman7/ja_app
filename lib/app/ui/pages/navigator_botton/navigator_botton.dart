@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+/*
 //class needs to extend StatefulWidget since we need to make changes to the bottom app bar according to the user clicks
 class Home extends StatefulWidget {
   @override
@@ -142,3 +142,4 @@ class HomeState extends State<Home> {
     );
   }
 }
+*/
