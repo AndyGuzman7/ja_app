@@ -134,16 +134,6 @@ class _RegisterPageUserState extends State<RegisterPageUser>
                       );
                     },
                   ),
-                  CustomImputField(
-                    icon: const Icon(Icons.code),
-                    label: "Codigo de registro (en caso de tener uno)",
-                    validator: (text) {
-                      if (text != "") {
-                        text = text!.replaceAll(" ", "");
-                        return null;
-                      }
-                    },
-                  ),
                   const SizedBox(
                     height: 10,
                   ),

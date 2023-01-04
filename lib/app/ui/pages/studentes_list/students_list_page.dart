@@ -1,12 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
+import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
+import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_button.dart';
+import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
 import 'package:ja_app/app/ui/pages/studentes_list/controller/students_list_controller.dart';
 import 'package:ja_app/app/ui/pages/studentes_list/widgets/item_header.dart';
 import 'package:ja_app/app/ui/pages/studentes_list/widgets/item_member.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
+
+import '../../routes/routes.dart';
 
 final studentListProvider = SimpleProvider(
   (_) => StudentsListController(sessionProvider.read),
@@ -21,7 +26,6 @@ class StudentsListPage extends StatelessWidget {
       backgroundColor: Color.fromARGB(255, 246, 246, 246),
       appBar: AppBar(
         elevation: 0,
-        title: const Text("Members"),
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -35,28 +39,36 @@ class StudentsListPage extends StatelessWidget {
               if (snapshot.hasData) {
                 return Column(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 20, right: 0, top: 20),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding:
-                                EdgeInsets.only(left: 0, right: 0, top: 20),
-                            child: CupertinoButton(
-                              child: const Text("Sign out"),
-                              onPressed: () async {},
-                              color: CustomColorPrimary().materialColor,
+                    Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: CustomTitle2(
+                                title: "Miembros",
+                                subTitle: "Usuarios registrados en el sistema",
+                                colorSubTitle: Colors.black54,
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  EdgeInsets.only(left: 20, right: 20, top: 20),
-                              child: ItemHeader(),
-                            ),
-                          ),
-                        ],
+                            CustomButton(
+                              icon: Icon(
+                                Icons.person_add,
+                                color: CustomColorPrimary().materialColor,
+                                size: 25,
+                              ),
+                              colorBorderButton:
+                                  CustomColorPrimary().materialColor,
+                              width: 60,
+                              height: 48,
+                              colorButton: Colors.white,
+                              onPressed: () {
+                                router.pushNamed(Routes.REGISTER);
+                              },
+                            )
+                          ],
+                        ),
                       ),
                     ),
                     Expanded(

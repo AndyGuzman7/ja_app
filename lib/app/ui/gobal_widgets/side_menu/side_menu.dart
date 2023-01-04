@@ -157,6 +157,13 @@ class NavigatorDrawer extends StatelessWidget {
               () {},
               icon: Icon(Icons.person_outline_rounded),
             ),
+            itemButton(
+              'Mi Iglesia',
+              () {
+                router.pushNamed(Routes.CHURCH);
+              },
+              icon: Icon(Icons.other_houses_outlined),
+            ),
             const Text('Activities'),
             itemButtonChilds(
               'Projects',

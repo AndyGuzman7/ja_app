@@ -35,11 +35,13 @@ class CustomTitle2 extends StatelessWidget {
   final bool? isBoldTitle;
   final Color colorTitle;
   final Color colorSubTitle;
+  final double? fontSize;
 
   final TextAlign textAlignTitle;
   final TextAlign textAlignSubTitle;
   const CustomTitle2(
       {Key? key,
+      this.fontSize,
       required this.title,
       this.isBoldTitle = false,
       this.subTitle,
@@ -52,13 +54,14 @@ class CustomTitle2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      isThreeLine: false,
       contentPadding:
           const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
       title: Text(
         title,
         textAlign: textAlignTitle,
         style: TextStyle(
-          fontSize: 20,
+          fontSize: fontSize ?? 20,
           color: colorTitle,
           fontWeight: isBoldTitle! ? FontWeight.bold : null,
         ),

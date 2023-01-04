@@ -50,6 +50,7 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
+              title: Text("Registro"),
               elevation: 0,
               bottom: const PreferredSize(
                 preferredSize: Size.fromHeight(40),
@@ -79,5 +80,10 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

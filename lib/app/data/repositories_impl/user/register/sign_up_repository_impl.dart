@@ -17,7 +17,7 @@ class SignUpRepositoryImpl extends SignUpRepository {
     _churchRepositoryImpl = ChurchRepositoryImpl(_firestore);
   }
   @override
-  Future<SignUpResponse> register(UserData data, String? codeRegister) async {
+  Future<SignUpResponse> register(UserData data) async {
     try {
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
@@ -30,10 +30,6 @@ class SignUpRepositoryImpl extends SignUpRepository {
       await user!.reload();
 
       user = _auth.currentUser;
-
-      if (codeRegister != null) {
-        //_churchRepositoryImpl.registerMemberChurch(data.id, )
-      }
 
       if (userCredential != null) {
         data.id = user!.uid;

@@ -75,6 +75,6 @@ class UserData {
         'gender': gender,
         'country': country.toJson(),
         'bautizated': bautizated,
-        'phone': phone
+        'phone': phone,
       };
 }

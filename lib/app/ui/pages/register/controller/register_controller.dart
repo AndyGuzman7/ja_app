@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -6,14 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/domain/models/country.dart';
-import 'package:ja_app/app/domain/models/user_data.dart';
-import 'package:ja_app/app/domain/models/resources.dart';
-import 'package:ja_app/app/data/repositories/user_impl/login_impl/authentication_repository.dart';
-import 'package:ja_app/app/data/repositories/resources_impl/resources_repository.dart';
-import 'package:ja_app/app/data/repositories/user_impl/register_impl/sign_up_repository.dart';
 import 'package:ja_app/app/domain/models/userAvatar.dart';
+import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/domain/responses/sign_up_response.dart';
-import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/dialogs.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/progress_dialog.dart';
 import 'package:ja_app/app/ui/gobal_widgets/drop_dow/custom_dropDownButton%20copy.dart';
@@ -22,8 +16,9 @@ import 'package:ja_app/app/ui/pages/register/utils/permisson_list.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
 
 import '../../../../data/repositories/church_impl/church_repository.dart';
-import '../../../../data/repositories_impl/church/church_repository_impl.dart';
-import '../register_page_avatar.dart';
+import '../../../../data/repositories/resources_impl/resources_repository.dart';
+import '../../../../data/repositories/user_impl/register_impl/sign_up_repository.dart';
+import '../../../global_controllers/session_controller.dart';
 
 class RegisterController extends StateNotifier<RegisterState> {
   final SessionController _sessionController;
@@ -79,24 +74,22 @@ class RegisterController extends StateNotifier<RegisterState> {
       country: state.country!,
       gender: state.singingCharacter!.index.toString(),
     );
-    final response =
-        await _signUpRepository.register(userData, state.codeRegister!);
-
-    if (response.error == null) {
-      _sessionController.setUser(response.user!, userData);
-      log("00");
-      log(response.user!.uid);
+    final response = await _signUpRepository.register(userData);
+    if (response.error == null && _sessionController.user == null) {
+      // _sessionController.setUser(response.user!, response.signUpData!);
     }
     return response;
   }
 
   Future<void> sendRegisterForm(BuildContext context) async {
+    FocusScope.of(context).unfocus();
     final isValidForm = formKeyTwo.currentState!.validate();
 
     if (isValidForm) {
       ProgressDialog.show(context);
       final response = await submit();
       router.pop();
+
       if (response.error != null) {
         late String content;
 
@@ -121,7 +114,12 @@ class RegisterController extends StateNotifier<RegisterState> {
         }
         Dialogs.alert(context, title: "ERROR", content: content);
       } else {
-        router.pushNamedAndRemoveUntil(Routes.HOME);
+        if (_sessionController.user != null) {
+          closePage(context);
+        } else {
+          _sessionController.setUser(response.user!, response.signUpData!);
+          router.pushNamedAndRemoveUntil(Routes.HOME);
+        }
       }
     } else {
       Dialogs.alert(context, title: "ERROR", content: "Invalid fields");
@@ -223,16 +221,16 @@ class RegisterController extends StateNotifier<RegisterState> {
   }
 
   void onCodeRegisterChanged(String codeRegister) {
-    state = state.copyWith(codeRegister: codeRegister);
+    state =
+        state.copyWith(codeRegister: codeRegister == "" ? null : codeRegister);
   }
 
   void nextPage(BuildContext context) {
-    /*onUserAvatarChanged(
+    onUserAvatarChanged(
         state.listAvatar!.firstWhere((element) => element.isSelect == true));
-    DefaultTabController.of(context)?.animateTo(1);*/
+    DefaultTabController.of(context)?.animateTo(1);
 
-    _church.registerMemberChurch(
-        "wJM5lbqzjmOvsXFe3fap", "wJM5lbqzjmOvsXFe3fap");
+    // _church.registerMemberChurchCodeAcess("wJM5lbqzjmOvsXFe3fap", "asdf125ZX");
   }
 
   void nextPageSend(BuildContext context) {
@@ -246,13 +244,16 @@ class RegisterController extends StateNotifier<RegisterState> {
     DefaultTabController.of(context)?.animateTo(0);
   }
 
+  void closePage(BuildContext context) {
+    Navigator.pop(context);
+  }
+
   void lastPagePersonal(BuildContext context) {
     DefaultTabController.of(context)?.animateTo(1);
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 }

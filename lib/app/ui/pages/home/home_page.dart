@@ -8,10 +8,13 @@ import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/data/repositories/user_impl/login_impl/authentication_repository.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
+import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_button.dart';
 import 'package:ja_app/app/ui/gobal_widgets/side_menu/side_menu.dart';
+import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
 import 'package:ja_app/app/ui/pages/home/controller/home_controller.dart';
 import 'package:ja_app/app/ui/pages/home/widgets/item_button.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
+import 'package:ja_app/app/utils/MyColors.dart';
 
 final homeProvider = SimpleProvider(
   (_) => HomeController(sessionProvider.read),
@@ -19,20 +22,51 @@ final homeProvider = SimpleProvider(
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
+  void displayBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (ctx) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.4,
+            child: Center(
+              child: Text("Welcome to AndroidVille!"),
+            ),
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
     /*ProviderListener<HomeController>(provider: homeProvider, builder: (_, controller){
       return
     })*/
+    PopupMenuItem _buildPopupMenuItem(String title) {
+      return PopupMenuItem(
+        child: Text(title),
+      );
+    }
 
     List<Widget> listWidgets = [];
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => displayBottomSheet(context),
+        child: Icon(Icons.add),
+      ),
       drawer: NavigatorDrawer(),
       appBar: AppBar(
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (ctx) => [
+              _buildPopupMenuItem('Search'),
+              _buildPopupMenuItem('Upload'),
+              _buildPopupMenuItem('Copy'),
+              _buildPopupMenuItem('Exit'),
+            ],
+          )
+        ],
         iconTheme: IconThemeData(color: Color.fromARGB(255, 0, 0, 0)),
         title: const Text(
-          "Home",
+          "Inicio",
           style: TextStyle(color: Colors.black),
           textAlign: TextAlign.center,
         ),
@@ -47,55 +81,122 @@ class HomePage extends StatelessWidget {
           child: FutureBuilder(
             future: homeProvider.read.getUser(),
             builder: (context, AsyncSnapshot<UserData?> snapshot) {
-              log(snapshot.hasData.toString());
               if (snapshot.hasData) {
-                log(snapshot.data!.listPermisson.first);
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Consumer(
                       builder: (_, watch, __) {
                         final user = snapshot.data;
+
                         return Container(
                           margin: const EdgeInsets.all(20),
-                          padding: const EdgeInsets.all(20),
                           decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(15),
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            image: DecorationImage(
+                              fit: BoxFit.fitWidth,
+                              image: NetworkImage(
+                                  "https://firebasestorage.googleapis.com/v0/b/ja-app-6430b.appspot.com/o/images-resources%2FlogoJA3.png?alt=media&token=e3eb6050-1f41-4260-a468-073116f2c10b"),
                             ),
-                            gradient: LinearGradient(
-                              colors: [
-                                Color.fromARGB(255, 102, 133, 230),
-                                Color.fromARGB(255, 127, 159, 229)
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                              //https://firebasestorage.googleapis.com/v0/b/ja-app-6430b.appspot.com/o/images-resources%2FlogoJA3.png?alt=media&token=e3eb6050-1f41-4260-a468-073116f2c10b
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color.fromARGB(255, 102, 134, 230),
+                                  Color.fromARGB(229, 102, 134, 230),
+                                  Color.fromARGB(255, 127, 159, 229)
+                                      .withOpacity(0.5),
+                                ],
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: ListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        title: Text(
+                                          "Bienvenid" +
+                                              (user!.gender == "0"
+                                                  ? "o"
+                                                  : "a") +
+                                              " ${user.name}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: Colors.white),
+                                        ),
+                                        subtitle: const Text(
+                                          "Que Dios te bendiga",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    /*Container(
+                                        width: 90,
+                                        child: Text(
+                                          "JApk",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20),
+                                        )
+                                        /*Image.network(
+                                          "https://firebasestorage.googleapis.com/v0/b/ja-app-6430b.appspot.com/o/images-resources%2FlogoJA1.png?alt=media&token=b8ce0ae4-c814-41ee-8aa9-1f1d8b87a981"),
+                                    */
+                                        )*/
+                                  ],
+                                ),
+                                CustomButton(
+                                  width: 100,
+                                  colorTextButton: CustomColorPrimary()
+                                      .materialColor
+                                      .shade100,
+                                  onPressed: (() {}),
+                                  colorButton: Colors.white,
+                                  textButton: "Mi perfil",
+                                  height: 20,
+                                )
                               ],
                             ),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  "Bienvenido ${user!.name}",
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                                subtitle: const Text(
-                                  "Que Dios te bendiga",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                              CupertinoButton(
-                                  color: Colors.white,
-                                  child: const Text(
-                                    "View perfil",
-                                    style: TextStyle(
-                                        color: Color.fromARGB(255, 13, 43, 68)),
-                                  ),
-                                  onPressed: () {})
-                            ],
-                          ),
                         );
                       },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text(
+                            "Tus funciones",
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Colors.black),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(
+                            Icons.phone_iphone_outlined,
+                            color: CustomColorPrimary().materialColor.shade100,
+                          )
+                        ],
+                      ),
                     ),
                     Flexible(
                       flex: 2,
@@ -109,15 +210,6 @@ class HomePage extends StatelessWidget {
                             getItemButtons(searchPermisson(snapshot.data!)),
                       ),
                     ),
-                    const Text("Home page"),
-                    CupertinoButton(
-                      child: const Text("Sign out"),
-                      onPressed: () async {
-                        await sessionProvider.read.signOut();
-                        router.pushNamedAndRemoveUntil(Routes.LOGIN);
-                      },
-                      color: Colors.blue,
-                    )
                   ],
                 );
               } else {
@@ -157,6 +249,41 @@ class HomePage extends StatelessWidget {
               Icons.school,
               color: Colors.blue,
             ),
+          ),
+          const ItemButton(
+            textTitle: "Noticias",
+            pageRoute: Routes.LIST_ESTUDENTS,
+            textSubTitle: '5 registrados',
+            iconButtonItem: Icon(Icons.supervised_user_circle),
+          ),
+          const ItemButton(
+            textTitle: "Calendario",
+            pageRoute: Routes.EESS,
+            textSubTitle: 'Escuela sábatica',
+            iconButtonItem: Icon(
+              Icons.school,
+              color: Colors.blue,
+            ),
+          )
+        ];
+        break;
+
+      case "C":
+        list = [
+          const ItemButton(
+            textTitle: "Noticias",
+            pageRoute: Routes.LIST_ESTUDENTS,
+            textSubTitle: '5 registrados',
+            iconButtonItem: Icon(Icons.supervised_user_circle),
+          ),
+          const ItemButton(
+            textTitle: "Calendario",
+            pageRoute: Routes.EESS,
+            textSubTitle: 'Escuela sábatica',
+            iconButtonItem: Icon(
+              Icons.school,
+              color: Colors.blue,
+            ),
           )
         ];
         break;
@@ -173,7 +300,7 @@ class HomePage extends StatelessWidget {
     permissonType =
         signUpData.listPermisson.contains("B") ? "B" : permissonType;
     permissonType =
-        signUpData.listPermisson.contains("c") ? "B" : permissonType;
+        signUpData.listPermisson.contains("C") ? "C" : permissonType;
 
     return permissonType;
   }

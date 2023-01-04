@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 class CustomParagraph extends StatelessWidget {
   final String paragraph;
   final EdgeInsets padding;
-  const CustomParagraph(
-      {Key? key, required this.paragraph, this.padding = EdgeInsets.zero})
-      : super(key: key);
+  final Color? colorText;
+  const CustomParagraph({
+    Key? key,
+    required this.paragraph,
+    this.padding = EdgeInsets.zero,
+    this.colorText,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,7 @@ class CustomParagraph extends StatelessWidget {
       child: Text(
         paragraph,
         textAlign: TextAlign.justify,
-        style: const TextStyle(color: Colors.black54, fontSize: 15),
+        style: TextStyle(color: colorText ?? Colors.black54, fontSize: 15),
       ),
     );
   }

@@ -27,7 +27,11 @@ class ItemMember extends StatelessWidget {
                 ),
                 width: 60,
                 height: 60,
-                child: Container(),
+                child: Container(
+                  child: CircleAvatar(
+                    child: Image.network(user.photoURL),
+                  ),
+                ),
               ),
             ),
             Column(

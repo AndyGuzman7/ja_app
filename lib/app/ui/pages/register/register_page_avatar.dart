@@ -30,6 +30,21 @@ class _RegisterPageAvatarState extends State<RegisterPageAvatar>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    Row rowModel(widgetOne, widgetTwo) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: widgetOne,
+          ),
+          const SizedBox(
+            width: 15,
+          ),
+          Expanded(child: widgetTwo),
+        ],
+      );
+    }
+
     log("nuevamente");
     widget.providerListener.read.getAvatar();
     return Container(
@@ -60,11 +75,19 @@ class _RegisterPageAvatarState extends State<RegisterPageAvatar>
               );
             }),
           ),
-          CustomButton(
-            height: 48,
-            textButton: 'Siguiente',
-            onPressed: () => widget.providerListener.read.nextPage(context),
-          )
+          rowModel(
+              CustomButton(
+                height: 48,
+                colorButton: Color.fromARGB(255, 188, 188, 188),
+                textButton: 'Cancelar',
+                onPressed: () =>
+                    widget.providerListener.read.closePage(context),
+              ),
+              CustomButton(
+                height: 48,
+                textButton: 'Siguiente',
+                onPressed: () => widget.providerListener.read.nextPage(context),
+              ))
         ],
       ),
     );
