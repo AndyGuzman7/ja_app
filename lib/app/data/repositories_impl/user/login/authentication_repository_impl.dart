@@ -21,14 +21,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     _auth = auth;
     _firestore = firestore;
     _userRepository = UserRepositoryImpl(_firestore);
-    auth.authStateChanges().listen((User? user) {
-      if (user == null) {
-        print('User is currently signed outsss!');
-      } else {
-        print('User is signed in!');
-      }
-    });
-    print("fuego");
+
     _init();
   }
   @override

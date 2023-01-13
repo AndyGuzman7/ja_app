@@ -13,8 +13,10 @@ import 'package:ja_app/app/ui/gobal_widgets/side_menu/side_menu.dart';
 import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
 import 'package:ja_app/app/ui/pages/home/controller/home_controller.dart';
 import 'package:ja_app/app/ui/pages/home/controller/home_state.dart';
+import 'package:ja_app/app/ui/pages/home/widgets/calendar_page_home.dart';
 import 'package:ja_app/app/ui/pages/home/widgets/item_button.dart';
 import 'package:ja_app/app/ui/pages/home/widgets/main_page_home.dart';
+import 'package:ja_app/app/ui/pages/home/widgets/noticies_page_home.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
 
@@ -23,11 +25,13 @@ final homeProvider = StateProvider<HomeController, HomeState>(
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
-  int currentTab = 0;
+//int currentTab = 0;
   final List<Widget> listWidgets = [
     MainPageHome(
       provider: homeProvider,
-    )
+    ),
+    NoticiesPageHome(),
+    CalendarPageHome()
   ];
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen = MainPageHome(
@@ -65,119 +69,133 @@ class HomePage extends StatelessWidget {
                     )
                   ],
                   iconTheme: IconThemeData(color: Color.fromARGB(255, 0, 0, 0)),
-                  title: const Text(
-                    "Inicio",
-                    style: TextStyle(color: Colors.black),
-                    textAlign: TextAlign.center,
-                  ),
+                  title: Consumer(builder: (_, watch, __) {
+                    final s = watch.select(
+                      homeProvider.select((state) => state.title),
+                    );
+                    return Text(
+                      s,
+                      style: TextStyle(color: Colors.black),
+                      textAlign: TextAlign.center,
+                    );
+                  }),
                   backgroundColor: Colors.transparent,
                   elevation: 0,
                 ),
-                body: PageStorage(
-                  bucket: bucket,
-                  child: currentScreen,
-                ),
+                body: Consumer(builder: (_, watch, __) {
+                  final s = watch.select(
+                    homeProvider.select((state) => state.currentTab),
+                  );
+                  return PageStorage(
+                    bucket: bucket,
+                    child: currentScreen,
+                  );
+                }),
                 /*floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {},
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,*/
                 bottomNavigationBar: BottomAppBar(
-                  child: Container(
-                    height: 60,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        MaterialButton(
-                          minWidth: 40,
-                          onPressed: () {
-                            currentScreen = MainPageHome(
-                              provider: homeProvider,
-                            );
-                            currentTab = 0;
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.home,
-                                color: currentTab == 0
-                                    ? CustomColorPrimary().materialColor
-                                    : Colors.grey,
-                              ),
-                              Text(
-                                "Inicio",
-                                style: TextStyle(
-                                    color: currentTab == 0
-                                        ? CustomColorPrimary().materialColor
-                                        : Colors.grey),
-                              )
-                            ],
+                  child: Consumer(builder: (_, watch, __) {
+                    final s = watch.select(
+                      homeProvider.select((state) => state.currentTab),
+                    );
+                    return Container(
+                      height: 60,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          MaterialButton(
+                            minWidth: 40,
+                            onPressed: () {
+                              currentScreen = MainPageHome(
+                                provider: homeProvider,
+                              );
+                              homeProvider.read.onChangedCurrentTab(0);
+                              homeProvider.read.onChangedTitle("Inicio");
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.home,
+                                  color: s == 0
+                                      ? CustomColorPrimary().materialColor
+                                      : Colors.grey,
+                                ),
+                                Text(
+                                  "Inicio",
+                                  style: TextStyle(
+                                      color: s == 0
+                                          ? CustomColorPrimary().materialColor
+                                          : Colors.grey),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                        MaterialButton(
-                          minWidth: 40,
-                          onPressed: () {
-                            currentScreen = MainPageHome(
-                              provider: homeProvider,
-                            );
-                            currentTab = 0;
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.calendar_month,
-                                color: currentTab == 1
-                                    ? CustomColorPrimary().materialColor
-                                    : Colors.grey,
-                              ),
-                              Text(
-                                "Calendario",
-                                style: TextStyle(
-                                    color: currentTab == 1
-                                        ? CustomColorPrimary().materialColor
-                                        : Colors.grey),
-                              )
-                            ],
+                          MaterialButton(
+                            minWidth: 40,
+                            onPressed: () {
+                              currentScreen = CalendarPageHome();
+                              homeProvider.read.onChangedCurrentTab(1);
+                              homeProvider.read.onChangedTitle("Calendario");
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.calendar_month,
+                                  color: s == 1
+                                      ? CustomColorPrimary().materialColor
+                                      : Colors.grey,
+                                ),
+                                Text(
+                                  "Calendario",
+                                  style: TextStyle(
+                                      color: s == 1
+                                          ? CustomColorPrimary().materialColor
+                                          : Colors.grey),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                        MaterialButton(
-                          minWidth: 40,
-                          onPressed: () {
-                            currentScreen = MainPageHome(
-                              provider: homeProvider,
-                            );
-                            currentTab = 0;
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.notifications_none,
-                                color: currentTab == 2
-                                    ? CustomColorPrimary().materialColor
-                                    : Colors.grey,
-                              ),
-                              Text(
-                                "Noticias",
-                                style: TextStyle(
-                                    color: currentTab == 2
-                                        ? CustomColorPrimary().materialColor
-                                        : Colors.grey),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                          MaterialButton(
+                            minWidth: 40,
+                            onPressed: () {
+                              currentScreen = NoticiesPageHome();
+                              homeProvider.read.onChangedCurrentTab(2);
+                              homeProvider.read.onChangedTitle("Noticias");
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.notifications_none,
+                                  color: s == 2
+                                      ? CustomColorPrimary().materialColor
+                                      : Colors.grey,
+                                ),
+                                Text(
+                                  "Noticias",
+                                  style: TextStyle(
+                                      color: s == 2
+                                          ? CustomColorPrimary().materialColor
+                                          : Colors.grey),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  }),
                   notchMargin: 10,
                   shape: CircularNotchedRectangle(),
                 ),

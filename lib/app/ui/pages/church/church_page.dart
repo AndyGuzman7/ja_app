@@ -113,10 +113,10 @@ class ChurchPage extends StatelessWidget {
         iconTheme: IconThemeData(color: Color.fromARGB(255, 0, 0, 0)),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        /*title: Text(
+        title: Text(
           "Mi Iglesia",
-          style: TextStyle(color: CustomColorPrimary().materialColor),
-        ),*/
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: Container(
         width: double.infinity,
@@ -129,6 +129,7 @@ class ChurchPage extends StatelessWidget {
                 final isSuscribe = watch.select(
                   churchProvider.select((state) => state.isSuscribe),
                 );
+
                 if (isSuscribe) {
                   final Church? church = churchProvider.read.state.church;
                   return Column(
@@ -271,38 +272,43 @@ class ChurchPage extends StatelessWidget {
                     ],
                   );
                 } else {
-                  return Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.church_outlined,
-                          color: Color.fromARGB(255, 125, 125, 125),
-                          size: 30,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        const Text(
-                          "No esta registrado/a en ninguna iglesia",
-                          style: TextStyle(
+                  return Container(
+                    padding: EdgeInsets.all(15),
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.church_outlined,
                             color: Color.fromARGB(255, 125, 125, 125),
+                            size: 30,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        CustomButton(
-                          onPressed: () {
-                            showAlertDialog(context, "Registro en una Iglesia",
-                                "Introduce el codigo de registro");
-                          },
-                          textButton: "Registrarse",
-                          height: 48,
-                          colorButton: Color.fromARGB(255, 175, 175, 175),
-                        )
-                      ],
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          const Text(
+                            "No esta registrado/a en ninguna iglesia",
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 125, 125, 125),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          CustomButton(
+                            onPressed: () {
+                              showAlertDialog(
+                                  context,
+                                  "Registro en una Iglesia",
+                                  "Introduce el codigo de registro");
+                            },
+                            textButton: "Registrarse",
+                            height: 48,
+                            colorButton: Color.fromARGB(255, 175, 175, 175),
+                          )
+                        ],
+                      ),
                     ),
                   );
                 }

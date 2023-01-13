@@ -157,19 +157,30 @@ class NavigatorDrawer extends StatelessWidget {
               () {},
               icon: Icon(Icons.person_outline_rounded),
             ),
-            itemButton(
-              'Mi Iglesia',
-              () {
-                router.pushNamed(Routes.CHURCH);
-              },
-              icon: Icon(Icons.other_houses_outlined),
-            ),
-            const Text('Activities'),
             itemButtonChilds(
-              'Projects',
+              'Mi iglesia',
               [
                 itemChild(
-                  'Mana project',
+                  'Iglesia',
+                  () {
+                    router.pushNamed(Routes.CHURCH);
+                  },
+                ),
+                itemChild(
+                  'Escuela sábatica',
+                  () {
+                    router.pushNamed(Routes.EESS);
+                  },
+                ),
+              ],
+              const Icon(Icons.other_houses_outlined),
+            ),
+            const Text('Actividades'),
+            itemButtonChilds(
+              'Proyectos',
+              [
+                itemChild(
+                  'Proyecto Maná',
                   () {
                     router.pushNamed(Routes.PROJECTS);
                   },
@@ -178,18 +189,18 @@ class NavigatorDrawer extends StatelessWidget {
               const Icon(Icons.spoke_outlined),
             ),
             itemButton(
-              'Events',
+              'Eventos',
               () {},
               icon: Icon(Icons.event_outlined),
             ),
             Divider(),
             itemButton(
-              'Resources',
+              'Recursos',
               () {},
               icon: Icon(Icons.folder_outlined),
             ),
             itemButton(
-              'Settings',
+              'Configuración',
               () {},
               icon: Icon(Icons.settings_outlined),
             ),

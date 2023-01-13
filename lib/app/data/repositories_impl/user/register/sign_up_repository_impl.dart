@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:ja_app/app/data/repositories_impl/church/church_repository_impl.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/data/repositories/user_impl/register_impl/sign_up_repository.dart';
@@ -54,6 +55,6 @@ class SignUpRepositoryImpl extends SignUpRepository {
   }
 
   Future<DocumentSnapshot> getUserFromDB(String userId) async {
-    return FirebaseFirestore.instance.collection("users").doc(userId).get();
+    return _firestore.collection("users").doc(userId).get();
   }
 }

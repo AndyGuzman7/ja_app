@@ -6,4 +6,5 @@ abstract class ChurchRepository {
   Future<bool> registerMemberChurchCodeAcess(String idMember, String code);
   Future<Church?> isExistChurchCodeAccess(String code);
   Future<Church?> isExistChurchSuscripcion(String id);
+  Future<Church?> getChurchWitdhIdMember(String id);
 }

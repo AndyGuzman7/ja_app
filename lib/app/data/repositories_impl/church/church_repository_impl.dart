@@ -82,4 +82,22 @@ class ChurchRepositoryImpl extends ChurchRepository {
       return null;
     }*/
   }
+
+  @override
+  Future<Church?> getChurchWitdhIdMember(String id) async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> response = await _firestore
+          .collection("church")
+          .where("members", arrayContains: id)
+          .get();
+
+      if (response.docChanges.isNotEmpty) {
+        return Church.fromJson(response.docs.elementAt(0).data());
+      }
+
+      return null;
+    } on bool catch (e) {
+      return null;
+    }
+  }
 }

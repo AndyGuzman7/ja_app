@@ -6,11 +6,11 @@ class ItemButton extends StatelessWidget {
   final String textSubTitle;
   final Icon iconButtonItem;
 
-  final String pageRoute;
+  final String? pageRoute;
 
   const ItemButton({
     required this.textTitle,
-    required this.pageRoute,
+    this.pageRoute,
     required this.textSubTitle,
     required this.iconButtonItem,
   });
@@ -43,7 +43,7 @@ class ItemButton extends StatelessWidget {
           child: InkWell(
             borderRadius: BorderRadius.circular(16),
             onTap: () {
-              router.pushNamed(pageRoute);
+              pageRoute != null ? router.pushNamed(pageRoute!) : null;
             },
             child: Column(
               mainAxisSize: MainAxisSize.max,

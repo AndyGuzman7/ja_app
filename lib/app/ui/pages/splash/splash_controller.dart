@@ -12,10 +12,10 @@ class SplashController extends SimpleNotifier {
   final _userRepository = Get.find<UserRepository>();
 
   SplashController(this._sessionController) {
-    _init();
+    init();
   }
 
-  void _init() async {
+  void init() async {
     final user = await _authRepository.user;
 
     if (user != null) {

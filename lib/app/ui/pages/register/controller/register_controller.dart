@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,6 +18,7 @@ import 'package:ja_app/app/ui/routes/routes.dart';
 
 import '../../../../data/repositories/church_impl/church_repository.dart';
 import '../../../../data/repositories/resources_impl/resources_repository.dart';
+import '../../../../data/repositories/user_impl/login_impl/authentication_repository.dart';
 import '../../../../data/repositories/user_impl/register_impl/sign_up_repository.dart';
 import '../../../global_controllers/session_controller.dart';
 
@@ -34,6 +36,8 @@ class RegisterController extends StateNotifier<RegisterState> {
 
   final _resourcesRepository = Get.find<ResourcesRepository>();
   final _church = Get.find<ChurchRepository>();
+
+  final _authRepository = Get.find<AuthenticationRepository>();
 
   List<UserAvatar> listAvatar = [];
 
@@ -115,11 +119,24 @@ class RegisterController extends StateNotifier<RegisterState> {
         Dialogs.alert(context, title: "ERROR", content: content);
       } else {
         if (_sessionController.user != null) {
+          final user = await _authRepository.user;
+
+          if (user != null) {
+            ProgressDialog.show(context);
+            final userMain = sessionProvider.read.userData;
+            await sessionProvider.read.signOut();
+            await _authRepository.singInWithEmailAndPassword(
+                userMain!.email, userMain.password);
+            final user = await _authRepository.user;
+            _sessionController.setUser(user!, userMain);
+            router.pop();
+          }
           closePage(context);
         } else {
           _sessionController.setUser(response.user!, response.signUpData!);
           router.pushNamedAndRemoveUntil(Routes.HOME);
         }
+        log("si llega");
       }
     } else {
       Dialogs.alert(context, title: "ERROR", content: "Invalid fields");

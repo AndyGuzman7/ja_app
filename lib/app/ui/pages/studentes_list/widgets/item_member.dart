@@ -61,3 +61,64 @@ class ItemMember extends StatelessWidget {
     );
   }
 }
+
+class ItemMemberV2 extends StatelessWidget {
+  UserData user;
+  ItemMemberV2(this.user, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.only(top: 1, bottom: 1),
+      color: Color.fromARGB(255, 255, 255, 255),
+      elevation: 0,
+      child: InkWell(
+        //borderRadius: BorderRadius.circular(16),
+        onTap: () {
+          //router.pushNamed(pageRoute);
+        },
+        child: Row(
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                width: 30,
+                height: 30,
+                child: Container(
+                  child: CircleAvatar(
+                    child: Image.network(user.photoURL),
+                  ),
+                ),
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  user.name + " " + user.lastName,
+                  style: TextStyle(fontSize: 14),
+                ),
+                /*Padding(
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    child: Text(
+                      user.email + " " + user.lastName,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromARGB(255, 123, 123, 123)),
+                    )),
+                Text(
+                  "Usuario registrado",
+                  style: TextStyle(color: Color.fromARGB(255, 13, 97, 167)),
+                )*/
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -1,14 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class CustomDropDown extends StatefulWidget {
   List<dynamic> lisItems;
   final String? Function(dynamic)? validator;
   final String hint;
+  final String? cabezera;
   final Icon? icon;
   void Function(dynamic) onChanged;
   CustomDropDown({
     required this.onChanged,
     this.icon,
+    this.cabezera,
     required this.validator,
     required this.hint,
     required this.lisItems,
@@ -126,9 +130,11 @@ class SettingsWidget extends StatefulWidget {
 
   final String? Function(dynamic)? validator;
   final String hint;
+  final String? cabecera;
   final Icon? icon;
   void Function(dynamic) onChanged;
   SettingsWidget({
+    this.cabecera,
     required this.items,
     required this.onChanged,
     this.icon,
@@ -148,8 +154,9 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   @override
   void initState() {
     dropDownMenuItems = getDropDownMenuItem();
-    currentItem = dropDownMenuItems![0].value;
-    widget.onChanged(currentItem);
+    if (dropDownMenuItems!.isNotEmpty) {
+      currentItem = dropDownMenuItems![0].value;
+    }
 
     super.initState();
   }
@@ -157,16 +164,18 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   List<DropdownMenuItem<dynamic>> getDropDownMenuItem() {
     List<DropdownMenuItem<dynamic>> items = [];
     for (dynamic item in widget.items) {
-      items.add(DropdownMenuItem(value: item, child: Text(item.name)));
+      items.add(DropdownMenuItem(
+          value: item, child: Text(item.name ?? 'Clase sin nombre')));
     }
     return items;
   }
 
   @override
   Widget build(BuildContext context) {
+    //widget.onChanged(currentItem);
     return FormField<dynamic>(
       initialValue: null,
-      //validator: widget.validator,
+      validator: widget.validator,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       builder: (state) {
         return Padding(
@@ -175,22 +184,29 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Container(
-                padding: const EdgeInsets.only(top: 10, bottom: 10),
-                child: Text(
-                  widget.hint,
-                  style: const TextStyle(fontSize: 17),
-                ),
-              ),
+              widget.cabecera != null
+                  ? Container(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Text(
+                        widget.hint,
+                        style: const TextStyle(fontSize: 17),
+                      ),
+                    )
+                  : SizedBox(),
               ButtonTheme(
                 alignedDropdown: true,
                 child: DropdownButtonFormField<dynamic>(
-                  value: currentItem,
+                  onTap: () {
+                    log("se hizo clic");
+                  },
+                  // value: currentItem,
+                  hint: Text(widget.hint),
                   items: dropDownMenuItems,
                   onChanged: (value) {
                     if (widget.validator != null) {
                       state.setValue(value);
                       state.validate();
+                      log("sdasdasd");
                     }
 
                     if (value != null) {
@@ -227,7 +243,13 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         : null,
                   ),
                 ),
-              )
+              ),
+              if (state.hasError)
+                Text(
+                  state.errorText!,
+                  style:
+                      const TextStyle(color: Color.fromARGB(255, 194, 18, 18)),
+                )
             ],
           ),
         );

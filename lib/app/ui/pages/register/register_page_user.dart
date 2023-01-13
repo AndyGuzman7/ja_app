@@ -114,7 +114,7 @@ class _RegisterPageUserState extends State<RegisterPageUser>
                       watch.watch(
                         registerProvider.select((state) => state.password),
                       );
-                      log("message");
+                      log("comprobando contraseña");
                       return CustomImputField(
                         icon: Icon(Icons.security),
                         label: "Verificación contraseña",
@@ -132,6 +132,15 @@ class _RegisterPageUserState extends State<RegisterPageUser>
                           return "invalid password";
                         },
                       );
+                    },
+                  ),
+                  Consumer(
+                    builder: (_, watch, __) {
+                      final s = watch.select(
+                        registerProvider.select((state) => state.termsOk),
+                      );
+                      log("comprobando ");
+                      return Text(s.toString());
                     },
                   ),
                   const SizedBox(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ja_app/app/domain/models/church/church.dart';
 
 class ChurchState {
@@ -15,11 +17,13 @@ class ChurchState {
   static ChurchState get initialState => ChurchState(
       photoURL: null, codeAccess: '', isSuscribe: false, church: null);
 
-  ChurchState copyWith(
-      {String? photoURL,
-      String? codeAccess,
-      bool? isSuscribe,
-      Church? church}) {
+  ChurchState copyWith({
+    String? photoURL,
+    String? codeAccess,
+    bool? isSuscribe,
+    Church? church,
+  }) {
+    log("asdadasd");
     return ChurchState(
       photoURL: photoURL ?? this.photoURL,
       church: church ?? this.church,

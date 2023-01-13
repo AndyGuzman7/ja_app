@@ -30,6 +30,14 @@ class HomeController extends StateNotifier<HomeState> {
     state = state.copyWith(user: user);
   }
 
+  void onChangedCurrentTab(int currentTab) {
+    state = state.copyWith(currentTab: currentTab);
+  }
+
+  void onChangedTitle(String title) {
+    state = state.copyWith(title: title);
+  }
+
   @override
   void dispose() {
     super.dispose();

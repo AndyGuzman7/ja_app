@@ -25,6 +25,7 @@ class MainPageHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("message");
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -161,18 +162,20 @@ class MainPageHome extends StatelessWidget {
             ),
           ),
           const ItemButton(
-            textTitle: "Noticias",
-            pageRoute: Routes.LIST_ESTUDENTS,
-            textSubTitle: '5 registrados',
-            iconButtonItem: Icon(Icons.supervised_user_circle),
+            textTitle: "Mi iglesia",
+            pageRoute: Routes.CHURCH,
+            textSubTitle: 'Iglesia Adeventista',
+            iconButtonItem: Icon(
+              Icons.church_outlined,
+              color: Colors.green,
+            ),
           ),
           const ItemButton(
-            textTitle: "Calendario",
-            pageRoute: Routes.EESS,
-            textSubTitle: 'Escuela sábatica',
+            textTitle: "Logros/Medallas",
+            textSubTitle: 'Puntaje personal',
             iconButtonItem: Icon(
-              Icons.school,
-              color: Colors.blue,
+              Icons.wine_bar_rounded,
+              color: Colors.red,
             ),
           )
         ];
@@ -181,18 +184,20 @@ class MainPageHome extends StatelessWidget {
       case "C":
         list = [
           const ItemButton(
-            textTitle: "Noticias",
-            pageRoute: Routes.LIST_ESTUDENTS,
-            textSubTitle: '5 registrados',
-            iconButtonItem: Icon(Icons.supervised_user_circle),
+            textTitle: "Mi iglesia",
+            pageRoute: Routes.CHURCH,
+            textSubTitle: 'Iglesia Adeventista',
+            iconButtonItem: Icon(
+              Icons.church_outlined,
+              color: Colors.green,
+            ),
           ),
           const ItemButton(
-            textTitle: "Calendario",
-            pageRoute: Routes.EESS,
-            textSubTitle: 'Escuela sábatica',
+            textTitle: "Logros/Medallas",
+            textSubTitle: 'Puntaje personal',
             iconButtonItem: Icon(
-              Icons.school,
-              color: Colors.blue,
+              Icons.wine_bar_rounded,
+              color: Colors.red,
             ),
           )
         ];

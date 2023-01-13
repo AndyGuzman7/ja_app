@@ -1,3 +1,5 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
 import 'package:ja_app/app/ui/gobal_widgets/container/custom_container_image_rounded.dart';
 import 'package:ja_app/app/ui/gobal_widgets/container/custom_container_information.dart';
 import 'package:ja_app/app/ui/gobal_widgets/container/custom_container_rounded.dart';
+import 'package:ja_app/app/ui/gobal_widgets/drop_dow/custom_dropDown.dart';
 
 import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_button.dart';
 import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
@@ -66,36 +69,34 @@ class ProjectManaPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           backgroundColor: Colors.white,
-          content: Padding(
-            padding: const EdgeInsets.only(right: 20, left: 20),
-            child: FutureBuilder<List<Brochure>?>(
-              future: projectManaPageProvider.read.getBrochures(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Form(
-                    key: formKey,
-                    child: CustomDropDownButton(
-                      onChanged: (value) {
-                        projectManaPageProvider.read.onIdBrochure(value.id!);
-                      },
-                      listBrochure: snapshot.data!,
-                      validator: (text) {
-                        print(text);
-                        if (text == null) return "Seleccione un item";
-                      },
-                    ),
-                  );
-                }
-                return Text('Load Brochures');
-              },
-            ),
+          content: FutureBuilder<List<Brochure>?>(
+            future: projectManaPageProvider.read.getBrochures(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Form(
+                  key: formKey,
+                  child: SettingsWidget(
+                    onChanged: (value) {
+                      projectManaPageProvider.read.onIdBrochure(value.id!);
+                    },
+                    items: snapshot.data!,
+                    validator: (text) {
+                      print(text);
+                      if (text == null) return "Seleccione un item";
+                    },
+                    hint: 'Folleto de EESS',
+                  ),
+                );
+              }
+              return Text('Cargando Folletos ...');
+            },
           ),
           actions: [
             Row(
               children: [
                 Expanded(
                   child: CustomButton(
-                    textButton: 'Cancel',
+                    textButton: 'Cancelar',
                     colorTextButton: CustomColorPrimary().materialColor,
                     colorButton: Colors.white54,
                     onPressed: () {
@@ -108,9 +109,10 @@ class ProjectManaPage extends StatelessWidget {
                 ),
                 Expanded(
                     child: CustomButton(
-                  textButton: 'Accept',
+                  textButton: 'Empezar',
                   onPressed: () {
-                    if (formKey.currentState!.validate()) {
+                    if (formKey.currentState != null) if (formKey.currentState!
+                        .validate()) {
                       startProject(context);
                       Navigator.pop(context);
                     }
@@ -140,16 +142,20 @@ class ProjectManaPage extends StatelessWidget {
     EdgeInsets paddingMain = EdgeInsets.only(left: 20, right: 20);
     EdgeInsets paddingMain2 = EdgeInsets.all(20);
     return DefaultTabController(
-      length: 2,
+      length: 1,
       child: Scaffold(
         appBar: AppBar(
+          title: Text(
+            "Proyecto Maná",
+            style: TextStyle(color: Colors.black),
+          ),
           bottom: TabBar(labelColor: Colors.black, tabs: [
             Tab(
               text: 'Información',
             ),
-            Tab(
+            /*Tab(
               text: 'Administrador',
-            )
+            )*/
           ]),
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.black),
@@ -171,7 +177,7 @@ class ProjectManaPage extends StatelessWidget {
                         child: Row(
                           children: [
                             const Expanded(
-                              child: CustomTitle(title: 'Mana Project'),
+                              child: CustomTitle(title: 'Proyecto Maná'),
                             ),
                             Consumer(builder: (_, ref, __) {
                               log("starts button");
@@ -183,7 +189,7 @@ class ProjectManaPage extends StatelessWidget {
                               if (!brochure) {
                                 return Expanded(
                                   child: CustomButton(
-                                    textButton: 'Start project',
+                                    textButton: 'Empezar Ahorro',
                                     height: 50,
                                     onPressed: () {
                                       showAlertDialog(
@@ -211,7 +217,7 @@ class ProjectManaPage extends StatelessWidget {
                           children: [
                             CustomContainerImageRounded(
                                 child: Image.network(
-                                    "https://articles.collegebol.com/wp-content/uploads/2020/06/group-young-people-posing-photo_52683-18823.jpg")),
+                                    "https://firebasestorage.googleapis.com/v0/b/ja-app-6430b.appspot.com/o/images-resources%2Fresource_1.jpg?alt=media&token=0f7910eb-31a6-4e86-b75e-00565d0ed17e")),
                             const SizedBox(width: 20),
                             const Expanded(
                                 child: CustomTitle2(
@@ -234,7 +240,7 @@ class ProjectManaPage extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(20),
                                 child: CustomTitle2(
-                                  title: 'Proyecto Maná Espacio Joven HDFE',
+                                  title: 'Proyecto Maná Espacio Joven HdFe',
                                   subTitle: 'Miembro Espacio Joven: ' +
                                       sessionProvider.read.user!.displayName!,
                                   //colorSubTitle: CustomColorPrimary().materialColor,
@@ -313,7 +319,7 @@ class ProjectManaPage extends StatelessWidget {
                               }),
                               Divider(),
                               atributeData(
-                                  'Fecha Culminación', '22 Octubre, 2022'),
+                                  'Fecha Culminación', '22 Octubre, 2023'),
                               const CustomContainerInformation(
                                 backgroundColor:
                                     Color.fromARGB(255, 145, 195, 237),
@@ -344,7 +350,7 @@ class ProjectManaPage extends StatelessWidget {
               }
             },
           ),
-          ProjectManaPageAdmin()
+          //ProjectManaPageAdmin()
         ]),
       ),
     );
