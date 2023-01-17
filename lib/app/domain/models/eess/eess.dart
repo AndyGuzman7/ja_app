@@ -15,14 +15,20 @@ class EESS {
       this.unitOfAction);
 
   factory EESS.fromJson(Map<String, dynamic> json) {
-    List<UnitOfAction> convertList(List<dynamic> json) {
+    List<UnitOfAction> convertList(json) {
+      log(json.toString());
+      Map<String, dynamic> jsons = json;
       List<UnitOfAction> list = [];
       //json.map((key, value) => null)
-      json.forEach((value) {
+
+      jsons.forEach((key, value) {
+        list.add(UnitOfAction.fromJson(value));
+      });
+      /*json.forEach((value) {
         list.add(UnitOfAction.fromJson(value));
         //print('$value');
         //listBrochures.add(Brochure.fromJson(value));
-      });
+      });*/
       return list;
     }
 

@@ -34,7 +34,7 @@ class SignUpRepositoryImpl extends SignUpRepository {
 
       if (userCredential != null) {
         data.id = user!.uid;
-        await addUserInfoToDB(user!.uid, data.toJson());
+        final response = await addUserInfoToDB(user!.uid, data.toJson());
       }
 
       return SignUpResponse(null, user, data);

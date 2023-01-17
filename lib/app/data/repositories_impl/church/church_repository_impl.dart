@@ -14,7 +14,8 @@ class ChurchRepositoryImpl extends ChurchRepository {
   Future<bool> registerMemberChurch(String idMember, String idChurch) async {
     try {
       log(idChurch);
-      await _firestore.collection("church").doc(idChurch).update({
+      final response =
+          await _firestore.collection("church").doc(idChurch).update({
         "members": FieldValue.arrayUnion([idMember]),
       });
 

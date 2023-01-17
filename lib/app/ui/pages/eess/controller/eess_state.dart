@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ja_app/app/domain/models/eess/eess.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
+import 'package:ja_app/app/domain/models/user_data.dart';
 
 class EeSsState {
   final String? imageUser;
@@ -16,10 +17,22 @@ class EeSsState {
   final bool isOk;
   final int isSuscribeEESSs;
   final UnitOfAction? unitOfAction;
+  final List<UserData> membersUnitOfAction;
+  final List<UnitOfAction> listUnitOfAction;
+
+  final List<UserData> membersUnitOfActionNew;
 
   final String? titleSearch;
 
+  final String? nameUnitOfActionCreate;
+  final UserData? userDataUnitOfActionCreate;
+
   EeSsState({
+    required this.listUnitOfAction,
+    required this.userDataUnitOfActionCreate,
+    required this.nameUnitOfActionCreate,
+    required this.membersUnitOfActionNew,
+    required this.membersUnitOfAction,
     required this.unitOfAction,
     required this.isSuscribeEESSs,
     required this.isOk,
@@ -34,6 +47,11 @@ class EeSsState {
   });
 
   static EeSsState get initialState => EeSsState(
+        listUnitOfAction: [],
+        nameUnitOfActionCreate: null,
+        userDataUnitOfActionCreate: null,
+        membersUnitOfActionNew: [],
+        membersUnitOfAction: [],
         unitOfAction: null,
         isSuscribeEESSs: 0,
         isOk: false,
@@ -48,6 +66,7 @@ class EeSsState {
       );
 
   EeSsState copyWith({
+    List<UnitOfAction>? listUnitOfAction,
     UnitOfAction? unitOfAction,
     int? isSuscribeEESSs,
     String? imageUser,
@@ -59,9 +78,21 @@ class EeSsState {
     bool? isSuscribeChurch,
     String? titleSearch,
     bool? isOk,
+    List<UserData>? membersUnitOfAction,
+    List<UserData>? membersUnitOfActionNew,
+    String? nameUnitOfActionCreate,
+    UserData? userDataUnitOfActionCreate,
   }) {
     log("stado");
     return EeSsState(
+      listUnitOfAction: listUnitOfAction ?? this.listUnitOfAction,
+      nameUnitOfActionCreate:
+          nameUnitOfActionCreate ?? this.nameUnitOfActionCreate,
+      userDataUnitOfActionCreate:
+          userDataUnitOfActionCreate ?? this.userDataUnitOfActionCreate,
+      membersUnitOfActionNew:
+          membersUnitOfActionNew ?? this.membersUnitOfActionNew,
+      membersUnitOfAction: membersUnitOfAction ?? this.membersUnitOfAction,
       unitOfAction: unitOfAction ?? this.unitOfAction,
       isSuscribeEESSs: isSuscribeEESSs ?? this.isSuscribeEESSs,
       isOk: isOk ?? this.isOk,

@@ -218,4 +218,62 @@ class EESSRepositoryImpl extends EESSRepository {
       return listEESS;
     }
   }
+
+  @override
+  Future<List<UserData>> getMembersEESSNoneToUnitOfAction(String idEESS) async {
+    List<UserData> listEESS = [];
+    try {
+      final docRef = await _firestore.collection("EESS").doc(idEESS).get();
+      if (docRef.exists) {
+        EESS eess = EESS.fromJson(docRef.data()!);
+        List<String>? members = eess.members;
+        List<String> membersNone = [];
+        if (members != null) {
+          log("entra a los miembros" + members.length.toString());
+          for (var e in members) {
+            log(e);
+            for (var element in eess.unitOfAction) {
+              log(element.name);
+              if (!element.members.contains(e)) {
+                if (membersNone.contains(e) == false) {
+                  membersNone.add(e);
+                  log(e);
+                }
+              }
+            }
+          }
+        }
+
+        for (var element in membersNone) {
+          final res = await _firestore
+              .collection("users")
+              .where("id", isEqualTo: element)
+              .get();
+
+          if (res.docChanges.isNotEmpty) {
+            listEESS.add(UserData.fromJson(res.docs.elementAt(0).data()));
+          }
+        }
+      }
+      return listEESS;
+    } on FirebaseFirestore catch (e) {
+      return listEESS;
+    }
+  }
+
+  @override
+  Future<bool> registerMemberEESSUnitOfAction(
+      List<String> idMembers, String idEESS, idUnitOfAction) async {
+    try {
+      await _firestore.collection("EESS").doc(idEESS).update({
+        "unitOfAction": {
+          idUnitOfAction: {"members": FieldValue.arrayUnion(idMembers)}
+        },
+      });
+
+      return true;
+    } on bool catch (e) {
+      return false;
+    }
+  }
 }

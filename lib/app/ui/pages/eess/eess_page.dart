@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
@@ -13,6 +15,7 @@ class EeSsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("se imprime el padre");
     return Container(
       child: DefaultTabController(
         length: eeSsProvider.read.state.listTabr.length,

@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:ja_app/app/ui/gobal_widgets/dialogs/custom_dialog.dart';
 
 abstract class Dialogs {
   static Future<void> alert(BuildContext context,
@@ -24,6 +26,32 @@ abstract class Dialogs {
           )
         ],
       ),
+    );
+  }
+}
+
+class CustomDialogSimple {
+  final BuildContext context;
+  final String title;
+  List<Widget>? actions;
+  Widget? content;
+  CustomDialogSimple(this.context, this.title, {this.actions, this.content});
+
+  dissmisAlertDialog() {
+    Navigator.pop(context);
+  }
+
+  showAlertDialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          title,
+          actions: actions,
+          content: content,
+        );
+      },
     );
   }
 }
