@@ -15,6 +15,7 @@ import 'package:ja_app/app/ui/gobal_widgets/item/item_list_view.dart';
 import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
 import 'package:ja_app/app/ui/pages/church/controller/church_controller.dart';
 import 'package:ja_app/app/ui/pages/eess/eess_page.dart';
+import 'package:ja_app/app/ui/pages/eess/widgets/unit_page_eess.dart';
 import 'package:ja_app/app/ui/pages/studentes_list/widgets/item_member.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
@@ -29,7 +30,7 @@ class SectionUnitPageEESS extends StatelessWidget {
     log("se cosntrue la seccion");
     return Column(
       children: [
-        card("Clase de EESS", unitOfAction.name, null),
+        card("Nombre de Unidad", unitOfAction.name, null),
         Divider(),
         Padding(
           padding:
@@ -57,31 +58,40 @@ class SectionUnitPageEESS extends StatelessWidget {
         ),
         Divider(),
         FutureBuilder(
-            future: eeSsProvider.read.getMembersToUnitOfAction(unitOfAction.id),
+            future:
+                unitPageProvider.read.getMembersToUnitOfAction(unitOfAction.id),
             builder: (context, AsyncSnapshot<List<UserData>> snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.data!.isEmpty) {
-                  return Container(
-                    child: Text("No hay miembros"),
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Consumer(builder: (_, watch, __) {
+                  final response = watch.select(
+                    unitPageProvider
+                        .select((state) => state.membersUnitOfAction),
                   );
-                } else {
-                  return Container(
-                    height: snapshot.data!.length <= 2 ? 100 : 200,
-                    width: double.infinity,
-                    // width: 300,
-                    color: Colors.grey.shade100,
-                    child: Expanded(
-                      child: ListView.builder(
-                        physics: BouncingScrollPhysics(),
-                        //padding: const EdgeInsets.only(top: 20),
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ItemMemberV2(snapshot.data![index]);
-                        },
+                  log("llega");
+
+                  if (response.isEmpty) {
+                    return Container(
+                      child: Text("No hay miembros"),
+                    );
+                  } else {
+                    return Container(
+                      height: response.length <= 2 ? 100 : 200,
+                      width: double.infinity,
+                      // width: 300,
+                      color: Colors.grey.shade100,
+                      child: Expanded(
+                        child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          //padding: const EdgeInsets.only(top: 20),
+                          itemCount: response.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ItemMemberV2(response[index]);
+                          },
+                        ),
                       ),
-                    ),
-                  );
-                }
+                    );
+                  }
+                });
               } else {
                 return Container(height: 200, child: willPopScope());
               }
@@ -149,7 +159,31 @@ class SectionUnitPageEESS extends StatelessWidget {
               Text(
                 subtitle,
                 style: TextStyle(fontSize: 20, color: Colors.white),
-              )
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Divider(
+                color: Colors.white,
+              ),
+              Text(
+                "Lider de Unidad",
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              FutureBuilder(
+                future: unitPageProvider.read.getUser(unitOfAction.leader),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    return carUser(snapshot.data);
+                  }
+                  return Container(
+                      height: 50,
+                      child: willPopScope(isColorBackground: false));
+                },
+              ),
             ],
           ),
         ),
@@ -157,14 +191,65 @@ class SectionUnitPageEESS extends StatelessWidget {
     );
   }
 
-  Widget willPopScope() {
+  Widget carUser(UserData user) {
+    return Row(
+      children: [
+        Container(
+          padding: EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(50),
+          ),
+          width: 50,
+          height: 50,
+          child: Container(
+            child: CircleAvatar(
+              child: Image.network(user.photoURL),
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                user.name + " " + user.lastName,
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+              /*Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      child: Text(
+                        user.email + " " + user.lastName,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Color.fromARGB(255, 123, 123, 123)),
+                      )),
+                  Text(
+                    "Usuario registrado",
+                    style: TextStyle(color: Color.fromARGB(255, 13, 97, 167)),
+                  )*/
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget willPopScope({bool isColorBackground = true}) {
     return WillPopScope(
       child: Container(
         width: double.infinity,
         height: double.infinity,
-        color: const Color.fromARGB(255, 255, 255, 255),
+        color: isColorBackground
+            ? const Color.fromARGB(255, 255, 255, 255)
+            : Colors.transparent,
         alignment: Alignment.center,
-        child: const CircularProgressIndicator(),
+        child: CircularProgressIndicator(
+          color: !isColorBackground ? Colors.white : null,
+        ),
       ),
       onWillPop: () async => false,
     );
@@ -247,7 +332,7 @@ class SectionUnitPageEESS extends StatelessWidget {
             backgroundColor: Colors.white,
             content: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
               FutureBuilder(
-                  future: eeSsProvider.read
+                  future: unitPageProvider.read
                       .getMembersNoneUnitOfAction(unitOfAction.id),
                   builder: (context, AsyncSnapshot<List<UserData>> snapshot) {
                     if (snapshot.hasData) {
@@ -271,13 +356,13 @@ class SectionUnitPageEESS extends StatelessWidget {
                               ),
                               CustomButton(
                                 height: 48,
-                                textButton: 'Añadir miembro/os',
+                                textButton: 'Añadir miembro/oss',
                                 colorButton: CustomColorPrimary().materialColor,
                                 // colo: Colors.white54,
                                 onPressed: () async {
-                                  if (eeSsProvider.read.state
+                                  if (unitPageProvider.read.state
                                       .membersUnitOfActionNew.isNotEmpty) {
-                                    await eeSsProvider.read
+                                    await unitPageProvider.read
                                         .onPressedAddMembers(context);
                                     router.pop(context);
                                   }
@@ -312,7 +397,7 @@ class SectionUnitPageEESS extends StatelessWidget {
     List<Widget> itemsWidgets = [];
     for (var element in items) {
       itemsWidgets.add(ItemMemberV3(element, false, (user) {
-        eeSsProvider.read.onChangedListMembersSelected(user);
+        unitPageProvider.read.onChangedListMembersSelected(user);
       }));
     }
     return itemsWidgets;

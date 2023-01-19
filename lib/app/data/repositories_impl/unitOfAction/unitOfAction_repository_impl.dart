@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ja_app/app/data/repositories/eess_impl/eess_repository.dart';
 import 'package:ja_app/app/data/repositories_impl/church/church_repository_impl.dart';
+import 'package:ja_app/app/data/repositories_impl/eess/eess_repository_impl.dart';
 import 'package:ja_app/app/domain/models/church/church.dart';
 import 'package:ja_app/app/domain/models/eess/eess.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
@@ -15,9 +16,11 @@ import '../name_nodes/name_nodes_user.dart';
 class UnitOfActionRepositoryImpl extends UnitOfActionRepository {
   final FirebaseFirestore _firestore;
   late ChurchRepositoryImpl _churchRepositoryImpl;
+  late EESSRepositoryImpl _eessRepositoryImpl;
 
   UnitOfActionRepositoryImpl(this._firestore) {
     _churchRepositoryImpl = ChurchRepositoryImpl(_firestore);
+    _eessRepositoryImpl = EESSRepositoryImpl(_firestore);
   }
 
   @override
@@ -128,44 +131,41 @@ class UnitOfActionRepositoryImpl extends UnitOfActionRepository {
   @override
   Future<List<UserData>> getMembersEESSNoneToUnitOfAction(String idEESS) async {
     List<UserData> listEESS = [];
-    //try {
-    final docRef = await _firestore.collection("EESS").doc(idEESS).get();
-    final listUnitOfActions = await getUnitOfActionAll();
-    if (docRef.exists) {
-      EESS eess = EESS.fromJson(docRef.data()!);
-      List<String>? members = eess.members;
-      List<String> membersNone = [];
-      if (members != null) {
-        log("entra a los miembros" + members.length.toString());
-        for (var e in members) {
-          log(e);
-          for (var element in listUnitOfActions) {
-            log(element.name);
-            if (element.members.contains(e) == false) {
-              if (membersNone.contains(e) == false) {
-                membersNone.add(e);
-                log(e);
-              }
+    try {
+      final eess = await _eessRepositoryImpl.getEESS(idEESS);
+      final listUnitOfActions = await getUnitOfActionAllByEESS(idEESS);
+      if (eess != null) {
+        List<String>? membersEESS = eess.members;
+        List<String> membersNone = [];
+        if (membersEESS != null && membersEESS.isNotEmpty) {
+          List<String> allMembersUnitOfActions = [];
+
+          for (var unitAction in listUnitOfActions) {
+            allMembersUnitOfActions.addAll(unitAction.members);
+          }
+
+          for (var memberEESS in membersEESS) {
+            if (!allMembersUnitOfActions.contains(memberEESS)) {
+              membersNone.add(memberEESS);
             }
           }
         }
-      }
 
-      for (var element in membersNone) {
-        final res = await _firestore
-            .collection("users")
-            .where("id", isEqualTo: element)
-            .get();
+        for (var element in membersNone) {
+          final res = await _firestore
+              .collection("users")
+              .where("id", isEqualTo: element)
+              .get();
 
-        if (res.docChanges.isNotEmpty) {
-          listEESS.add(UserData.fromJson(res.docs.elementAt(0).data()));
+          if (res.docChanges.isNotEmpty) {
+            listEESS.add(UserData.fromJson(res.docs.elementAt(0).data()));
+          }
         }
       }
-    }
-    return listEESS;
-    /*} on FirebaseFirestore catch (e) {
       return listEESS;
-    }*/
+    } on FirebaseFirestore catch (e) {
+      return listEESS;
+    }
   }
 
   @override

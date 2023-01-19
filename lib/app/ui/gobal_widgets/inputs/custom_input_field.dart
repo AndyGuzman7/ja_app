@@ -10,6 +10,7 @@ class CustomImputField extends StatefulWidget {
   final bool isPassword;
   final String? Function(String?)? validator;
   final Icon? icon;
+  final bool isNoSpace;
   final String? value;
   const CustomImputField(
       {Key? key,
@@ -18,6 +19,7 @@ class CustomImputField extends StatefulWidget {
       required this.label,
       this.inputType,
       this.icon,
+      this.isNoSpace = true,
       this.isPassword = false,
       this.validator})
       : super(key: key);
@@ -102,7 +104,9 @@ class _CustomImputFieldState extends State<CustomImputField> {
                     onChanged: (text) {
                       if (widget.validator != null) {
                         // ignore: invalid_use_of_protected_member
-                        text = text.replaceAll(" ", "");
+                        widget.isNoSpace
+                            ? text = text.replaceAll(" ", "")
+                            : null;
                         state.setValue(text);
                         state.validate();
                       }

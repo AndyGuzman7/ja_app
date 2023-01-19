@@ -3,6 +3,7 @@ import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/data/repositories/eess_impl/eess_repository.dart';
 import 'package:ja_app/app/data/repositories/unitOfAction_impl/unitOfAction_repository.dart';
+import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
 import 'package:ja_app/app/domain/models/eess/eess.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
@@ -20,6 +21,7 @@ class UnitPageController extends StateNotifier<UnitPageState> {
   List<UserData> membersSelected = [];
   String? _routeName;
   String? get routeName => _routeName;
+  final userRepository = Get.find<UserRepository>();
 
   final GlobalKey<FormState> formKey = GlobalKey();
 
@@ -62,6 +64,13 @@ class UnitPageController extends StateNotifier<UnitPageState> {
     }
   }
 
+  onChangedListMembersSelected(UserData user) {
+    List<UserData> list = state.membersUnitOfActionNew;
+    list.contains(user)
+        ? removeListMembersSelected(user)
+        : addListMembersSelected(user);
+  }
+
   onPressedAddMembers(context) async {
     ProgressDialog.show(context);
     final List<UserData> list = state.membersUnitOfActionNew;
@@ -79,8 +88,8 @@ class UnitPageController extends StateNotifier<UnitPageState> {
     if (response) {
       state = state.copyWith(membersUnitOfActionNew: []);
 
-      await getUnitOfActionByEESS();
-      router.pop(context);
+      await getMembersToUnitOfAction(state.unitOfAction!.id);
+      // router.pop(context);
     }
     router.pop(context);
   }
@@ -108,6 +117,10 @@ class UnitPageController extends StateNotifier<UnitPageState> {
     }
   }
 
+  void onChangedListMembersUnitOfAction(List<UserData> list) {
+    state = state.copyWith(membersUnitOfAction: list);
+  }
+
   void onChangedNameCreateUnitOfAction(String name) {
     state = state.copyWith(nameUnitOfActionCreate: name);
   }
@@ -129,9 +142,11 @@ class UnitPageController extends StateNotifier<UnitPageState> {
   }
 
   Future<List<UserData>>? getMembersToUnitOfAction(String idUnitAction) async {
-    final eess = await _unitOfAction.getMembersToUnitAction(idUnitAction);
-    //if (eess != null) onChangedEESS(eess);
-    return eess;
+    final response = await _unitOfAction.getMembersToUnitAction(idUnitAction);
+
+    onChangedListMembersUnitOfAction(response);
+
+    return response;
   }
 
   Future<List<UnitOfAction>> getUnitOfActionByEESS() async {
@@ -151,6 +166,17 @@ class UnitPageController extends StateNotifier<UnitPageState> {
   Future loadPageData() async {
     final response = await getUnitOfActionByEESS();
     onChangedListUnitOfAction(response);
+    //return response;
+  }
+
+  Future<UserData?> getUser(String idUser) async {
+    UserData? data;
+    try {
+      data = await userRepository.getUser(idUser);
+      return data!;
+    } catch (e) {
+      return null;
+    }
   }
 
   @override

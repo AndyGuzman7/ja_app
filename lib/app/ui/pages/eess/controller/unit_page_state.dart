@@ -12,8 +12,10 @@ class UnitPageState {
   final String? nameUnitOfActionCreate;
   final UserData? userDataUnitOfActionCreate;
   final List<UserData> membersUnitOfActionNew;
+  final List<UserData> membersUnitOfAction;
 
   UnitPageState({
+    required this.membersUnitOfAction,
     required this.membersUnitOfActionNew,
     required this.listUnitOfAction,
     required this.userDataUnitOfActionCreate,
@@ -22,6 +24,7 @@ class UnitPageState {
   });
 
   static UnitPageState get initialState => UnitPageState(
+        membersUnitOfAction: [],
         membersUnitOfActionNew: [],
         listUnitOfAction: [],
         nameUnitOfActionCreate: null,
@@ -39,6 +42,7 @@ class UnitPageState {
   }) {
     log("stado");
     return UnitPageState(
+      membersUnitOfAction: membersUnitOfAction ?? this.membersUnitOfAction,
       membersUnitOfActionNew:
           membersUnitOfActionNew ?? this.membersUnitOfActionNew,
       unitOfAction: unitOfAction ?? this.unitOfAction,

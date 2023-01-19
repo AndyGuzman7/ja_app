@@ -33,57 +33,45 @@ class UnitPageEESS extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("se construye");
     return Container(
       height: double.infinity,
       color: Colors.white,
-      child: Expanded(
-        child: FutureBuilder(
-          future: unitPageProvider.read.loadPageData(),
-          builder: (context, AsyncSnapshot snapshot) {
-            log("otra");
-            if (snapshot.connectionState == ConnectionState.done) {
-              return SingleChildScrollView(
-                child: Column(
+      child: FutureBuilder(
+        future: unitPageProvider.read.loadPageData(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            log("entra");
+            return Consumer(builder: (_, watch, __) {
+              final response = watch.select(
+                unitPageProvider.select((state) => state.listUnitOfAction),
+              );
+
+              if (response.isNotEmpty) {
+                return SingleChildScrollView(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Row(children: [
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20),
-                              child: CustomTitle2(
-                                title: "Unidades de Acción",
-                              ),
-                            ),
-                          ),
-                        ]),
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: CustomTitle2(
+                          title: "Unidades de Acción",
+                        ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
                           children: [
                             Expanded(
-                              child: Consumer(builder: (_, watch, __) {
-                                final response = watch.select(
-                                  unitPageProvider.select(
-                                      (state) => state.listUnitOfAction),
-                                );
-                                log(response.length.toString());
-                                final combo = SettingsWidgetV2(
-                                  items: response,
-                                  value: true,
-                                  //value: snapshot.data!.first,
-                                  onChanged: (v) {
-                                    unitPageProvider.read
-                                        .onChangedUnitOfAction(v);
-                                  },
-                                  hint: 'Unidad de Acciósn',
-                                );
-
-                                return combo;
-                              }),
+                              child: SettingsWidgetV2(
+                                items: response,
+                                value: true,
+                                //value: snapshot.data!.first,
+                                onChanged: (v) {
+                                  unitPageProvider.read
+                                      .onChangedUnitOfAction(v);
+                                },
+                                hint: 'Unidad de Acción',
+                              ),
                             ),
                             SizedBox(
                               width: 20,
@@ -100,104 +88,12 @@ class UnitPageEESS extends StatelessWidget {
                               height: 48,
                               colorButton: Colors.white,
                               onPressed: () {
-                                CustomDialogSimple(
-                                    context, "Añadir Unidad de Acción",
-                                    content: FutureBuilder<List<UserData>?>(
-                                      future: unitPageProvider.read
-                                          .getListMembers(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasData) {
-                                          final List<UserData> list =
-                                              snapshot.data!;
-                                          return Form(
-                                            key: unitPageProvider.read
-                                                .formKeyRegisterUnitOfAction,
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                CustomImputField(
-                                                  onChanged: unitPageProvider
-                                                      .read
-                                                      .onChangedNameCreateUnitOfAction,
-                                                  label:
-                                                      "Nombre Unidad de Acción",
-                                                  validator: (text) {
-                                                    if (text == "")
-                                                      return "El codigo es necesario";
-                                                    text = text!
-                                                        .replaceAll(" ", "");
-                                                    return null;
-                                                  },
-                                                ),
-                                                SettingsWidget(
-                                                  onChanged: (v) {
-                                                    unitPageProvider.read
-                                                        .onChangedUserDateCreateUnitOfAction(
-                                                            v);
-                                                    log("se hace un on cahnged");
-                                                  },
-                                                  hint: 'Escoja una clase',
-                                                  items: list,
-                                                  validator: (text) {
-                                                    if (text == null)
-                                                      return "Seleccione una clase";
-                                                    return null;
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        } else {
-                                          return Text("Cargando clases...");
-                                        }
-                                      },
-                                    ),
-                                    actions: [
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: CustomButton(
-                                              height: 48,
-                                              textButton: 'Cancelar',
-                                              colorTextButton: Colors.white,
-                                              colorButton: Color.fromARGB(
-                                                  255, 204, 201, 201),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 20,
-                                          ),
-                                          Expanded(
-                                              child: CustomButton(
-                                            height: 48,
-                                            textButton: 'Registrar',
-                                            onPressed: () {
-                                              unitPageProvider.read
-                                                  .onPressedRegisterUnitOfAction(
-                                                      context);
-                                            },
-                                          ))
-                                        ],
-                                      )
-                                    ]).showAlertDialog();
-                                //showAlertDialog(context, "", "");
-                                //router.pushNamed(Routes.REGISTER);
+                                dialogWidget(context);
                               },
                             )
                           ],
                         ),
                       ),
-                      /*SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20),
-                                child:
-                                    Row(children: buildCards(snapshot.data!)),
-                              ),
-                            ),*/
                       Divider(),
                       Consumer(builder: (_, watch, __) {
                         final unitOfAction = watch.select(
@@ -213,120 +109,124 @@ class UnitPageEESS extends StatelessWidget {
                           return SizedBox();
                         }
                       }),
+                    ],
+                  ),
+                );
+              } else {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "No existe unidades de Acción\npresione el boton para crear una.",
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    CustomButton(
+                      icon: Icon(
+                        Icons.add_circle_outline_sharp,
+                        color: CustomColorPrimary().materialColor,
+                        size: 25,
+                      ),
+                      colorBorderButton: CustomColorPrimary().materialColor,
+                      width: 60,
+                      height: 48,
+                      colorButton: Colors.white,
+                      onPressed: () {
+                        dialogWidget(context);
+                      },
+                    ),
+                  ],
+                );
+              }
+            });
+          } else {
+            return willPopScope();
+          }
+        },
+      ),
+    );
+  }
 
-                      /*Expanded(
-                              child: Container(
-                                color: Colors.grey.shade100,
-                                child: ListView.builder(
-                                    physics: BouncingScrollPhysics(),
-                                    //padding: const EdgeInsets.only(top: 20),
-                                    itemCount: snapshot.data!.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      log("otra veeee");
-                                      return ItemMemberV2(
-                                          snapshot.data![index]);
-                                    }),
-                              ),
-                            ),*/
-                    ]),
+  dialogWidget(BuildContext context) {
+    return CustomDialogSimple(context, "Añadir Unidad de Acción",
+        content: FutureBuilder<List<UserData>?>(
+          future: unitPageProvider.read.getListMembers(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final List<UserData> list = snapshot.data!;
+              return Form(
+                key: unitPageProvider.read.formKeyRegisterUnitOfAction,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomImputField(
+                      onChanged:
+                          unitPageProvider.read.onChangedNameCreateUnitOfAction,
+                      label: "Nombre Unidad de Acción",
+                      isNoSpace: false,
+                      validator: (text) {
+                        if (text == "") return "El nombre es necesario";
+                        //text = text!.replaceAll(" ", "");
+                        if (text!.substring(text.length - 1, text.length) ==
+                            " ") {
+                          text = text.replaceRange(text.length, null, "");
+                          log(text);
+                        }
+                        return null;
+                      },
+                    ),
+                    SettingsWidget(
+                      onChanged: (v) {
+                        unitPageProvider.read
+                            .onChangedUserDateCreateUnitOfAction(v);
+                      },
+                      hint: 'Lider de Unidad de Acción',
+                      items: list,
+                      validator: (text) {
+                        if (text == null) return "Seleccione un lider";
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
               );
             } else {
-              return CustomButton(
-                icon: Icon(
-                  Icons.add_circle_outline_sharp,
-                  color: CustomColorPrimary().materialColor,
-                  size: 25,
-                ),
-                colorBorderButton: CustomColorPrimary().materialColor,
-                width: 60,
-                height: 48,
-                colorButton: Colors.white,
-                onPressed: () {
-                  CustomDialogSimple(context, "Añadir Unidad de Acción",
-                      content: FutureBuilder<List<UserData>?>(
-                        future: unitPageProvider.read.getListMembers(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            final List<UserData> list = snapshot.data!;
-                            return Form(
-                              key: unitPageProvider
-                                  .read.formKeyRegisterUnitOfAction,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  CustomImputField(
-                                    onChanged: unitPageProvider
-                                        .read.onChangedNameCreateUnitOfAction,
-                                    label: "Nombre Unidad de Acción",
-                                    validator: (text) {
-                                      if (text == "")
-                                        return "El codigo es necesario";
-                                      text = text!.replaceAll(" ", "");
-                                      return null;
-                                    },
-                                  ),
-                                  SettingsWidget(
-                                    onChanged: (v) {
-                                      unitPageProvider.read
-                                          .onChangedUserDateCreateUnitOfAction(
-                                              v);
-                                      log("se hace un on cahnged");
-                                    },
-                                    hint: 'Escoja una clase',
-                                    items: list,
-                                    validator: (text) {
-                                      if (text == null)
-                                        return "Seleccione una clase";
-                                      return null;
-                                    },
-                                  ),
-                                ],
-                              ),
-                            );
-                          } else {
-                            return Text("Cargando clases...");
-                          }
-                        },
-                      ),
-                      actions: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: CustomButton(
-                                height: 48,
-                                textButton: 'Cancelar',
-                                colorTextButton: Colors.white,
-                                colorButton: Color.fromARGB(255, 204, 201, 201),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            Expanded(
-                                child: CustomButton(
-                              height: 48,
-                              textButton: 'Registrar',
-                              onPressed: () {
-                                unitPageProvider.read
-                                    .onPressedRegisterUnitOfAction(context);
-                              },
-                            ))
-                          ],
-                        )
-                      ]).showAlertDialog();
-                  //showAlertDialog(context, "", "");
-                  //router.pushNamed(Routes.REGISTER);
-                },
-              );
+              return Text("Cargando...");
             }
           },
         ),
-      ),
-    );
+        actions: [
+          Row(
+            children: [
+              Expanded(
+                child: CustomButton(
+                  height: 48,
+                  textButton: 'Cancelar',
+                  colorTextButton: Colors.white,
+                  colorButton: Color.fromARGB(255, 204, 201, 201),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                  child: CustomButton(
+                height: 48,
+                textButton: 'Registrar',
+                onPressed: () {
+                  unitPageProvider.read.onPressedRegisterUnitOfAction(context);
+                },
+              ))
+            ],
+          )
+        ]).showAlertDialog();
   }
 
   Widget willPopScope() {
