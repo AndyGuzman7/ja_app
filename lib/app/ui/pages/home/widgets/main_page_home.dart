@@ -58,6 +58,7 @@ class MainPageHome extends StatelessWidget {
                     ],
                   ),
                 ),
+
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

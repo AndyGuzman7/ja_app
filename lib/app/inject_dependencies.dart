@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:ja_app/app/data/repositories/eess_impl/eess_repository.dart';
+import 'package:ja_app/app/data/repositories/target_virtual/target_virtual_repository.dart';
 import 'package:ja_app/app/data/repositories/unitOfAction_impl/unitOfAction_repository.dart';
 import 'package:ja_app/app/data/repositories_impl/eess/eess_repository_impl.dart';
+import 'package:ja_app/app/data/repositories_impl/targetVirtual/target_virtual_repository_impl.dart';
 import 'package:ja_app/app/data/repositories_impl/unitOfAction/unitOfAction_repository_impl.dart';
 import 'package:ja_app/app/data/repositories_impl/user/login/authentication_repository_impl.dart';
 import 'package:ja_app/app/data/repositories_impl/project_mana/project_mana_repository_impl.dart';
@@ -49,4 +51,7 @@ void injectDependencies() {
 
   Get.lazyPut<UnitOfActionRepository>(
       () => UnitOfActionRepositoryImpl(FirebaseFirestore.instance));
+
+  Get.lazyPut<TargetVirtualRepository>(
+      () => TargetVirtualRepositoryImpl(FirebaseFirestore.instance));
 }

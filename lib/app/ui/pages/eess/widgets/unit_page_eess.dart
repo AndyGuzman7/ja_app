@@ -15,14 +15,16 @@ import 'package:ja_app/app/ui/gobal_widgets/drop_dow/custom_dropDown.dart';
 import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_button.dart';
 import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_input_field.dart';
 import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/unit_page_controller.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/unit_page_state.dart';
+import 'package:ja_app/app/ui/pages/eess/controller/members_page_controller/members_page_state.dart';
+import 'package:ja_app/app/ui/pages/eess/controller/unit_page_controller/unit_page_controller.dart';
+import 'package:ja_app/app/ui/pages/eess/controller/unit_page_controller/unit_page_state.dart';
 import 'package:ja_app/app/ui/pages/eess/eess_page.dart';
 import 'package:ja_app/app/ui/pages/eess/widgets/section_unit_page_eess.dart';
 import 'package:ja_app/app/ui/pages/studentes_list/widgets/item_member.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
 
 import '../../../../domain/models/country.dart';
+import '../controller/members_page_controller/members_page_controller.dart';
 
 final unitPageProvider = StateProvider<UnitPageController, UnitPageState>(
     (_) => UnitPageController(sessionProvider.read, eeSsProvider.read),
@@ -88,6 +90,7 @@ class UnitPageEESS extends StatelessWidget {
                               height: 48,
                               colorButton: Colors.white,
                               onPressed: () {
+                                //unitPageProvider.read.sendEmail();
                                 dialogWidget(context);
                               },
                             )
@@ -154,7 +157,7 @@ class UnitPageEESS extends StatelessWidget {
   dialogWidget(BuildContext context) {
     return CustomDialogSimple(context, "Añadir Unidad de Acción",
         content: FutureBuilder<List<UserData>?>(
-          future: unitPageProvider.read.getListMembers(),
+          future: unitPageProvider.read.getMembersNoneUnitOfAction(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final List<UserData> list = snapshot.data!;

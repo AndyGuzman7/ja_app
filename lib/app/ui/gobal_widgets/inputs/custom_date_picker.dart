@@ -38,7 +38,7 @@ class _CustomImputDatePickerState extends State<CustomImputDatePicker> {
   Widget build(BuildContext context) {
     return FormField<DateTime>(
         validator: widget.validator,
-        //initialValue: DateTime.now(),
+        initialValue: DateTime.now(),
         autovalidateMode: AutovalidateMode.onUserInteraction,
         builder: (state) {
           DateTime? value = state.value;
@@ -54,8 +54,7 @@ class _CustomImputDatePickerState extends State<CustomImputDatePicker> {
                   child: TextField(
                     controller: value != null
                         ? TextEditingController(
-                            text: DateFormat.yMMMEd().format(value),
-                          )
+                            text: DateFormat.yMEd("ES").format(value))
                         : null,
                     obscureText: _obscureText,
                     keyboardType: widget.inputType,
@@ -84,6 +83,7 @@ class _CustomImputDatePickerState extends State<CustomImputDatePicker> {
 
                       showDatePicker(
                         context: context,
+                        locale: const Locale("es", "ES"),
                         initialDate: DateTime.now(),
                         firstDate: DateTime(1980),
                         lastDate: DateTime(2222),

@@ -6,6 +6,7 @@ import 'package:ja_app/app/data/repositories_impl/church/church_repository_impl.
 import 'package:ja_app/app/domain/models/church/church.dart';
 import 'package:ja_app/app/domain/models/eess/eess.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
+import 'package:ja_app/app/utils/MyColors.dart';
 
 import '../../../domain/models/user_data.dart';
 import '../../repositories/church_impl/church_repository.dart';
@@ -27,7 +28,6 @@ class EESSRepositoryImpl extends EESSRepository {
         .get();
 
     if (response.docChanges.isNotEmpty) {
-      log(response.docs.elementAt(0).data().toString());
       return EESS.fromJson(response.docs.elementAt(0).data());
     }
     return null;
@@ -41,12 +41,10 @@ class EESSRepositoryImpl extends EESSRepository {
   @override
   Future<EESS?> getEESS(String id) async {
     try {
-      log(id);
       DocumentSnapshot<Map<String, dynamic>> response =
           await _firestore.collection("EESS").doc(id).get();
 
       if (response.exists) {
-        log(response.data().toString());
         return EESS.fromJson(response.data()!);
       }
     } on FirebaseFirestore catch (e) {
@@ -229,15 +227,11 @@ class EESSRepositoryImpl extends EESSRepository {
         List<String>? members = eess.members;
         List<String> membersNone = [];
         if (members != null) {
-          log("entra a los miembros" + members.length.toString());
           for (var e in members) {
-            log(e);
             for (var element in eess.unitOfAction) {
-              log(element.name);
               if (!element.members.contains(e)) {
                 if (membersNone.contains(e) == false) {
                   membersNone.add(e);
-                  log(e);
                 }
               }
             }
@@ -270,6 +264,65 @@ class EESSRepositoryImpl extends EESSRepository {
           idUnitOfAction: {"members": FieldValue.arrayUnion(idMembers)}
         },
       });
+
+      return true;
+    } on bool catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  Future<List<UserData>> getMembersChurchNoneEESS(
+      String idEESS, idChurch) async {
+    List<UserData> listEESS = [];
+
+    ///try {
+    final church = await _churchRepositoryImpl.getChurch(idChurch);
+    final eessList = await getEESSByChurch(idChurch);
+    if (church != null) {
+      List<String> membersChurch = church.members;
+      List<String> membersNone = [];
+      if (membersChurch.isNotEmpty) {
+        List<String> allMembersEESS = [];
+
+        for (var eess in eessList) {
+          allMembersEESS.addAll(eess.members!);
+        }
+
+        for (var memberChurch in membersChurch) {
+          if (!allMembersEESS.contains(memberChurch)) {
+            membersNone.add(memberChurch);
+          }
+        }
+      }
+
+      for (var element in membersNone) {
+        final res = await _firestore
+            .collection("users")
+            .where("id", isEqualTo: element)
+            .get();
+
+        if (res.docChanges.isNotEmpty) {
+          listEESS.add(UserData.fromJson(res.docs.elementAt(0).data()));
+        }
+      }
+
+      ///CustomColorPrimary()
+    }
+    return listEESS;
+    /* } on FirebaseFirestore catch (e) {
+      return listEESS;
+    }*/
+  }
+
+  @override
+  Future<bool> registerMembersEESS(
+      List<String> idMembers, String idEESS) async {
+    try {
+      await _firestore
+          .collection("EESS")
+          .doc(idEESS)
+          .update({"members": FieldValue.arrayUnion(idMembers)});
 
       return true;
     } on bool catch (e) {

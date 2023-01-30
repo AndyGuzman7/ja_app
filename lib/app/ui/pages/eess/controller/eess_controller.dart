@@ -6,6 +6,7 @@ import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/data/repositories/church_impl/church_repository.dart';
 import 'package:ja_app/app/data/repositories/eess_impl/eess_repository.dart';
 import 'package:ja_app/app/data/repositories/unitOfAction_impl/unitOfAction_repository.dart';
+import 'package:ja_app/app/domain/models/church/church.dart';
 import 'package:ja_app/app/domain/models/eess/eess.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/tabBarUi.dart';
@@ -16,6 +17,7 @@ import 'package:ja_app/app/ui/pages/eess/controller/eess_state.dart';
 import 'package:ja_app/app/ui/pages/eess/eess_page.dart';
 import 'package:ja_app/app/ui/pages/eess/widgets/main_page_eess.dart';
 import 'package:ja_app/app/ui/pages/eess/widgets/members_page_eess.dart';
+import 'package:ja_app/app/ui/pages/eess/widgets/target_page_eess.dart';
 import 'package:ja_app/app/ui/pages/eess/widgets/unit_page_eess.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
 
@@ -45,7 +47,7 @@ class EeSsController extends StateNotifier<EeSsState> {
     log("el init");
     List<TabBarUi> listTabBar = [
       TabBarUi(
-        "Principal",
+        "Mi EESS",
         MainPageEess(provider: eeSsProvider),
         null,
       ),
@@ -63,7 +65,7 @@ class EeSsController extends StateNotifier<EeSsState> {
       ),
       TabBarUi(
         "Tarjeta",
-        Center(child: Text("HOLA")),
+        const TargetPageEESS(),
         "adminEESS",
       ),
     ];
@@ -98,41 +100,6 @@ class EeSsController extends StateNotifier<EeSsState> {
     list.contains(user)
         ? removeListMembersSelected(user)
         : addListMembersSelected(user);
-  }
-
-  onPressedRegisterUnitOfAction(context) async {
-    final isReady = formKeyRegisterUnitOfAction.currentState;
-
-    if (isReady != null) {
-      final validator = formKeyRegisterUnitOfAction.currentState!.validate();
-      if (validator) {
-        await registerUnitOfAction(context);
-        //router.pop(context);
-      }
-    }
-  }
-
-  Future registerUnitOfAction(context) async {
-    FocusScope.of(context).unfocus();
-    ProgressDialog.show(context);
-
-    final response = await _unitOfAction.registerUnitOfAction(
-        state.nameUnitOfActionCreate!,
-        state.userDataUnitOfActionCreate!.id,
-        state.eess!.id!);
-    router.pop(context);
-
-    if (!response) {
-      Dialogs.alert(context, title: "Invalido", content: "Codigo invalido");
-    } else {
-      router.pop();
-
-      await Dialogs.alert(context,
-          title: "Registro", content: "Registro exitoso");
-      final response = await getUnitOfActionByEESS();
-      onChangedListUnitOfAction(response);
-    }
-    return response;
   }
 
   onPressedAddMembers(context) async {
@@ -187,7 +154,6 @@ class EeSsController extends StateNotifier<EeSsState> {
   }
 
   onChangedIsSuscribe(bool isSsucribe) {
-    log("suscribe");
     state = state.copyWith(isSuscribeEESS: isSsucribe);
   }
 
@@ -220,42 +186,41 @@ class EeSsController extends StateNotifier<EeSsState> {
   }
 
   void onChangedUnitOfAction(UnitOfAction unitOfAction) {
-    log("otra vex se selecciona");
     state = state.copyWith(unitOfAction: unitOfAction);
+  }
+
+  void onChangedChurch(Church church) {
+    state = state.copyWith(church: church);
   }
 
   void onChangedListUnitOfAction(List<UnitOfAction> list) {
     dynamic s = list;
     state = state.copyWith(listUnitOfAction: s);
-    /*if (list.isNotEmpty) {
-      onChangedUnitOfAction(list.first);
-    }*/
   }
 
-  Future<void> loadSuscriptionAndEESS() async {
-    final eess = await getEESSSuscription();
+  Future<void> loadDataChurchEESS() async {
+    final church = await getcHURCHByMember();
+    final eess = await getEESSByMember();
+    onChangedChurch(church!);
     onChangedEESS(eess!);
-    onChangedIsSuscribe(true);
-    onChangedIsSuscribreEESSs(1);
   }
 
-  Future<void> isExistSuscription() async {
-    //try {
-    final idUser = _sessionController.userData!.id;
-    final responseEESS = await _eess.isExistEESSSuscripcion(idUser);
-    final responseChurch = await _church.isExistChurchSuscripcion(idUser);
+  Future<void> getChurchAndEESS() async {
+    try {
+      final idUser = _sessionController.userData!.id;
+      final responseChurch = await _church.isExistChurchSuscripcion(idUser);
+      final responseEESS = await _eess.isExistEESSSuscripcion(idUser);
 
-    if (responseChurch != null) {
-      onChangedIsSuscribeChurch(true);
-      if (responseEESS != null) {
-        await loadSuscriptionAndEESS();
+      if (responseChurch == null) {
+        return;
       }
-    }
-
-    log("sigueee");
-    /*} catch (e) {
+      if (responseEESS == null) {
+        return;
+      }
+      await loadDataChurchEESS();
+    } catch (e) {
       return;
-    }*/
+    }
   }
 
   Future<List<UserData>> getListMembers() async {
@@ -270,9 +235,15 @@ class EeSsController extends StateNotifier<EeSsState> {
     return listUserData;
   }
 
-  Future<EESS?> getEESSSuscription() async {
+  Future<EESS?> getEESSByMember() async {
     final idUser = _sessionController.userData!.id;
     final response = await _eess.getEESSWitdhIdMember(idUser);
+    return response;
+  }
+
+  Future<Church?> getcHURCHByMember() async {
+    final idUser = _sessionController.userData!.id;
+    final response = await _church.getChurchWitdhIdMember(idUser);
     return response;
   }
 
@@ -323,7 +294,7 @@ class EeSsController extends StateNotifier<EeSsState> {
 
   Future<List<UserData>>? getMembersToUnitOfAction(String idUnitAction) async {
     final eess = await _unitOfAction.getMembersToUnitAction(idUnitAction);
-    //if (eess != null) onChangedEESS(eess);
+
     return eess;
   }
 

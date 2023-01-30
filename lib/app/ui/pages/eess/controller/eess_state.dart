@@ -2,12 +2,14 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:ja_app/app/domain/models/church/church.dart';
 import 'package:ja_app/app/domain/models/eess/eess.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 
 class EeSsState {
   final String? imageUser;
+  final Church? church;
   final List<Tab> listTabr;
   final List<Widget> listTabBarView;
   final bool isSuscribeEESS;
@@ -28,6 +30,7 @@ class EeSsState {
   final UserData? userDataUnitOfActionCreate;
 
   EeSsState({
+    required this.church,
     required this.listUnitOfAction,
     required this.userDataUnitOfActionCreate,
     required this.nameUnitOfActionCreate,
@@ -47,6 +50,7 @@ class EeSsState {
   });
 
   static EeSsState get initialState => EeSsState(
+        church: null,
         listUnitOfAction: [],
         nameUnitOfActionCreate: null,
         userDataUnitOfActionCreate: null,
@@ -66,6 +70,7 @@ class EeSsState {
       );
 
   EeSsState copyWith({
+    Church? church,
     List<UnitOfAction>? listUnitOfAction,
     UnitOfAction? unitOfAction,
     int? isSuscribeEESSs,
@@ -83,8 +88,8 @@ class EeSsState {
     String? nameUnitOfActionCreate,
     UserData? userDataUnitOfActionCreate,
   }) {
-    log("stado");
     return EeSsState(
+      church: church ?? this.church,
       listUnitOfAction: listUnitOfAction ?? this.listUnitOfAction,
       nameUnitOfActionCreate:
           nameUnitOfActionCreate ?? this.nameUnitOfActionCreate,

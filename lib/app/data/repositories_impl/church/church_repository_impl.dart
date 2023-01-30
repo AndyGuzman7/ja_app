@@ -13,7 +13,6 @@ class ChurchRepositoryImpl extends ChurchRepository {
   @override
   Future<bool> registerMemberChurch(String idMember, String idChurch) async {
     try {
-      log(idChurch);
       final response =
           await _firestore.collection("church").doc(idChurch).update({
         "members": FieldValue.arrayUnion([idMember]),
@@ -50,7 +49,6 @@ class ChurchRepositoryImpl extends ChurchRepository {
       final church = await isExistChurchCodeAccess(code);
 
       if (church != null) {
-        log(church.id);
         final register = await registerMemberChurch(idMember, church.id);
         if (!register) {
           return false;
@@ -73,7 +71,6 @@ class ChurchRepositoryImpl extends ChurchRepository {
         .get();
 
     if (response.docChanges.isNotEmpty) {
-      log(response.docs.elementAt(0).data().toString());
       return Church.fromJson(response.docs.elementAt(0).data());
     }
     return null;
@@ -100,5 +97,21 @@ class ChurchRepositoryImpl extends ChurchRepository {
     } on bool catch (e) {
       return null;
     }
+  }
+
+  @override
+  Future<Church?> getChurch(String id) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> response =
+          await _firestore.collection("church").doc(id).get();
+
+      if (response.exists) {
+        return Church.fromJson(response.data()!);
+      }
+    } on FirebaseFirestore catch (e) {
+      log(e.app.name);
+      return null;
+    }
+    return null;
   }
 }

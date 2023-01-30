@@ -20,7 +20,6 @@ class UserRepositoryImpl extends UserRepository {
           .get();
 
       if (response.exists) {
-        log(response.data().toString());
         return UserData.fromJson(response.data()!);
       }
     } on FirebaseFirestore catch (e) {
@@ -38,7 +37,6 @@ class UserRepositoryImpl extends UserRepository {
           await _firestore.collection(NameNodesUser.NODE_MAIN_USERS).get();
 
       response.docs.forEach((element) {
-        print(element.data());
         listSignUpData.add(UserData.fromJson(element.data()));
       });
 

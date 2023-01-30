@@ -3,4 +3,6 @@ import 'package:ja_app/app/domain/models/resources.dart';
 
 abstract class ResourcesRepository {
   Future<Resources> getImagesLink();
+
+  Future<bool> registerImageAvatar();
 }

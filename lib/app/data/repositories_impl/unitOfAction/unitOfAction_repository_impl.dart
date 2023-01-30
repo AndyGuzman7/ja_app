@@ -169,21 +169,21 @@ class UnitOfActionRepositoryImpl extends UnitOfActionRepository {
   }
 
   @override
-  Future<bool> registerUnitOfAction(String nameUnitOfAction,
+  Future<UnitOfAction?> registerUnitOfAction(String nameUnitOfAction,
       String idLeaderUnitOfAction, String idEESS) async {
     try {
       final id = _firestore.collection("unitOfAction").doc().id;
       UnitOfAction unitOfAction =
           UnitOfAction(id, idEESS, idLeaderUnitOfAction, nameUnitOfAction, []);
 
-      await _firestore
+      final response = await _firestore
           .collection("unitOfAction")
           .doc(id)
           .set(unitOfAction.toJson());
 
-      return true;
-    } on bool catch (e) {
-      return false;
+      return unitOfAction;
+    } on UnitOfAction catch (e) {
+      return null;
     }
   }
 }

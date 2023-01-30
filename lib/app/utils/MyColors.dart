@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 // Color.fromARGB(255, 102, 133, 230),
 //    Color.fromARGB(255, 127, 159, 229)
 class CustomColorPrimary {
-  Color c = Color.fromARGB(255, 91, 119, 238);
+  Color c = Color(0xFF5B77EE);
   late final int _colorCode;
   final Map<int, Color> _colorCodes = {
     50: Color.fromARGB(255, 91, 119, 238),

@@ -2,8 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/ui.dart';
+import 'package:ja_app/app/domain/models/country.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/gobal_widgets/item/item_list_view_controller.dart';
+
+import '../../../utils/MyColors.dart';
+import '../drop_dow/custom_dropDown.dart';
 
 class ItemMemberV3 extends StatefulWidget {
   UserData user;
@@ -82,6 +86,134 @@ class _ItemMemberV3State extends State<ItemMemberV3> {
           ],
         ),
       ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class ItemMemberV4 extends StatefulWidget {
+  UserData user;
+  bool isSelected;
+
+  final void Function(UserData userData, String state)? onPressed;
+  ItemMemberV4(this.user, this.isSelected, this.onPressed, {Key? key})
+      : super(key: key);
+
+  @override
+  State<ItemMemberV4> createState() => _ItemMemberV4State();
+}
+
+class _ItemMemberV4State extends State<ItemMemberV4> {
+  String? value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.only(top: 1, bottom: 1),
+      color: Color.fromARGB(255, 255, 255, 255),
+      elevation: 0,
+      child: InkWell(
+        //borderRadius: BorderRadius.circular(16),
+        onLongPress: () {
+          setState(() {
+            widget.isSelected = !widget.isSelected;
+            log(widget.isSelected.toString());
+            widget.onPressed!(widget.user, value!);
+          });
+        },
+        //router.pushNamed(pageRoute);
+
+        child: Row(
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                width: 30,
+                height: 30,
+                child: Container(
+                  child: CircleAvatar(
+                    child: Image.network(widget.user.photoURL),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.user.name + " " + widget.user.lastName,
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 20, left: 10),
+              child: PopupMenuButton(
+                constraints: BoxConstraints(),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      border: Border.all(
+                          color: Color.fromARGB(255, 146, 146, 146))),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 48,
+                        padding: EdgeInsets.all(5),
+                        child: Row(
+                          children: [
+                            Text(value ?? "F"),
+                            Icon(
+                              Icons.filter_list_alt,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                            Icon(
+                              Icons.arrow_drop_down_sharp,
+                              color: Colors.black,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                itemBuilder: (ctx) => [
+                  _buildPopupMenuItem('P'),
+                  _buildPopupMenuItem('F'),
+                ],
+                onSelected: ((value) {
+                  log(value.toString() + "sadasda");
+                }),
+              ),
+            ),
+            /*if (widget.isSelected)
+              Icon(Icons.check_box_outlined)
+            else
+              Icon(Icons.check_box_outline_blank_rounded)*/
+          ],
+        ),
+      ),
+    );
+  }
+
+  PopupMenuItem _buildPopupMenuItem(String title) {
+    return PopupMenuItem(
+      child: Text(title),
+      onTap: () {
+        setState(() {
+          value = title;
+        });
+        widget.onPressed!(widget.user, value!);
+        //eeSsProvider.read.onChangedTitleSearch(title);
+      },
     );
   }
 }

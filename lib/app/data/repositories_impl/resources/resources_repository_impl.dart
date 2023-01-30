@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ja_app/app/data/repositories_impl/name_nodes/name_nodes_user.dart';
 import 'package:ja_app/app/domain/models/resources.dart';
 import 'package:ja_app/app/data/repositories/resources_impl/resources_repository.dart';
+import 'package:ja_app/app/domain/models/userAvatar.dart';
 
 class ResourcesRepositoryImpl extends ResourcesRepository {
   final FirebaseFirestore _firestore;
@@ -30,5 +33,22 @@ class ResourcesRepositoryImpl extends ResourcesRepository {
       return resources!;
     }
     return resources!;
+  }
+
+  @override
+  Future<bool> registerImageAvatar() async {
+    List<UserAvatar> userAvatar = [];
+    String jsonTags = jsonEncode(userAvatar);
+    final e = userAvatar.map((e) => e.toJson()).toString();
+    try {
+      await _firestore
+          .collection("resources")
+          .doc("images")
+          .collection(jsonTags);
+
+      return true;
+    } on bool catch (e) {
+      return false;
+    }
   }
 }

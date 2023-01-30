@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_meedu/ui.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -118,7 +119,11 @@ class _MyAppState extends State<MyApp> {
         textTheme: GoogleFonts.ubuntuTextTheme(),
         primarySwatch: CustomColorPrimary().materialColor,
       ),
-
+      localizationsDelegates: [GlobalMaterialLocalizations.delegate],
+      supportedLocales: [
+        Locale('en', ''),
+        Locale('ar', ''), // arabic, no country code
+      ],
       navigatorKey: router.navigatorKey,
       initialRoute: Routes.SPLASH,
       routes: appRoutes,

@@ -27,7 +27,6 @@ class SectionUnitPageEESS extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("se cosntrue la seccion");
     return Column(
       children: [
         card("Nombre de Unidad", unitOfAction.name, null),
@@ -67,7 +66,6 @@ class SectionUnitPageEESS extends StatelessWidget {
                     unitPageProvider
                         .select((state) => state.membersUnitOfAction),
                   );
-                  log("llega");
 
                   if (response.isEmpty) {
                     return Container(
@@ -79,15 +77,13 @@ class SectionUnitPageEESS extends StatelessWidget {
                       width: double.infinity,
                       // width: 300,
                       color: Colors.grey.shade100,
-                      child: Expanded(
-                        child: ListView.builder(
-                          physics: BouncingScrollPhysics(),
-                          //padding: const EdgeInsets.only(top: 20),
-                          itemCount: response.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return ItemMemberV2(response[index]);
-                          },
-                        ),
+                      child: ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        //padding: const EdgeInsets.only(top: 20),
+                        itemCount: response.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ItemMemberV2(response[index]);
+                        },
                       ),
                     );
                   }
@@ -267,6 +263,19 @@ class SectionUnitPageEESS extends StatelessWidget {
     );
   }
 
+  DataColumn s() {
+    return DataColumn(
+        label: Container(
+      color: CustomColorPrimary().c,
+      child: Row(
+        children: [
+          Text("data"),
+          IconButton(onPressed: () {}, icon: Icon(Icons.read_more))
+        ],
+      ),
+    ));
+  }
+
   Widget cardTerm(title, value) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -332,8 +341,7 @@ class SectionUnitPageEESS extends StatelessWidget {
             backgroundColor: Colors.white,
             content: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
               FutureBuilder(
-                  future: unitPageProvider.read
-                      .getMembersNoneUnitOfAction(unitOfAction.id),
+                  future: unitPageProvider.read.getMembersNoneUnitOfAction(),
                   builder: (context, AsyncSnapshot<List<UserData>> snapshot) {
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {

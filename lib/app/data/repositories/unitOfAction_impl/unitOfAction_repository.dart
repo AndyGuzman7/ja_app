@@ -8,7 +8,7 @@ import 'package:ja_app/app/domain/models/user_data.dart';
 abstract class UnitOfActionRepository {
   Future<List<UnitOfAction>> getUnitOfActionAll();
 
-  Future<bool> registerUnitOfAction(
+  Future<UnitOfAction?> registerUnitOfAction(
       String nameUnitOfAction, String idLeaderUnitOfAction, String idEESS);
 
   Future<List<UnitOfAction>> getUnitOfActionAllByEESS(String idEESS);

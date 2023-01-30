@@ -15,6 +15,7 @@ import 'package:ja_app/app/ui/gobal_widgets/drop_dow/custom_dropDownButton%20cop
 import 'package:ja_app/app/ui/pages/register/controller/register_state.dart';
 import 'package:ja_app/app/ui/pages/register/utils/permisson_list.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
+import 'package:ja_app/app/utils/email_service.dart';
 
 import '../../../../data/repositories/church_impl/church_repository.dart';
 import '../../../../data/repositories/resources_impl/resources_repository.dart';
@@ -52,7 +53,8 @@ class RegisterController extends StateNotifier<RegisterState> {
       newUrl = url +
           name +
           ".png?alt=media&token=08b2edd7-f904-4d61-b59f-97520e4000b3";
-      var user = UserAvatar(name, newUrl, i == 0 ? true : false);
+      var user =
+          UserAvatar(name: name, url: newUrl, isSelect: i == 0 ? true : false);
 
       //if (user.isSelect == true) onUserAvatarChanged(user);
       listAvatar.add(user);
@@ -118,6 +120,12 @@ class RegisterController extends StateNotifier<RegisterState> {
         }
         Dialogs.alert(context, title: "ERROR", content: content);
       } else {
+        await sendEmail(
+            response.signUpData!.email,
+            "¡Su registro fue exitoso!\n Los datos mas importantes para su inicio de sesión:\n\tEmail: " +
+                response.signUpData!.email +
+                "\n\tContraseña: " +
+                response.signUpData!.password);
         if (_sessionController.user != null) {
           final user = await _authRepository.user;
 
@@ -141,6 +149,12 @@ class RegisterController extends StateNotifier<RegisterState> {
     } else {
       Dialogs.alert(context, title: "ERROR", content: "Invalid fields");
     }
+  }
+
+  sendEmail(email, text) async {
+    EmailService emailService = EmailService(
+        email, "Registro de miembro " + DateTime.now().toString(), text);
+    await emailService.sendEmail();
   }
 
   Future<void> uploadPfp(File file) async {

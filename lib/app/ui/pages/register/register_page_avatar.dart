@@ -123,7 +123,7 @@ class _RegisterPageAvatarState extends State<RegisterPageAvatar>
       if (e.name == i.name) {
         e.isSelect = true;
       }
-      UserAvatar f = UserAvatar(e.name, e.url, e.isSelect);
+      UserAvatar f = UserAvatar(name: e.name, url: e.url, isSelect: e.isSelect);
       listNew.add(f);
     }
     //provider.read.onUserAvatarChanged(i);

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ja_app/app/data/repositories/eess_impl/eess_repository.dart';
 import 'package:ja_app/app/data/repositories/unitOfAction_impl/unitOfAction_repository.dart';
 import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
@@ -10,18 +12,26 @@ import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/dialogs.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/progress_dialog.dart';
 import 'package:ja_app/app/ui/pages/eess/controller/eess_controller.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/unit_page_state.dart';
+import 'package:ja_app/app/ui/pages/eess/controller/members_page_controller/members_page_state.dart';
+import 'package:ja_app/app/ui/pages/eess/controller/unit_page_controller/unit_page_state.dart';
+import 'package:ja_app/app/utils/email_service.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
 
-import '../../../global_controllers/session_controller.dart';
+import '../../../../../data/repositories/target_virtual/target_virtual_repository.dart';
+import '../../../../global_controllers/session_controller.dart';
 
 class UnitPageController extends StateNotifier<UnitPageState> {
   final SessionController _sessionController;
   final EeSsController _eeSsController;
+
   List<UserData> membersSelected = [];
   String? _routeName;
   String? get routeName => _routeName;
   final userRepository = Get.find<UserRepository>();
+
+  final _targetVirtual = Get.find<TargetVirtualRepository>();
 
   final GlobalKey<FormState> formKey = GlobalKey();
 
@@ -41,6 +51,7 @@ class UnitPageController extends StateNotifier<UnitPageState> {
       final validator = formKeyRegisterUnitOfAction.currentState!.validate();
       if (validator) {
         await registerUnitOfAction(context);
+
         router.pop(context);
       }
     }
@@ -53,9 +64,14 @@ class UnitPageController extends StateNotifier<UnitPageState> {
         state.nameUnitOfActionCreate!,
         state.userDataUnitOfActionCreate!.id,
         _eeSsController.state.eess!.id!);
+
+    final responseRegisterMember = await _unitOfAction
+        .registerMemberUnitOfAction([state.userDataUnitOfActionCreate!.id],
+            response!.idEESS, response.id);
+    await _targetVirtual.registerTargetVirtual(response.id);
     router.pop(context);
 
-    if (response) {
+    if (response != null && responseRegisterMember) {
       await Dialogs.alert(context,
           title: "Registro", content: "Registro exitoso");
       await loadPageData();
@@ -155,8 +171,7 @@ class UnitPageController extends StateNotifier<UnitPageState> {
     return unitOfActions;
   }
 
-  Future<List<UserData>>? getMembersNoneUnitOfAction(
-      String idUnitAction) async {
+  Future<List<UserData>>? getMembersNoneUnitOfAction() async {
     final idEESS = _eeSsController.state.eess!.id;
     final response =
         await _unitOfAction.getMembersEESSNoneToUnitOfAction(idEESS!);
@@ -179,8 +194,28 @@ class UnitPageController extends StateNotifier<UnitPageState> {
     }
   }
 
+  sendEmail() async {
+    EmailService emailService = EmailService("andyguzman117@gmail.com",
+        "Registro de miembro " + DateTime.now().toString(), "");
+    await emailService.sendEmail();
+  }
+
   @override
   void dispose() {
     super.dispose();
   }
+}
+
+class GoogleAuthApi {
+  static final _googleSignIn =
+      GoogleSignIn(scopes: ['https://mail.google.com/']);
+  static Future<GoogleSignInAccount?> signIng() async {
+    if (await _googleSignIn.isSignedIn()) {
+      return _googleSignIn.currentUser;
+    } else {
+      return await _googleSignIn.signIn();
+    }
+  }
+
+  static Future signOut() => _googleSignIn.signOut();
 }

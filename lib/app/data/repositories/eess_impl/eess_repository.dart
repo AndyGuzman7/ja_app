@@ -20,6 +20,10 @@ abstract class EESSRepository {
 
   Future<List<UserData>> getMembersEESSNoneToUnitOfAction(String idEESS);
 
+  Future<List<UserData>> getMembersChurchNoneEESS(String idEESS, idChurch);
+
   Future<List<UserData>> getUnitOfAction(String idEESS);
   Future<Church?> getChurchWitdhIdMember(String id);
+
+  Future<bool> registerMembersEESS(List<String> idMembers, String idEESS);
 }
