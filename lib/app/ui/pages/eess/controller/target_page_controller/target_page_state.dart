@@ -9,14 +9,21 @@ import 'package:ja_app/app/domain/models/user_data.dart';
 
 class TargetPageState {
   final UnitOfAction? unitOfAction;
+  final TargetVirtual? targetVirtualSelected;
   final List<UnitOfAction> listUnitOfAction;
   final String? nameUnitOfActionCreate;
   final UserData? userDataUnitOfActionCreate;
   final List<UserData> membersEESSNew;
   final List<UserData> membersUnitOfAction;
+  final List<UserDataAttendance> listUserDataAttendance;
+
+  final List<UserData> membersAttendance;
   final List<Attendance> attendanceList;
 
   TargetPageState({
+    required this.listUserDataAttendance,
+    required this.membersAttendance,
+    required this.targetVirtualSelected,
     required this.attendanceList,
     required this.membersUnitOfAction,
     required this.membersEESSNew,
@@ -27,7 +34,10 @@ class TargetPageState {
   });
 
   static TargetPageState get initialState => TargetPageState(
+        listUserDataAttendance: [],
+        targetVirtualSelected: null,
         attendanceList: [],
+        membersAttendance: [],
         membersUnitOfAction: [],
         membersEESSNew: [],
         listUnitOfAction: [],
@@ -37,6 +47,9 @@ class TargetPageState {
       );
 
   TargetPageState copyWith({
+    List<UserDataAttendance>? listUserDataAttendance,
+    List<UserData>? membersAttendance,
+    TargetVirtual? targetVirtualSelected,
     List<Attendance>? attendanceList,
     List<UnitOfAction>? listUnitOfAction,
     UnitOfAction? unitOfAction,
@@ -47,6 +60,11 @@ class TargetPageState {
   }) {
     log("stado");
     return TargetPageState(
+      listUserDataAttendance:
+          listUserDataAttendance ?? this.listUserDataAttendance,
+      membersAttendance: membersAttendance ?? this.membersAttendance,
+      targetVirtualSelected:
+          targetVirtualSelected ?? this.targetVirtualSelected,
       attendanceList: attendanceList ?? this.attendanceList,
       membersUnitOfAction: membersUnitOfAction ?? this.membersUnitOfAction,
       membersEESSNew: membersEESSNew ?? this.membersEESSNew,

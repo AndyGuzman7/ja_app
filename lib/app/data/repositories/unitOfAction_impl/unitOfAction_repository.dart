@@ -14,6 +14,11 @@ abstract class UnitOfActionRepository {
   Future<List<UnitOfAction>> getUnitOfActionAllByEESS(String idEESS);
 
   Future<UnitOfAction?> getUnitOfAction(String idUnitOfAction);
+
+  Future<UnitOfAction?> isMemberToUnitOfAction(String idMember);
+
+  Future<UnitOfAction?> isLeaderToUnitOfAction(String idMember);
+
   Future<List<UserData>> getMembersToUnitAction(String idUnitAction);
   Future<bool> registerMemberUnitOfAction(
       List<String> idMember, String idEESS, idUnitOfAction);

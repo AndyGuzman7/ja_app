@@ -22,7 +22,9 @@ import 'package:ja_app/app/utils/MyColors.dart';
 
 class SectionUnitPageEESS extends StatelessWidget {
   final UnitOfAction unitOfAction;
-  const SectionUnitPageEESS({Key? key, required this.unitOfAction})
+  final bool isAdmin;
+  const SectionUnitPageEESS(
+      {Key? key, required this.unitOfAction, required this.isAdmin})
       : super(key: key);
 
   @override
@@ -38,21 +40,22 @@ class SectionUnitPageEESS extends StatelessWidget {
             Expanded(
               child: CustomTitle2(title: "Miembros"),
             ),
-            CustomButton(
-              icon: Icon(
-                Icons.person_add,
-                color: CustomColorPrimary().materialColor,
-                size: 25,
-              ),
-              colorBorderButton: CustomColorPrimary().materialColor,
-              width: 60,
-              height: 48,
-              colorButton: Colors.white,
-              onPressed: () {
-                showAlertDialog(context, "", "");
-                //router.pushNamed(Routes.REGISTER);
-              },
-            )
+            if (isAdmin)
+              CustomButton(
+                icon: Icon(
+                  Icons.person_add,
+                  color: CustomColorPrimary().materialColor,
+                  size: 25,
+                ),
+                colorBorderButton: CustomColorPrimary().materialColor,
+                width: 60,
+                height: 48,
+                colorButton: Colors.white,
+                onPressed: () {
+                  showAlertDialog(context, "", "");
+                  //router.pushNamed(Routes.REGISTER);
+                },
+              )
           ]),
         ),
         Divider(),

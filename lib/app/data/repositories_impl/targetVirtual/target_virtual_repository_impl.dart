@@ -208,13 +208,17 @@ class TargetVirtualRepositoryImpl extends TargetVirtualRepository {
   }
 
   @override
-  Future<bool> isExistAttendanceNowByIdUnitfAction(
-      String idUnitOfAction) async {
-    final dateNow = DateFormat.yMd().format(DateTime.now());
+  Future<bool> isExistAttendanceNowByIdTrgetVirtual(
+      String idTargetVirtual, DateTime dateTime) async {
+    final dateNow = DateFormat.yMd("EN").format(dateTime);
+
+    DateFormat format = DateFormat("MM/dd/yyyy");
+    log(idTargetVirtual);
+    print(format.parse(dateNow));
     final res = await _firestore
-        .collection("EESS_targetVirtual")
-        .where("attendance", arrayContains: dateNow)
-        .where("idUnitOfAction", isEqualTo: idUnitOfAction)
+        .collection("EESS_unitOfAction_attendance")
+        .where("date", isEqualTo: format.parse(dateNow))
+        .where("idTargetVirtual", isEqualTo: idTargetVirtual)
         .get();
 
     if (res.docs.isEmpty) {
@@ -228,15 +232,20 @@ class TargetVirtualRepositoryImpl extends TargetVirtualRepository {
 
   @override
   Future<bool> registerAttendanceToTargetVirtual(
-      DateTime dateTime, String idTargetVirtual) async {
+      DateTime dateTime, String idTargetVirtual, List<Attendance>? list) async {
     /* try {*/
-    final dateNow = DateFormat.yMd().format(dateTime);
+    final id = _firestore.collection("EESS_unitOfAction_attendance").doc().id;
+
+    final dateNow = DateFormat.yMd("EN").format(dateTime);
+
+    DateFormat format = DateFormat("MM/dd/yyyy");
+    print(format.parse(dateNow));
+    final dayAttendance =
+        DayAtendance(id, idTargetVirtual, format.parse(dateNow), list ?? []);
     await _firestore
-        .collection("EESS_targetVirtual")
-        .doc(idTargetVirtual)
-        .update({
-      "attendance": FieldValue.arrayUnion([dateNow])
-    });
+        .collection("EESS_unitOfAction_attendance")
+        .doc(id)
+        .set(dayAttendance.toJson());
 
     return true;
     /*} on bool catch (e) {
@@ -264,6 +273,82 @@ class TargetVirtualRepositoryImpl extends TargetVirtualRepository {
       return null;
     } on bool catch (e) {
       return null;
+    }
+  }
+
+  @override
+  Future<Attendance?> getAttendance(String idAttendance) async {
+    try {
+      //log(id);
+      DocumentSnapshot<Map<String, dynamic>> response = await _firestore
+          .collection("EESS_unitOfAction_attendance")
+          .doc(idAttendance)
+          .get();
+
+      if (response.exists) {
+        return Attendance.fromJson(response.data()!);
+      }
+    } on FirebaseFirestore catch (e) {
+      log(e.app.name);
+      return null;
+    }
+    return null;
+  }
+
+  @override
+  Future<TargetVirtual?> getTargetVirtual(String idTargetVirtual) async {
+    try {
+      //log(id);
+      DocumentSnapshot<Map<String, dynamic>> response = await _firestore
+          .collection("EESS_targetVirtual")
+          .doc(idTargetVirtual)
+          .get();
+
+      if (response.exists) {
+        return TargetVirtual.fromJson(response.data()!);
+      }
+    } on FirebaseFirestore catch (e) {
+      log(e.app.name);
+      return null;
+    }
+    return null;
+  }
+
+  @override
+  Future<DayAtendance?> getAttendanceNowByIdTrgetVirtual(
+      String idTargetVirtual, DateTime dateTime) async {
+    final dateNow = DateFormat.yMd("EN").format(dateTime);
+
+    DateFormat format = DateFormat("MM/dd/yyyy");
+
+    final res = await _firestore
+        .collection("EESS_unitOfAction_attendance")
+        .where("date", isEqualTo: format.parse(dateNow))
+        .where("idTargetVirtual", isEqualTo: idTargetVirtual)
+        .get();
+
+    if (res.docs.isEmpty) {
+      return null;
+    }
+
+    return DayAtendance.fromJson(res.docs.first.data());
+  }
+
+  @override
+  Future<bool> registerMemberToAttendance(
+      List<Attendance> listAttendance, String idAttendaance) async {
+    try {
+      final s = listAttendance.map((e) => e.toJson()).toList();
+      await _firestore
+          .collection("EESS_unitOfAction_attendance")
+          .doc(idAttendaance)
+          .update({
+        "attendance": listAttendance.map((e) => e.toJson()).toList(),
+      });
+
+      return true;
+    } on bool catch (e) {
+      return false;
     }
   }
 }

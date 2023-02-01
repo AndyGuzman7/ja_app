@@ -186,4 +186,44 @@ class UnitOfActionRepositoryImpl extends UnitOfActionRepository {
       return null;
     }
   }
+
+  @override
+  Future<UnitOfAction?> isLeaderToUnitOfAction(String idMember) async {
+    /*try {*/
+    UnitOfAction? unitOfAction;
+    QuerySnapshot<Map<String, dynamic>> response = await _firestore
+        .collection("unitOfAction")
+        .where("leader", isEqualTo: idMember)
+        .get();
+
+    if (response.docs.isNotEmpty) {
+      return UnitOfAction.fromJson(response.docs.first.data());
+    }
+
+    return unitOfAction;
+    /*} on UnitOfAction catch (e) {
+      return null;
+    }*/
+  }
+
+  @override
+  Future<UnitOfAction?> isMemberToUnitOfAction(String idMember) async {
+    /* try {*/
+    UnitOfAction? unitOfAction;
+    QuerySnapshot<Map<String, dynamic>> response = await _firestore
+        .collection("unitOfAction")
+        .where("members", arrayContains: idMember)
+        .get();
+    log(response.docs.toString());
+
+    if (response.docs.isNotEmpty) {
+      log("sssssssssiiiiiiiiiiiii");
+      return UnitOfAction.fromJson(response.docs.first.data());
+    }
+
+    return unitOfAction;
+    /*} on UnitOfAction catch (e) {
+      return null;
+    }*/
+  }
 }

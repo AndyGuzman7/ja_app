@@ -137,11 +137,23 @@ class TargetPageController extends StateNotifier<TargetPageState> {
     state = state.copyWith(membersUnitOfAction: list);
   }
 
+  void onChangedListUserDataAttendance(list) {
+    state = state.copyWith(listUserDataAttendance: list);
+  }
+
   void onChangedAttendaceList(list) {
     state = state.copyWith(attendanceList: list);
   }
 
-  void changedStateMember(String idMember, String stateMember) {
+  void onChangedTargetVirtualSelected(TargetVirtual targetVirtual) {
+    state = state.copyWith(targetVirtualSelected: targetVirtual);
+  }
+
+  void onChangedListAttendance(List<UserData> list) {
+    state = state.copyWith(membersAttendance: list);
+  }
+
+  void changedStateMember(String idMember, Attendance stateMember) {
     List<Attendance> attendanceList = state.attendanceList;
     final r = attendanceList.where((element) => element.idMember == idMember);
 
@@ -149,16 +161,32 @@ class TargetPageController extends StateNotifier<TargetPageState> {
       attendanceList
           .where((element) => element.idMember == idMember)
           .first
-          .state = stateMember;
+          .state = stateMember.state;
     }
     onChangedAttendaceList(attendanceList);
   }
 
   Future<void> onPressedButtonSave() async {
-    final idTargetVirtual = await _targetVirtual
-        .getTargetVirtualByUnitOfAction(state.unitOfAction!.id);
-    _targetVirtual.registerAttendanceToTargetVirtual(
-        DateTime.now(), idTargetVirtual!.id!);
+    final isExist = await _targetVirtual.isExistAttendanceNowByIdTrgetVirtual(
+      state.targetVirtualSelected!.id!,
+      DateTime.now(),
+    );
+
+    if (isExist) {
+      final attendance = await _targetVirtual.getAttendanceNowByIdTrgetVirtual(
+        state.targetVirtualSelected!.id!,
+        DateTime.now(),
+      );
+
+      _targetVirtual.registerMemberToAttendance(
+          state.attendanceList, attendance!.id);
+    } else {
+      final idTargetVirtual = await _targetVirtual
+          .getTargetVirtualByUnitOfAction(state.unitOfAction!.id);
+
+      _targetVirtual.registerAttendanceToTargetVirtual(
+          DateTime.now(), idTargetVirtual!.id!, state.attendanceList);
+    }
   }
 
   Future<List<UserData>> getListMembers() async {
@@ -208,7 +236,22 @@ class TargetPageController extends StateNotifier<TargetPageState> {
   Future loadPageData() async {
     final response = await getUnitOfActionByEESS();
     onChangedListUnitOfAction(response);
+    final res = await getTargetVirtualByUnitOfAction(state.unitOfAction!.id);
+    onChangedTargetVirtualSelected(res!);
     //return response;
+  }
+
+  Future loadPageTargetVirtualData() async {
+    final response =
+        await getTargetVirtualByUnitOfAction(state.unitOfAction!.id);
+    onChangedTargetVirtualSelected(response!);
+  }
+
+  Future<TargetVirtual?> getTargetVirtualByUnitOfAction(
+      String idUnitOfAction) async {
+    final targetVirtual =
+        await _targetVirtual.getTargetVirtualByUnitOfAction(idUnitOfAction);
+    return targetVirtual;
   }
 
   /*void onChangedMembersEESS(List<UserData> list) {
@@ -216,11 +259,61 @@ class TargetPageController extends StateNotifier<TargetPageState> {
   }*/
 
   Future<void> loadDataAttendanceAction() async {
-    final isExistAttendanceNow = await _targetVirtual
-        .isExistAttendanceNowByIdUnitfAction(state.unitOfAction!.id);
-    if (!isExistAttendanceNow) {
-      final membersUnitOfAction =
-          await _unitOfAction.getMembersToUnitAction(state.unitOfAction!.id);
+    final isExist = await _targetVirtual.isExistAttendanceNowByIdTrgetVirtual(
+      state.targetVirtualSelected!.id!,
+      DateTime.now(),
+    );
+    log(isExist.toString());
+    if (isExist) {
+      final membersUnitOfAction = await _unitOfAction.getMembersToUnitAction(
+        state.unitOfAction!.id,
+      );
+
+      DayAtendance? attendance =
+          await _targetVirtual.getAttendanceNowByIdTrgetVirtual(
+        state.targetVirtualSelected!.id!,
+        DateTime.now(),
+      );
+
+      final listIdMembers = membersUnitOfAction.map((e) => e.id).toList();
+
+      List<Attendance> listAttendance = attendance!.attendance;
+      for (var element in listAttendance) {
+        if (listIdMembers.contains(element.idMember)) {
+          listIdMembers.remove(element.idMember);
+        }
+      }
+      listAttendance.addAll(listIdMembers.map((e) => Attendance(e, "F")));
+
+      final listUsers = await userRepository
+          .getMembersToIds(listAttendance.map((e) => e.idMember).toList());
+
+      List<UserDataAttendance> usersData = listAttendance.map(((e) {
+        final user = listUsers.firstWhere(
+          (element) => element.id == e.idMember,
+        );
+        return UserDataAttendance(user, e);
+      })).toList();
+      log(usersData.length.toString());
+      onChangedListUserDataAttendance(usersData);
+      onChangedMembersUnitOfAction(listUsers);
+      onChangedAttendaceList(listAttendance);
+    } else {
+      final membersUnitOfAction = await _unitOfAction.getMembersToUnitAction(
+        state.unitOfAction!.id,
+      );
+
+      final listAttendance =
+          membersUnitOfAction.map((e) => Attendance(e.id, "F")).toList();
+
+      List<UserDataAttendance> usersData = listAttendance.map(((e) {
+        final user = membersUnitOfAction.firstWhere(
+          (element) => element.id == e.idMember,
+        );
+        return UserDataAttendance(user, e);
+      })).toList();
+      log(usersData.length.toString());
+      onChangedListUserDataAttendance(usersData);
 
       onChangedAttendaceList(
           membersUnitOfAction.map((e) => Attendance(e.id, "F")).toList());

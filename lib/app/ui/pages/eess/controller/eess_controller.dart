@@ -45,6 +45,7 @@ class EeSsController extends StateNotifier<EeSsState> {
 
   init() {
     log("el init");
+    List<String> listPermisson = _sessionController.userData!.listPermisson;
     List<TabBarUi> listTabBar = [
       TabBarUi(
         "Mi EESS",
@@ -60,8 +61,10 @@ class EeSsController extends StateNotifier<EeSsState> {
       ),
       TabBarUi(
         "Unidades",
-        UnitPageEESS(),
-        "adminEESS",
+        UnitPageEESS(
+          listPermissons: listPermisson,
+        ),
+        null,
       ),
       TabBarUi(
         "Tarjeta",
@@ -69,30 +72,20 @@ class EeSsController extends StateNotifier<EeSsState> {
         "adminEESS",
       ),
     ];
-    List<Tab> listNew = [];
-    List<Widget> listNewTabBarView = [];
 
-    for (var element in listTabBar) {
-      final object =
-          _sessionController.userData!.listPermisson.contains("adminEESS");
-
-      String permissonType =
-          _sessionController.userData!.listPermisson.contains("adminEESS")
-              ? "adminEESS"
-              : "F";
-
-      if (element.permissons == null) {
-        listNew.add(element.tabBar);
-        listNewTabBarView.add(element.tabBarView);
-      }
-      log(object.toString());
-      if (permissonType == element.permissons) {
-        listNew.add(element.tabBar);
-        listNewTabBarView.add(element.tabBarView);
-      }
+    bool permissonAdminPage = listPermisson.contains("adminEESS");
+    bool permissonAdmin = listPermisson.contains("A");
+    log(permissonAdmin.toString() + "" + permissonAdminPage.toString());
+    if (permissonAdmin || permissonAdminPage) {
+      onChangedListTabBar(listTabBar.map((e) => e.tabBar).toList());
+      onChangedListTabBarView(listTabBar.map((e) => e.tabBarView).toList());
+      return;
     }
-    onChangedListTabBar(listNew);
-    onChangedListTabBarView(listNewTabBarView);
+    List<TabBarUi> listTBNew =
+        listTabBar.where((value) => value.permissons == null).toList();
+
+    onChangedListTabBar(listTBNew.map((e) => e.tabBar).toList());
+    onChangedListTabBarView(listTBNew.map((e) => e.tabBarView).toList());
   }
 
   onChangedListMembersSelected(UserData user) {

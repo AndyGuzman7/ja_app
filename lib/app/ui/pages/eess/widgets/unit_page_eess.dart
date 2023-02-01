@@ -31,7 +31,9 @@ final unitPageProvider = StateProvider<UnitPageController, UnitPageState>(
     autoDispose: true);
 
 class UnitPageEESS extends StatelessWidget {
-  const UnitPageEESS({Key? key}) : super(key: key);
+  final List<String> listPermissons;
+  const UnitPageEESS({required this.listPermissons, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,117 +41,198 @@ class UnitPageEESS extends StatelessWidget {
       height: double.infinity,
       color: Colors.white,
       child: FutureBuilder(
-        future: unitPageProvider.read.loadPageData(),
+        future: unitPageProvider.read.verificationPersmissons(listPermissons),
         builder: (context, AsyncSnapshot snapshot) {
+          final state = unitPageProvider.read.state;
           if (snapshot.connectionState == ConnectionState.done) {
-            log("entra");
-            return Consumer(builder: (_, watch, __) {
-              final response = watch.select(
-                unitPageProvider.select((state) => state.listUnitOfAction),
-              );
+            if (state.admin != null) {
+              return futureBuilder(context);
+            }
 
-              if (response.isNotEmpty) {
+            if (state.unitOfActionLeader != null) {
+              log("leader");
+              return sectionDontAdmin(state.unitOfActionLeader, true);
+            }
+            if (state.unitOfActionMember != null) {
+              return sectionDontAdmin(state.unitOfActionMember, false);
+            }
+
+            return sectionDontExist(context);
+          }
+          return willPopScope();
+        },
+      ),
+    );
+  }
+
+  Widget futureBuilder(context) {
+    return Consumer(builder: (_, watch, __) {
+      final response = watch.select(
+        unitPageProvider.select((state) => state.listUnitOfAction),
+      );
+
+      if (response.isNotEmpty) {
+        return sectionMain(context, response);
+      }
+      return sectionDontExistAdmin(context);
+    });
+  }
+
+  Widget sectionDontExistAdmin(context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          "No existe unidades de Acción\npresione el boton para crear una.",
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        CustomButton(
+          icon: Icon(
+            Icons.add_circle_outline_sharp,
+            color: CustomColorPrimary().materialColor,
+            size: 25,
+          ),
+          colorBorderButton: CustomColorPrimary().materialColor,
+          width: 60,
+          height: 48,
+          colorButton: Colors.white,
+          onPressed: () {
+            dialogWidget(context);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget sectionDontExist(context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.info),
+        SizedBox(
+          height: 20,
+        ),
+        Text(
+          "Aun no pertenece a una Unidad de Acción.",
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        /*CustomButton(
+          icon: Icon(
+            Icons.add_circle_outline_sharp,
+            color: CustomColorPrimary().materialColor,
+            size: 25,
+          ),
+          colorBorderButton: CustomColorPrimary().materialColor,
+          width: 60,
+          height: 48,
+          colorButton: Colors.white,
+          onPressed: () {
+            dialogWidget(context);
+          },
+        ),*/
+      ],
+    );
+  }
+
+  Widget sectionDontAdmin(unitOfAction, isAdmin) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+            child: CustomTitle(
+              title: "Mi unidad de Acción",
+              subTitle: "Usted es miembro de esta unidad.",
+            ),
+          ),
+          SingleChildScrollView(
+            child: SectionUnitPageEESS(
+              unitOfAction: unitOfAction,
+              isAdmin: isAdmin,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget sectionMain(context, response) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: CustomTitle2(
+              title: "Unidades de Acción",
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Expanded(
+                  child: SettingsWidgetV2(
+                    items: response,
+                    value: true,
+                    //value: snapshot.data!.first,
+                    onChanged: (v) {
+                      unitPageProvider.read.onChangedUnitOfAction(v);
+                    },
+                    hint: 'Unidad de Acción',
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                CustomButton(
+                  icon: Icon(
+                    Icons.add_circle_outline_sharp,
+                    color: CustomColorPrimary().materialColor,
+                    size: 25,
+                  ),
+                  colorBorderButton: CustomColorPrimary().materialColor,
+                  width: 60,
+                  height: 48,
+                  colorButton: Colors.white,
+                  onPressed: () {
+                    //unitPageProvider.read.sendEmail();
+                    dialogWidget(context);
+                  },
+                )
+              ],
+            ),
+          ),
+          Divider(),
+          Consumer(
+            builder: (_, watch, __) {
+              final unitOfAction = watch.select(
+                unitPageProvider.select((state) => state.unitOfAction),
+              );
+              if (unitOfAction != null) {
                 return SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: CustomTitle2(
-                          title: "Unidades de Acción",
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: SettingsWidgetV2(
-                                items: response,
-                                value: true,
-                                //value: snapshot.data!.first,
-                                onChanged: (v) {
-                                  unitPageProvider.read
-                                      .onChangedUnitOfAction(v);
-                                },
-                                hint: 'Unidad de Acción',
-                              ),
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            CustomButton(
-                              icon: Icon(
-                                Icons.add_circle_outline_sharp,
-                                color: CustomColorPrimary().materialColor,
-                                size: 25,
-                              ),
-                              colorBorderButton:
-                                  CustomColorPrimary().materialColor,
-                              width: 60,
-                              height: 48,
-                              colorButton: Colors.white,
-                              onPressed: () {
-                                //unitPageProvider.read.sendEmail();
-                                dialogWidget(context);
-                              },
-                            )
-                          ],
-                        ),
-                      ),
-                      Divider(),
-                      Consumer(builder: (_, watch, __) {
-                        final unitOfAction = watch.select(
-                          unitPageProvider
-                              .select((state) => state.unitOfAction),
-                        );
-                        if (unitOfAction != null) {
-                          return SingleChildScrollView(
-                            child:
-                                SectionUnitPageEESS(unitOfAction: unitOfAction),
-                          );
-                        } else {
-                          return SizedBox();
-                        }
-                      }),
-                    ],
+                  child: SectionUnitPageEESS(
+                    unitOfAction: unitOfAction,
+                    isAdmin: true,
                   ),
                 );
               } else {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      "No existe unidades de Acción\npresione el boton para crear una.",
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    CustomButton(
-                      icon: Icon(
-                        Icons.add_circle_outline_sharp,
-                        color: CustomColorPrimary().materialColor,
-                        size: 25,
-                      ),
-                      colorBorderButton: CustomColorPrimary().materialColor,
-                      width: 60,
-                      height: 48,
-                      colorButton: Colors.white,
-                      onPressed: () {
-                        dialogWidget(context);
-                      },
-                    ),
-                  ],
-                );
+                return SizedBox();
               }
-            });
-          } else {
-            return willPopScope();
-          }
-        },
+            },
+          ),
+        ],
       ),
     );
   }

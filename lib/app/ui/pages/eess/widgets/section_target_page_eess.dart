@@ -9,6 +9,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:intl/intl.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
+import 'package:ja_app/app/domain/models/target_virtual/target_virtual.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/dialogs.dart';
 import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_button.dart';
@@ -25,8 +26,8 @@ import 'package:ja_app/app/ui/routes/routes.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
 
 class SectionTargetPageEESS extends StatelessWidget {
-  final UnitOfAction unitOfAction;
-  const SectionTargetPageEESS({Key? key, required this.unitOfAction})
+  final TargetVirtual targetVirtual;
+  const SectionTargetPageEESS({Key? key, required this.targetVirtual})
       : super(key: key);
 
   @override
@@ -160,7 +161,7 @@ class SectionTargetPageEESS extends StatelessWidget {
                                             final response = ref.select(
                                               targetPageProvider.select(
                                                   (state) => state
-                                                      .membersUnitOfAction),
+                                                      .listUserDataAttendance),
                                             );
 
                                             if (response.isEmpty) {
@@ -355,7 +356,7 @@ class SectionTargetPageEESS extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
-              FutureBuilder(
+              /*FutureBuilder(
                 future: unitPageProvider.read.getUser(unitOfAction.leader),
                 builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
@@ -365,7 +366,7 @@ class SectionTargetPageEESS extends StatelessWidget {
                       height: 50,
                       child: willPopScope(isColorBackground: false));
                 },
-              ),
+              ),*/
             ],
           ),
         ),
@@ -493,168 +494,16 @@ class SectionTargetPageEESS extends StatelessWidget {
     );
   }
 
-  showAlertDialogMembers(
-      BuildContext contextFather, String text, String? message) {
-    showDialog(
-      barrierDismissible: false,
-      context: contextFather,
-      useRootNavigator: false,
-      builder: (context) {
-        final GlobalKey<FormState> formKey = GlobalKey();
-        return AlertDialog(
-            contentPadding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            titleTextStyle: TextStyle(
-                color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),
-            title: Text(
-              text,
-              textAlign: TextAlign.center,
-            ),
-            backgroundColor: Colors.white,
-            content: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-              FutureBuilder(
-                  future: unitPageProvider.read.getMembersNoneUnitOfAction(),
-                  builder: (context, AsyncSnapshot<List<UserData>> snapshot) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data!.isEmpty) {
-                        return Container(
-                          child: Text("No hay miembros"),
-                        );
-                      } else {
-                        return Container(
-                          width: double.maxFinite,
-                          height: 300,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  children: itemsBuild(snapshot.data!),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              CustomButton(
-                                height: 48,
-                                textButton: 'Añadir miembro/oss',
-                                colorButton: CustomColorPrimary().materialColor,
-                                // colo: Colors.white54,
-                                onPressed: () async {
-                                  if (unitPageProvider.read.state
-                                      .membersUnitOfActionNew.isNotEmpty) {
-                                    await unitPageProvider.read
-                                        .onPressedAddMembers(context);
-                                    router.pop(context);
-                                  }
-                                },
-                              ),
-                              SizedBox(
-                                height: 15,
-                              )
-                            ],
-                          ),
-                        );
-                      }
-                    } else {
-                      return Container(height: 200, child: willPopScope());
-                    }
-                  }),
-              CustomButton(
-                height: 48,
-                textButton: 'Cancelar',
-                colorTextButton: CustomColorPrimary().materialColor,
-                colorButton: Colors.white54,
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true).pop();
-                },
-              )
-            ]));
-      },
-    );
-  }
-
-  itemsBuild(List<UserData> items) {
+  itemsBuild(List<UserDataAttendance> items) {
     log("se renderiza de nuevo");
     List<Widget> itemsWidgets = [];
     for (var element in items) {
-      itemsWidgets.add(ItemMemberV4(element, false, (user, state) {
+      itemsWidgets.add(
+          ItemMemberV4(element.user, element.attendance, false, (user, state) {
         targetPageProvider.read.changedStateMember(user.id, state);
         //unitPageProvider.read.onChangedListMembersSelected(user);
       }));
     }
     return itemsWidgets;
-  }
-
-  showAlertDialog(BuildContext contextFather, String text, String? message) {
-    showDialog(
-      barrierDismissible: false,
-      context: contextFather,
-      builder: (context) {
-        final GlobalKey<FormState> formKey = GlobalKey();
-        return AlertDialog(
-          iconPadding: EdgeInsets.only(left: 15, right: 15, top: 10),
-          icon: Icon(
-            Icons.person_add,
-            size: 40,
-            color: CustomColorPrimary().materialColor,
-          ),
-          contentPadding:
-              EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 15),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))),
-          titleTextStyle: TextStyle(
-              color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),
-          title: Text(
-            text,
-            textAlign: TextAlign.center,
-          ),
-          backgroundColor: Colors.white,
-          content: Form(
-            // key: churchProvider.read.formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CustomButton(
-                  height: 48,
-                  icon: Icon(Icons.person_add),
-                  textButton: 'Añadir Miembro',
-                  onPressed: () {
-                    showAlertDialogMembers(
-                        contextFather,
-                        "Mantenga presionado para seleccionar/deseleccionar",
-                        "");
-                    //churchProvider.read.onRegister(contextFather);
-                  },
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                CustomButton(
-                  icon: Icon(Icons.person_add_alt),
-                  height: 48,
-                  textButton: 'Crear Miembro',
-                  onPressed: () {
-                    router.pushNamed(Routes.REGISTER);
-                  },
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                CustomButton(
-                  height: 48,
-                  textButton: 'Cancelar',
-                  colorTextButton: CustomColorPrimary().materialColor,
-                  colorButton: Colors.white54,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 }

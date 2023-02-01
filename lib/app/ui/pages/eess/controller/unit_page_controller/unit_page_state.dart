@@ -8,13 +8,21 @@ import 'package:ja_app/app/domain/models/user_data.dart';
 
 class UnitPageState {
   final UnitOfAction? unitOfAction;
+
+  final UnitOfAction? unitOfActionLeader;
+
+  final UnitOfAction? unitOfActionMember;
   final List<UnitOfAction> listUnitOfAction;
   final String? nameUnitOfActionCreate;
   final UserData? userDataUnitOfActionCreate;
   final List<UserData> membersUnitOfActionNew;
   final List<UserData> membersUnitOfAction;
+  final UserData? admin;
 
   UnitPageState({
+    required this.unitOfActionLeader,
+    required this.unitOfActionMember,
+    required this.admin,
     required this.membersUnitOfAction,
     required this.membersUnitOfActionNew,
     required this.listUnitOfAction,
@@ -24,6 +32,9 @@ class UnitPageState {
   });
 
   static UnitPageState get initialState => UnitPageState(
+        unitOfActionLeader: null,
+        unitOfActionMember: null,
+        admin: null,
         membersUnitOfAction: [],
         membersUnitOfActionNew: [],
         listUnitOfAction: [],
@@ -32,16 +43,21 @@ class UnitPageState {
         unitOfAction: null,
       );
 
-  UnitPageState copyWith({
-    List<UnitOfAction>? listUnitOfAction,
-    UnitOfAction? unitOfAction,
-    List<UserData>? membersUnitOfAction,
-    List<UserData>? membersUnitOfActionNew,
-    String? nameUnitOfActionCreate,
-    UserData? userDataUnitOfActionCreate,
-  }) {
+  UnitPageState copyWith(
+      {UserData? admin,
+      List<UnitOfAction>? listUnitOfAction,
+      UnitOfAction? unitOfAction,
+      List<UserData>? membersUnitOfAction,
+      List<UserData>? membersUnitOfActionNew,
+      String? nameUnitOfActionCreate,
+      UserData? userDataUnitOfActionCreate,
+      UnitOfAction? unitOfActionLeader,
+      UnitOfAction? unitOfActionMember}) {
     log("stado");
     return UnitPageState(
+      unitOfActionLeader: unitOfActionLeader ?? this.unitOfActionLeader,
+      unitOfActionMember: unitOfActionMember ?? this.unitOfActionMember,
+      admin: admin ?? this.admin,
       membersUnitOfAction: membersUnitOfAction ?? this.membersUnitOfAction,
       membersUnitOfActionNew:
           membersUnitOfActionNew ?? this.membersUnitOfActionNew,

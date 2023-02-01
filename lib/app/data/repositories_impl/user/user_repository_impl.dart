@@ -45,4 +45,26 @@ class UserRepositoryImpl extends UserRepository {
       return listSignUpData;
     }
   }
+
+  @override
+  Future<List<UserData>> getMembersToIds(List<String> ids) async {
+    List<UserData> listEESS = [];
+    try {
+      if (ids.isNotEmpty) {
+        for (var element in ids) {
+          final res = await _firestore
+              .collection("users")
+              .where("id", isEqualTo: element)
+              .get();
+
+          if (res.docChanges.isNotEmpty) {
+            listEESS.add(UserData.fromJson(res.docs.elementAt(0).data()));
+          }
+        }
+      }
+      return listEESS;
+    } on FirebaseFirestore catch (e) {
+      return listEESS;
+    }
+  }
 }

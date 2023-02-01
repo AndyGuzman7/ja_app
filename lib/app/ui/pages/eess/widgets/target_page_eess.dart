@@ -97,14 +97,14 @@ class TargetPageEESS extends StatelessWidget {
                       ),
                       Divider(),
                       Consumer(builder: (_, watch, __) {
-                        final unitOfAction = watch.select(
+                        final targetVirtual = watch.select(
                           targetPageProvider
-                              .select((state) => state.unitOfAction),
+                              .select((state) => state.targetVirtualSelected),
                         );
-                        if (unitOfAction != null) {
+                        if (targetVirtual != null) {
                           return SingleChildScrollView(
                             child: SectionTargetPageEESS(
-                                unitOfAction: unitOfAction),
+                                targetVirtual: targetVirtual),
                           );
                         } else {
                           return SizedBox();

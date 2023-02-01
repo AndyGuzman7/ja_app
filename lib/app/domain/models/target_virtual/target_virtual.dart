@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import '../user_data.dart';
+
 class TargetVirtual {
   final String? id;
   final String idUnitOfAction;
@@ -25,20 +29,50 @@ class TargetVirtual {
 }
 
 class DayAtendance {
+  String id;
+  String idTargetVirtual;
   DateTime date;
   List<Attendance> attendance;
-  DayAtendance(this.date, this.attendance);
+  DayAtendance(this.id, this.idTargetVirtual, this.date, this.attendance);
 
   factory DayAtendance.fromJson(Map<String, dynamic> json) {
+    convert(date) {
+      DateTime dateTime = date.toDate();
+      return dateTime;
+    }
+
+    List<Attendance> convertList(List json) {
+      log(json.toString());
+      // Map<String, dynamic> jsons = json;
+      List<Attendance> list = [];
+      //json.map((key, value) => null)
+      for (var element in json) {
+        list.add(Attendance.fromJson(element));
+      }
+
+      /*json.forEach((value) {
+        list.add(UnitOfAction.fromJson(value));
+        //print('$value');
+        //listBrochures.add(Brochure.fromJson(value));
+      });*/
+      return list;
+    }
+
     return DayAtendance(
-      json['date'],
-      json['attendance'] != null ? List.castFrom(json['atendance']) : [],
+      json['id'],
+      json['idTargetVirtual'],
+      convert(json['date']),
+      json['attendance'] != null
+          ? convertList(List.castFrom(json['attendance']))
+          : [],
     );
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'idTargetVirtual': idTargetVirtual,
         'date': date,
-        'attendance': attendance,
+        'attendance': attendance.map((e) => e.toJson()).toList(),
       };
 }
 
@@ -55,4 +89,10 @@ class Attendance {
         'idMember': idMember,
         'state': state,
       };
+}
+
+class UserDataAttendance {
+  UserData user;
+  Attendance attendance;
+  UserDataAttendance(this.user, this.attendance);
 }

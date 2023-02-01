@@ -145,6 +145,18 @@ class UnitPageController extends StateNotifier<UnitPageState> {
     state = state.copyWith(userDataUnitOfActionCreate: user);
   }
 
+  void onChangedIsAdmin(UserData admin) {
+    state = state.copyWith(admin: admin);
+  }
+
+  void onChangedUnitOfActionLeader(UnitOfAction u) {
+    state = state.copyWith(unitOfActionLeader: u);
+  }
+
+  void onChangedUnitOfActionMember(UnitOfAction u) {
+    state = state.copyWith(unitOfActionMember: u);
+  }
+
   Future<List<UserData>> getListMembers() async {
     List<UserData> listUserData = [];
     listUserData = await _eess.getMembersEESS(_eeSsController.state.eess!.id!);
@@ -179,6 +191,35 @@ class UnitPageController extends StateNotifier<UnitPageState> {
   }
 
   Future loadPageData() async {
+    final response = await getUnitOfActionByEESS();
+    onChangedListUnitOfAction(response);
+    //return response;
+  }
+
+  Future verificationPersmissons(List<String> listPermisson) async {
+    bool permissonAdminPage = listPermisson.contains("adminEESS");
+    bool permissonAdmin = listPermisson.contains("A");
+
+    if (permissonAdminPage || permissonAdmin) {
+      await loadPageData();
+      onChangedIsAdmin(_sessionController.userData!);
+      return;
+    }
+    final idUser = _sessionController.userData!.id;
+    final isLeader = await _unitOfAction.isLeaderToUnitOfAction(idUser);
+
+    if (isLeader != null) {
+      onChangedUnitOfActionLeader(isLeader);
+      onChangedUnitOfAction(isLeader);
+      return;
+    }
+
+    final isMember = await _unitOfAction.isMemberToUnitOfAction(idUser);
+    if (isMember != null) {
+      onChangedUnitOfActionMember(isMember);
+      onChangedUnitOfAction(isMember);
+    }
+
     final response = await getUnitOfActionByEESS();
     onChangedListUnitOfAction(response);
     //return response;

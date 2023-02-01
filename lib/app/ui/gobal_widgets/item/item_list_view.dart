@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/domain/models/country.dart';
+import 'package:ja_app/app/domain/models/target_virtual/target_virtual.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/gobal_widgets/item/item_list_view_controller.dart';
 
@@ -93,10 +94,12 @@ class _ItemMemberV3State extends State<ItemMemberV3> {
 // ignore: must_be_immutable
 class ItemMemberV4 extends StatefulWidget {
   UserData user;
+  Attendance attendance;
   bool isSelected;
 
-  final void Function(UserData userData, String state)? onPressed;
-  ItemMemberV4(this.user, this.isSelected, this.onPressed, {Key? key})
+  final void Function(UserData userData, Attendance state)? onPressed;
+  ItemMemberV4(this.user, this.attendance, this.isSelected, this.onPressed,
+      {Key? key})
       : super(key: key);
 
   @override
@@ -118,7 +121,7 @@ class _ItemMemberV4State extends State<ItemMemberV4> {
           setState(() {
             widget.isSelected = !widget.isSelected;
             log(widget.isSelected.toString());
-            widget.onPressed!(widget.user, value!);
+            widget.onPressed!(widget.user, Attendance(widget.user.id, value!));
           });
         },
         //router.pushNamed(pageRoute);
@@ -168,7 +171,7 @@ class _ItemMemberV4State extends State<ItemMemberV4> {
                         padding: EdgeInsets.all(5),
                         child: Row(
                           children: [
-                            Text(value ?? "F"),
+                            Text(widget.attendance.state),
                             Icon(
                               Icons.filter_list_alt,
                               color: Colors.white,
@@ -189,9 +192,6 @@ class _ItemMemberV4State extends State<ItemMemberV4> {
                   _buildPopupMenuItem('P'),
                   _buildPopupMenuItem('F'),
                 ],
-                onSelected: ((value) {
-                  log(value.toString() + "sadasda");
-                }),
               ),
             ),
             /*if (widget.isSelected)
@@ -211,7 +211,7 @@ class _ItemMemberV4State extends State<ItemMemberV4> {
         setState(() {
           value = title;
         });
-        widget.onPressed!(widget.user, value!);
+        widget.onPressed!(widget.user, Attendance(widget.user.id, value!));
         //eeSsProvider.read.onChangedTitleSearch(title);
       },
     );
