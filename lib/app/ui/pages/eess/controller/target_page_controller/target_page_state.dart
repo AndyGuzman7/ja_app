@@ -9,6 +9,7 @@ import 'package:ja_app/app/domain/models/user_data.dart';
 
 class TargetPageState {
   final UnitOfAction? unitOfAction;
+  final DateTime? dateTimeSelected;
   final TargetVirtual? targetVirtualSelected;
   final List<UnitOfAction> listUnitOfAction;
   final String? nameUnitOfActionCreate;
@@ -16,11 +17,14 @@ class TargetPageState {
   final List<UserData> membersEESSNew;
   final List<UserData> membersUnitOfAction;
   final List<UserDataAttendance> listUserDataAttendance;
+  final List<DateTime>? listDateTimeMonth;
 
   final List<UserData> membersAttendance;
   final List<Attendance> attendanceList;
 
   TargetPageState({
+    required this.dateTimeSelected,
+    required this.listDateTimeMonth,
     required this.listUserDataAttendance,
     required this.membersAttendance,
     required this.targetVirtualSelected,
@@ -34,6 +38,8 @@ class TargetPageState {
   });
 
   static TargetPageState get initialState => TargetPageState(
+        dateTimeSelected: null,
+        listDateTimeMonth: [],
         listUserDataAttendance: [],
         targetVirtualSelected: null,
         attendanceList: [],
@@ -47,6 +53,8 @@ class TargetPageState {
       );
 
   TargetPageState copyWith({
+    DateTime? dateTimeSelected,
+    List<DateTime>? listDateTimeMonth,
     List<UserDataAttendance>? listUserDataAttendance,
     List<UserData>? membersAttendance,
     TargetVirtual? targetVirtualSelected,
@@ -60,6 +68,8 @@ class TargetPageState {
   }) {
     log("stado");
     return TargetPageState(
+      dateTimeSelected: dateTimeSelected ?? this.dateTimeSelected,
+      listDateTimeMonth: listDateTimeMonth ?? this.listDateTimeMonth,
       listUserDataAttendance:
           listUserDataAttendance ?? this.listUserDataAttendance,
       membersAttendance: membersAttendance ?? this.membersAttendance,

@@ -130,7 +130,7 @@ class ProjectManaPage extends StatelessWidget {
     final controller = projectManaPageProvider.read;
     //final isValidForm = controller.formKey.currentState!.validate();
 
-    ProgressDialog.show(context);
+    ProgressDialog.show(context, double.infinity, double.infinity);
     await controller.startProject();
     router.pop();
 

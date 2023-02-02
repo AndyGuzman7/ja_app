@@ -92,7 +92,7 @@ class RegisterController extends StateNotifier<RegisterState> {
     final isValidForm = formKeyTwo.currentState!.validate();
 
     if (isValidForm) {
-      ProgressDialog.show(context);
+      ProgressDialog.show(context, double.infinity, double.infinity);
       final response = await submit();
       router.pop();
 
@@ -130,7 +130,7 @@ class RegisterController extends StateNotifier<RegisterState> {
           final user = await _authRepository.user;
 
           if (user != null) {
-            ProgressDialog.show(context);
+            ProgressDialog.show(context, double.infinity, double.infinity);
             final userMain = sessionProvider.read.userData;
             await sessionProvider.read.signOut();
             await _authRepository.singInWithEmailAndPassword(

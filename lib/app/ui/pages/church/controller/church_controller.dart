@@ -53,7 +53,7 @@ class ChurchController extends StateNotifier<ChurchState> {
 
   Future registerChurch(context) async {
     FocusScope.of(context).unfocus();
-    ProgressDialog.show(context);
+    ProgressDialog.show(context, double.infinity, double.infinity);
 
     final response = await _church.registerMemberChurchCodeAcess(
         _sessionController.userData!.id, state.codeAccess);

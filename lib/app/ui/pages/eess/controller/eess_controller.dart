@@ -96,7 +96,7 @@ class EeSsController extends StateNotifier<EeSsState> {
   }
 
   onPressedAddMembers(context) async {
-    ProgressDialog.show(context);
+    ProgressDialog.show(context, double.infinity, double.infinity);
     final List<UserData> list = state.membersUnitOfActionNew;
     final String idUnitOfAction = state.unitOfAction!.id;
 
@@ -248,7 +248,7 @@ class EeSsController extends StateNotifier<EeSsState> {
     if (formKey.currentState != null) {
       if (formKey.currentState!.validate()) {
         final idUser = _sessionController.userData!.id;
-        ProgressDialog.show(context);
+        ProgressDialog.show(context, double.infinity, double.infinity);
 
         final response =
             await _eess.registerMemberEESS(idUser, state.eess!.id!);

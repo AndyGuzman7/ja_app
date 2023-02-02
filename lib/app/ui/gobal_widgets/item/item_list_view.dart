@@ -93,12 +93,11 @@ class _ItemMemberV3State extends State<ItemMemberV3> {
 
 // ignore: must_be_immutable
 class ItemMemberV4 extends StatefulWidget {
-  UserData user;
-  Attendance attendance;
+  UserDataAttendance userDataAttendance;
   bool isSelected;
 
-  final void Function(UserData userData, Attendance state)? onPressed;
-  ItemMemberV4(this.user, this.attendance, this.isSelected, this.onPressed,
+  final void Function(UserDataAttendance userDataAttendance)? onPressed;
+  ItemMemberV4(this.userDataAttendance, this.isSelected, this.onPressed,
       {Key? key})
       : super(key: key);
 
@@ -107,8 +106,6 @@ class ItemMemberV4 extends StatefulWidget {
 }
 
 class _ItemMemberV4State extends State<ItemMemberV4> {
-  String? value;
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -121,7 +118,7 @@ class _ItemMemberV4State extends State<ItemMemberV4> {
           setState(() {
             widget.isSelected = !widget.isSelected;
             log(widget.isSelected.toString());
-            widget.onPressed!(widget.user, Attendance(widget.user.id, value!));
+            widget.onPressed!(widget.userDataAttendance);
           });
         },
         //router.pushNamed(pageRoute);
@@ -139,7 +136,8 @@ class _ItemMemberV4State extends State<ItemMemberV4> {
                 height: 30,
                 child: Container(
                   child: CircleAvatar(
-                    child: Image.network(widget.user.photoURL),
+                    child:
+                        Image.network(widget.userDataAttendance.user.photoURL),
                   ),
                 ),
               ),
@@ -149,7 +147,9 @@ class _ItemMemberV4State extends State<ItemMemberV4> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.user.name + " " + widget.user.lastName,
+                    widget.userDataAttendance.user.name +
+                        " " +
+                        widget.userDataAttendance.user.lastName,
                     style: TextStyle(fontSize: 14),
                   ),
                 ],
@@ -171,7 +171,7 @@ class _ItemMemberV4State extends State<ItemMemberV4> {
                         padding: EdgeInsets.all(5),
                         child: Row(
                           children: [
-                            Text(widget.attendance.state),
+                            Text(widget.userDataAttendance.attendance.state),
                             Icon(
                               Icons.filter_list_alt,
                               color: Colors.white,
@@ -209,9 +209,10 @@ class _ItemMemberV4State extends State<ItemMemberV4> {
       child: Text(title),
       onTap: () {
         setState(() {
-          value = title;
+          widget.userDataAttendance.attendance.state = title;
+          widget.onPressed!(widget.userDataAttendance);
         });
-        widget.onPressed!(widget.user, Attendance(widget.user.id, value!));
+
         //eeSsProvider.read.onChangedTitleSearch(title);
       },
     );

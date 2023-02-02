@@ -58,8 +58,7 @@ class UnitPageController extends StateNotifier<UnitPageState> {
   }
 
   Future registerUnitOfAction(context) async {
-    ProgressDialog.show(context);
-
+    ProgressDialog.show(context, double.infinity, double.infinity);
     final response = await _unitOfAction.registerUnitOfAction(
         state.nameUnitOfActionCreate!,
         state.userDataUnitOfActionCreate!.id,
@@ -88,7 +87,7 @@ class UnitPageController extends StateNotifier<UnitPageState> {
   }
 
   onPressedAddMembers(context) async {
-    ProgressDialog.show(context);
+    ProgressDialog.show(context, double.infinity, double.infinity);
     final List<UserData> list = state.membersUnitOfActionNew;
     final String idUnitOfAction = state.unitOfAction!.id;
 

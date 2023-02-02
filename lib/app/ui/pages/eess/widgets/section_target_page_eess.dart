@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/target_virtual/target_virtual.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
+import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/dialogs.dart';
 import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_button.dart';
 import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_date_picker.dart';
@@ -69,10 +70,21 @@ class SectionTargetPageEESS extends StatelessWidget {
       ));
     }
 
+    bool selected = true;
     return Column(
       children: [
         // card("Nombre de Unidad", unitOfAction.name, null),
-        //Divider(),
+        //Divider(),child: Center(
+        AnimatedContainer(
+          width: selected ? 200.0 : 100.0,
+          height: selected ? 100.0 : 200.0,
+          color: selected ? Colors.red : Colors.blue,
+          alignment:
+              selected ? Alignment.center : AlignmentDirectional.topCenter,
+          duration: const Duration(seconds: 2),
+          curve: Curves.fastOutSlowIn,
+          child: const FlutterLogo(size: 75),
+        ),
         Padding(
           padding: const EdgeInsets.only(
             top: 5,
@@ -101,102 +113,7 @@ class SectionTargetPageEESS extends StatelessWidget {
                     showModalBottomSheet(
                       context: context,
                       builder: (context) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              top: 20, left: 20, right: 20),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              CustomTitle(title: "LLamar lista"),
-                              Row(
-                                children: [
-                                  Text("Fecha:"),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Expanded(
-                                    child: CustomImputDatePicker(
-                                      label: DateFormat.yMEd("ES")
-                                          .format(DateTime.now()),
-                                      // onChanged: controller.onBirthDateChanged,
-                                      validator: (text) {
-                                        if (text == null)
-                                          return "Es necesario una fecha";
-                                        if (text.weekday != 6) {
-                                          return "Seleccione un día sábado";
-                                        }
-
-                                        if (text.day < DateTime.now().day) {
-                                          return "Seleccione un día sábado";
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  CustomButton(
-                                    textButton: "Guardar",
-                                    width: 100,
-                                    height: 48,
-                                    onPressed: () {
-                                      targetPageProvider.read
-                                          .onPressedButtonSave();
-                                    },
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  FutureBuilder(
-                                    future: targetPageProvider.read
-                                        .loadDataAttendanceAction(),
-                                    builder: (context,
-                                        AsyncSnapshot<void> snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.done) {
-                                        return Consumer(
-                                          builder: (context, ref, child) {
-                                            final response = ref.select(
-                                              targetPageProvider.select(
-                                                  (state) => state
-                                                      .listUserDataAttendance),
-                                            );
-
-                                            if (response.isEmpty) {
-                                              return Text("No hay miembros");
-                                            }
-                                            return Container(
-                                              width: double.maxFinite,
-                                              height: 300,
-                                              child: Column(
-                                                children: [
-                                                  Expanded(
-                                                    child: ListView(
-                                                      children:
-                                                          itemsBuild(response),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      }
-
-                                      return Container(
-                                          height: 200, child: willPopScope());
-                                    },
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        );
+                        return contentSection(context);
                       },
                     );
                   },
@@ -310,6 +227,185 @@ class SectionTargetPageEESS extends StatelessWidget {
           height: 10,
         ),*/
       ],
+    );
+  }
+
+  contentSection(context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+      child: Expanded(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            CustomTitle(title: "LLamar lista"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text("Fecha:"),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Color.fromARGB(255, 240, 240, 240)),
+                  child: Row(children: [
+                    IconButton(
+                        onPressed: () {
+                          targetPageProvider.read
+                              .onPressedLastDateTime(context);
+                        },
+                        icon: Icon(Icons.arrow_circle_left_rounded)),
+                    Consumer(
+                      builder: ((context, ref, child) {
+                        final response = ref.select(
+                          targetPageProvider
+                              .select((state) => state.dateTimeSelected),
+                        );
+                        return AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 500),
+                          transitionBuilder:
+                              (Widget child, Animation<double> animation) {
+                            return ScaleTransition(
+                                scale: animation, child: child);
+                          },
+                          child: card2(response!),
+                        );
+                      }),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          targetPageProvider.read
+                              .onPressedNextDateTime(context);
+                        },
+                        icon: Icon(Icons.arrow_circle_right_rounded)),
+                  ]),
+                ),
+                Consumer(builder: (context, ref, child) {
+                  final response = ref.select(
+                    targetPageProvider
+                        .select((state) => state.dateTimeSelected),
+                  );
+
+                  return CustomButton(
+                      textButton: "Guardar",
+                      width: 100,
+                      height: 48,
+                      onPressed: DateTime.now().day == response!.day
+                          ? () {
+                              targetPageProvider.read
+                                  .onPressedButtonSave(context);
+                            }
+                          : null);
+                })
+              ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                FutureBuilder(
+                  future:
+                      targetPageProvider.read.initPageAttedanceAction(context),
+                  builder: (context, AsyncSnapshot<void> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return Consumer(
+                        builder: (context, ref, child) {
+                          final response = ref.select(
+                            targetPageProvider
+                                .select((state) => state.dateTimeSelected),
+                          );
+                          if (response!.day > DateTime.now().day) {
+                            return SizedBox(
+                                height: 200,
+                                child: Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Text(
+                                          "No puede llamar lista si no es sábado"),
+                                    ],
+                                  ),
+                                ));
+                          }
+
+                          return Consumer(builder: (context, ref, child) {
+                            final response = ref.select(
+                              targetPageProvider.select(
+                                  (state) => state.listUserDataAttendance),
+                            );
+                            if (response.isEmpty) {
+                              return Container(
+                                  height: 200, child: willPopScope());
+                            }
+                            return Container(
+                              width: double.maxFinite,
+                              height: 200,
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: ListView(
+                                      children: itemsBuild(response),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                ],
+                              ),
+                            );
+                          });
+                        },
+                      );
+                    }
+
+                    return Container(height: 200, child: willPopScope());
+                  },
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  card2(DateTime date) {
+    String dateSt = DateFormat.yMEd("ES").format(date);
+    return Container(
+      key: ValueKey(dateSt),
+      //color: Color.fromARGB(255, 255, 255, 255),
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Color.fromARGB(255, 145, 145, 145),
+          width: 1,
+        ),
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.calendar_month,
+                size: 20,
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Text("Sábado"),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            dateSt,
+            style: TextStyle(fontSize: 12),
+          )
+        ],
+      ),
     );
   }
 
@@ -434,7 +530,9 @@ class SectionTargetPageEESS extends StatelessWidget {
           color: !isColorBackground ? Colors.white : null,
         ),
       ),
-      onWillPop: () async => false,
+      onWillPop: () async {
+        return false;
+      },
     );
   }
 
@@ -498,9 +596,11 @@ class SectionTargetPageEESS extends StatelessWidget {
     log("se renderiza de nuevo");
     List<Widget> itemsWidgets = [];
     for (var element in items) {
-      itemsWidgets.add(
-          ItemMemberV4(element.user, element.attendance, false, (user, state) {
-        targetPageProvider.read.changedStateMember(user.id, state);
+      itemsWidgets.add(ItemMemberV4(element, false, (user) {
+        if (DateTime.now().day ==
+            targetPageProvider.read.state.dateTimeSelected!.day) {
+          targetPageProvider.read.changedStateUserDataAttendance(user);
+        }
         //unitPageProvider.read.onChangedListMembersSelected(user);
       }));
     }

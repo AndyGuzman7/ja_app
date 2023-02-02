@@ -62,7 +62,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   _submit(BuildContext context) async {
     final controller = resetPasswordProvider.read;
     if (isValidEmail(controller.email)) {
-      ProgressDialog.show(context);
+      ProgressDialog.show(context, double.infinity, double.infinity);
       final response = await controller.submit();
       Navigator.pop(context);
       if (response == ResetPasswordResponse.ok) {

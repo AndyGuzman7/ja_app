@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/data/repositories/eess_impl/eess_repository.dart';
@@ -59,7 +61,7 @@ class TargetPageController extends StateNotifier<TargetPageState> {
   }
 
   Future registerUnitOfAction(context) async {
-    ProgressDialog.show(context);
+    ProgressDialog.show(context, double.infinity, double.infinity);
 
     final response = await _unitOfAction.registerUnitOfAction(
         state.nameUnitOfActionCreate!,
@@ -84,7 +86,7 @@ class TargetPageController extends StateNotifier<TargetPageState> {
   }
 
   onPressedAddMembers(context) async {
-    ProgressDialog.show(context);
+    ProgressDialog.show(context, double.infinity, double.infinity);
     final List<UserData> list = state.membersEESSNew;
 
     List<String> listIdS = [];
@@ -137,8 +139,16 @@ class TargetPageController extends StateNotifier<TargetPageState> {
     state = state.copyWith(membersUnitOfAction: list);
   }
 
-  void onChangedListUserDataAttendance(list) {
+  void onChangedListUserDataAttendance(List<UserDataAttendance> list) {
     state = state.copyWith(listUserDataAttendance: list);
+  }
+
+  void onChangedListDateTimeMonth(list) {
+    state = state.copyWith(listDateTimeMonth: list);
+  }
+
+  void onChangedDateTimeSelected(DateTime dateTime) {
+    state = state.copyWith(dateTimeSelected: dateTime);
   }
 
   void onChangedAttendaceList(list) {
@@ -155,18 +165,24 @@ class TargetPageController extends StateNotifier<TargetPageState> {
 
   void changedStateMember(String idMember, Attendance stateMember) {
     List<Attendance> attendanceList = state.attendanceList;
-    final r = attendanceList.where((element) => element.idMember == idMember);
+    attendanceList.where((element) => element.idMember == idMember);
 
-    if (r.isNotEmpty) {
-      attendanceList
-          .where((element) => element.idMember == idMember)
-          .first
-          .state = stateMember.state;
-    }
     onChangedAttendaceList(attendanceList);
   }
 
-  Future<void> onPressedButtonSave() async {
+  void changedStateUserDataAttendance(UserDataAttendance userDataAttendance) {
+    List<Attendance> attendanceList = state.attendanceList;
+    attendanceList
+        .where((element) => element.idMember != userDataAttendance.user.id)
+        .toList()
+        .add(userDataAttendance.attendance);
+
+    onChangedAttendaceList(attendanceList);
+  }
+
+  Future<void> onPressedButtonSave(context) async {
+    ProgressDialog.show(context, double.infinity, double.infinity);
+
     final isExist = await _targetVirtual.isExistAttendanceNowByIdTrgetVirtual(
       state.targetVirtualSelected!.id!,
       DateTime.now(),
@@ -179,7 +195,8 @@ class TargetPageController extends StateNotifier<TargetPageState> {
       );
 
       _targetVirtual.registerMemberToAttendance(
-          state.attendanceList, attendance!.id);
+          state.listUserDataAttendance.map((e) => e.attendance).toList(),
+          attendance!.id);
     } else {
       final idTargetVirtual = await _targetVirtual
           .getTargetVirtualByUnitOfAction(state.unitOfAction!.id);
@@ -187,6 +204,9 @@ class TargetPageController extends StateNotifier<TargetPageState> {
       _targetVirtual.registerAttendanceToTargetVirtual(
           DateTime.now(), idTargetVirtual!.id!, state.attendanceList);
     }
+    router.pop();
+    await Dialogs.alert(context,
+        title: "Registro", content: "Registro exitoso");
   }
 
   Future<List<UserData>> getListMembers() async {
@@ -258,26 +278,60 @@ class TargetPageController extends StateNotifier<TargetPageState> {
     state = state.copyWith(membersEESS: list);
   }*/
 
-  Future<void> loadDataAttendanceAction() async {
+  Future<void> onPressedNextDateTime(context) async {
+    var list = state.listDateTimeMonth;
+    var dateTime = state.dateTimeSelected;
+    var index = list!.indexWhere((element) => element.day == dateTime!.day);
+    var indexNow = index + 1;
+    if (indexNow < list.length) {
+      onChangedDateTimeSelected(list[indexNow]);
+      onChangedListUserDataAttendance([]);
+      await loadDataAttendanceAction(context);
+    }
+  }
+
+  Future<void> onPressedLastDateTime(context) async {
+    var list = state.listDateTimeMonth;
+    var dateTime = state.dateTimeSelected;
+    var index = list!.indexWhere((element) => element.day == dateTime!.day);
+    var indexNow = index - 1;
+    if (indexNow >= 0) {
+      onChangedDateTimeSelected(list[indexNow]);
+      onChangedListUserDataAttendance([]);
+      await loadDataAttendanceAction(context);
+    }
+  }
+
+  Future<void> initPageAttedanceAction(context) async {
+    final listDateTime = getDatesNow();
+    onChangedListDateTimeMonth(listDateTime);
+    onChangedDateTimeSelected(listDateTime
+        .firstWhere((element) => element.day >= DateTime.now().day));
+    await loadDataAttendanceAction(context);
+  }
+
+  Future<void> loadDataAttendanceAction(context) async {
+    if (state.dateTimeSelected!.day > DateTime.now().day) {
+      onChangedListUserDataAttendance([]);
+      return;
+    }
+
     final isExist = await _targetVirtual.isExistAttendanceNowByIdTrgetVirtual(
       state.targetVirtualSelected!.id!,
-      DateTime.now(),
+      state.dateTimeSelected!,
     );
-    log(isExist.toString());
+    final membersUnitOfAction = await _unitOfAction.getMembersToUnitAction(
+      state.unitOfAction!.id,
+    );
     if (isExist) {
-      final membersUnitOfAction = await _unitOfAction.getMembersToUnitAction(
-        state.unitOfAction!.id,
-      );
-
-      DayAtendance? attendance =
+      final dayAttendance =
           await _targetVirtual.getAttendanceNowByIdTrgetVirtual(
         state.targetVirtualSelected!.id!,
-        DateTime.now(),
+        state.dateTimeSelected!,
       );
 
       final listIdMembers = membersUnitOfAction.map((e) => e.id).toList();
-
-      List<Attendance> listAttendance = attendance!.attendance;
+      List<Attendance> listAttendance = dayAttendance!.attendance;
       for (var element in listAttendance) {
         if (listIdMembers.contains(element.idMember)) {
           listIdMembers.remove(element.idMember);
@@ -294,10 +348,9 @@ class TargetPageController extends StateNotifier<TargetPageState> {
         );
         return UserDataAttendance(user, e);
       })).toList();
-      log(usersData.length.toString());
+
       onChangedListUserDataAttendance(usersData);
-      onChangedMembersUnitOfAction(listUsers);
-      onChangedAttendaceList(listAttendance);
+      onChangedAttendaceList(usersData.map((e) => e.attendance).toList());
     } else {
       final membersUnitOfAction = await _unitOfAction.getMembersToUnitAction(
         state.unitOfAction!.id,
@@ -319,6 +372,38 @@ class TargetPageController extends StateNotifier<TargetPageState> {
           membersUnitOfAction.map((e) => Attendance(e.id, "F")).toList());
       onChangedMembersUnitOfAction(membersUnitOfAction);
     }
+  }
+
+  List<DateTime> getDatesNow() {
+    final dateNow = DateTime.now();
+    final dayMonth = DateTime(dateNow.year, dateNow.month + 1, -1).day + 1;
+
+    var daysMonth = List.generate(dayMonth, (number) => number + 1);
+
+    var daysSaturday = daysMonth.where((element) =>
+        DateTime(dateNow.year, dateNow.month, element).weekday == 6);
+    var dateSaturday = daysSaturday
+        .map((e) => DateTime(dateNow.year, dateNow.month, e))
+        .toList();
+
+    return dateSaturday;
+  }
+
+  Widget willPopScope({bool isColorBackground = true}) {
+    return WillPopScope(
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: isColorBackground
+            ? const Color.fromARGB(255, 255, 255, 255)
+            : Colors.transparent,
+        alignment: Alignment.center,
+        child: CircularProgressIndicator(
+          color: !isColorBackground ? Colors.white : null,
+        ),
+      ),
+      onWillPop: () async => false,
+    );
   }
 
   @override

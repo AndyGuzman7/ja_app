@@ -10,7 +10,7 @@ Future<void> sendLoginForm(BuildContext context) async {
   final controller = loginProvider.read;
   final isValidForm = controller.formKey.currentState!.validate();
   if (isValidForm) {
-    ProgressDialog.show(context);
+    ProgressDialog.show(context, double.infinity, double.infinity);
     final response = await controller.submit();
     router.pop();
     if (response.error != null) {
