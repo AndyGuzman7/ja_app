@@ -94,17 +94,8 @@ class UnitOfActionRepositoryImpl extends UnitOfActionRepository {
             UnitOfAction.fromJson(docRef.data()!);
 
         if (unitOfAction != null) {
-          for (var element in unitOfAction.members) {
-            final res = await _firestore
-                .collection("users")
-                .where("id", isEqualTo: element)
-                .get();
-
-            if (res.docChanges.isNotEmpty) {
-              log("hay lista");
-              listEESS.add(UserData.fromJson(res.docs.elementAt(0).data()));
-            }
-          }
+          listEESS =
+              await _eessRepositoryImpl.getMembersToIds(unitOfAction.members);
         }
       }
       return listEESS;

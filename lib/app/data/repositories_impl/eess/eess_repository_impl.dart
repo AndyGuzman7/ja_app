@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ja_app/app/data/repositories/eess_impl/eess_repository.dart';
@@ -6,6 +7,7 @@ import 'package:ja_app/app/data/repositories_impl/church/church_repository_impl.
 import 'package:ja_app/app/domain/models/church/church.dart';
 import 'package:ja_app/app/domain/models/eess/eess.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
+import 'package:ja_app/app/ui/pages/navigator_botton/color.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
 
 import '../../../domain/models/user_data.dart';
@@ -124,18 +126,42 @@ class EESSRepositoryImpl extends EESSRepository {
   Future<List<UserData>> getMembersEESS(String idEESS) async {
     List<UserData> listEESS = [];
     try {
-      final docRef = await _firestore.collection("EESS").doc(idEESS).get();
-      if (docRef.exists) {
-        EESS eess = EESS.fromJson(docRef.data()!);
-        for (var element in eess.members!) {
+      final eess = await getEESS(idEESS);
+
+      if (eess == null) {
+        return [];
+      }
+      var members = eess.members;
+      if (members == null) {
+        return [];
+      }
+      listEESS = await getMembersToIds(members);
+      return listEESS;
+    } on FirebaseFirestore catch (e) {
+      return listEESS;
+    }
+  }
+
+  Future<List<UserData>> getMembersToIds(List<String> listIds) async {
+    List<UserData> listEESS = [];
+    try {
+      if (listIds.isNotEmpty) {
+        var countFor = (listIds.length / 10);
+        countFor = ((countFor % 1 != 0 ? countFor + 1 : countFor));
+        int count = 1;
+        while (count <= countFor) {
+          var list = listIds.take(10).toList();
+
           final res = await _firestore
               .collection("users")
-              .where("id", isEqualTo: element)
+              .where("id", whereIn: list)
               .get();
 
           if (res.docChanges.isNotEmpty) {
-            listEESS.add(UserData.fromJson(res.docs.elementAt(0).data()));
+            listEESS.addAll(res.docs.map((e) => UserData.fromJson(e.data())));
           }
+          count++;
+          listIds.removeRange(0, list.length);
         }
       }
       return listEESS;
@@ -198,17 +224,7 @@ class EESSRepositoryImpl extends EESSRepository {
             .where((element) => element.id == idUnitAction)
             .first;
         if (e != null) {
-          for (var element in e.members) {
-            final res = await _firestore
-                .collection("users")
-                .where("id", isEqualTo: element)
-                .get();
-
-            if (res.docChanges.isNotEmpty) {
-              log("hay lista");
-              listEESS.add(UserData.fromJson(res.docs.elementAt(0).data()));
-            }
-          }
+          listEESS = await getMembersToIds(e.members);
         }
       }
       return listEESS;

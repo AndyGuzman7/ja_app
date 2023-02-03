@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_meedu/ui.dart';
 
@@ -11,7 +11,7 @@ import 'package:ja_app/app/ui/routes/app_routes.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
 import 'package:ja_app/src/providers/push_notifications_provider.dart';
-
+/*
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
     'High Importance Notifications', // title
@@ -28,8 +28,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   //await Firebase.initializeApp();
   print('A bg message just showed up :  ${message.messageId}');
 }
-
-void showNotification() {
+*/
+/*void showNotification() {
   flutterLocalNotificationsPlugin.show(
     0,
     "Testing",
@@ -43,7 +43,7 @@ void showNotification() {
           icon: '@mipmap/ic_launcher'),
     ),
   );
-}
+}*/
 
 void suscribeHotel() async {
   FirebaseMessaging.instance.subscribeToTopic("notificationData").then(
@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> {
     // TODO: implement initState
     super.initState();
     suscribeHotel();
-    PushNotificationService.messageStream.listen((message) {
+    /*PushNotificationService.messageStream.listen((message) {
       log("My app");
 
       RemoteNotification? notification = message.notification;
@@ -86,8 +86,8 @@ class _MyAppState extends State<MyApp> {
               ),
             ));
       }
-    });
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    });*/
+    /*FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A new onMessageOpenedApp event was published!');
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
@@ -106,7 +106,7 @@ class _MyAppState extends State<MyApp> {
               );
             });
       }
-    });
+    });*/
   }
 
   @override

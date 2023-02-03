@@ -94,9 +94,9 @@ class RegisterController extends StateNotifier<RegisterState> {
     if (isValidForm) {
       ProgressDialog.show(context, double.infinity, double.infinity);
       final response = await submit();
-      router.pop();
 
       if (response.error != null) {
+        router.pop();
         late String content;
 
         switch (response.error) {
@@ -130,21 +130,22 @@ class RegisterController extends StateNotifier<RegisterState> {
           final user = await _authRepository.user;
 
           if (user != null) {
-            ProgressDialog.show(context, double.infinity, double.infinity);
+            //ProgressDialog.show(context, double.infinity, double.infinity);
             final userMain = sessionProvider.read.userData;
             await sessionProvider.read.signOut();
             await _authRepository.singInWithEmailAndPassword(
                 userMain!.email, userMain.password);
             final user = await _authRepository.user;
             _sessionController.setUser(user!, userMain);
-            router.pop();
           }
+          router.pop();
           closePage(context);
         } else {
+          router.pop();
+
           _sessionController.setUser(response.user!, response.signUpData!);
           router.pushNamedAndRemoveUntil(Routes.HOME);
         }
-        log("si llega");
       }
     } else {
       Dialogs.alert(context, title: "ERROR", content: "Invalid fields");

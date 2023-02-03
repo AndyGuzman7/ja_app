@@ -134,15 +134,6 @@ class _RegisterPageUserState extends State<RegisterPageUser>
                       );
                     },
                   ),
-                  Consumer(
-                    builder: (_, watch, __) {
-                      final s = watch.select(
-                        registerProvider.select((state) => state.termsOk),
-                      );
-                      log("comprobando ");
-                      return Text(s.toString());
-                    },
-                  ),
                   const SizedBox(
                     height: 10,
                   ),

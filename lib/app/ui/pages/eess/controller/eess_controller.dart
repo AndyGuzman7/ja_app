@@ -204,13 +204,15 @@ class EeSsController extends StateNotifier<EeSsState> {
       final responseChurch = await _church.isExistChurchSuscripcion(idUser);
       final responseEESS = await _eess.isExistEESSSuscripcion(idUser);
 
-      if (responseChurch == null) {
-        return;
+      if (responseChurch != null) {
+        final church = await getcHURCHByMember();
+        onChangedChurch(church!);
       }
-      if (responseEESS == null) {
-        return;
+      if (responseEESS != null) {
+        final eess = await getEESSByMember();
+        onChangedEESS(eess!);
       }
-      await loadDataChurchEESS();
+      //await loadDataChurchEESS();
     } catch (e) {
       return;
     }
@@ -251,7 +253,7 @@ class EeSsController extends StateNotifier<EeSsState> {
         ProgressDialog.show(context, double.infinity, double.infinity);
 
         final response =
-            await _eess.registerMemberEESS(idUser, state.eess!.id!);
+            await _eess.registerMemberEESS(idUser, state.eessSelected!.id!);
         router.pop();
 
         if (!response) {
@@ -260,8 +262,9 @@ class EeSsController extends StateNotifier<EeSsState> {
           router.pop();
           await Dialogs.alert(context,
               title: "Registro", content: "Registro exitoso");
+          onChangedEESS(state.eessSelected!);
 
-          final response = await getUnitOfActionByEESS();
+          //final response = await getUnitOfActionByEESS();
           //onChangedListUnitOfAction(response);
         }
       }

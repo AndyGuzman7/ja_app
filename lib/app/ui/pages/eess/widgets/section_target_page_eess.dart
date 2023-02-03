@@ -233,136 +233,131 @@ class SectionTargetPageEESS extends StatelessWidget {
   contentSection(context) {
     return Padding(
       padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-      child: Expanded(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            CustomTitle(title: "LLamar lista"),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text("Fecha:"),
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Color.fromARGB(255, 240, 240, 240)),
-                  child: Row(children: [
-                    IconButton(
-                        onPressed: () {
-                          targetPageProvider.read
-                              .onPressedLastDateTime(context);
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          CustomTitle(title: "LLamar lista"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text("Fecha:"),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    color: Color.fromARGB(255, 240, 240, 240)),
+                child: Row(children: [
+                  IconButton(
+                      onPressed: () {
+                        targetPageProvider.read.onPressedLastDateTime(context);
+                      },
+                      icon: Icon(Icons.arrow_circle_left_rounded)),
+                  Consumer(
+                    builder: ((context, ref, child) {
+                      final response = ref.select(
+                        targetPageProvider
+                            .select((state) => state.dateTimeSelected),
+                      );
+                      return AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 500),
+                        transitionBuilder:
+                            (Widget child, Animation<double> animation) {
+                          return ScaleTransition(
+                              scale: animation, child: child);
                         },
-                        icon: Icon(Icons.arrow_circle_left_rounded)),
-                    Consumer(
-                      builder: ((context, ref, child) {
+                        child: card2(response!),
+                      );
+                    }),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        targetPageProvider.read.onPressedNextDateTime(context);
+                      },
+                      icon: Icon(Icons.arrow_circle_right_rounded)),
+                ]),
+              ),
+              Consumer(builder: (context, ref, child) {
+                final response = ref.select(
+                  targetPageProvider.select((state) => state.dateTimeSelected),
+                );
+
+                return CustomButton(
+                    textButton: "Guardar",
+                    width: 100,
+                    height: 48,
+                    onPressed: DateTime.now().day == response!.day
+                        ? () {
+                            targetPageProvider.read
+                                .onPressedButtonSave(context);
+                          }
+                        : null);
+              })
+            ],
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              FutureBuilder(
+                future:
+                    targetPageProvider.read.initPageAttedanceAction(context),
+                builder: (context, AsyncSnapshot<void> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return Consumer(
+                      builder: (context, ref, child) {
                         final response = ref.select(
                           targetPageProvider
                               .select((state) => state.dateTimeSelected),
                         );
-                        return AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 500),
-                          transitionBuilder:
-                              (Widget child, Animation<double> animation) {
-                            return ScaleTransition(
-                                scale: animation, child: child);
-                          },
-                          child: card2(response!),
-                        );
-                      }),
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          targetPageProvider.read
-                              .onPressedNextDateTime(context);
-                        },
-                        icon: Icon(Icons.arrow_circle_right_rounded)),
-                  ]),
-                ),
-                Consumer(builder: (context, ref, child) {
-                  final response = ref.select(
-                    targetPageProvider
-                        .select((state) => state.dateTimeSelected),
-                  );
-
-                  return CustomButton(
-                      textButton: "Guardar",
-                      width: 100,
-                      height: 48,
-                      onPressed: DateTime.now().day == response!.day
-                          ? () {
-                              targetPageProvider.read
-                                  .onPressedButtonSave(context);
-                            }
-                          : null);
-                })
-              ],
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                FutureBuilder(
-                  future:
-                      targetPageProvider.read.initPageAttedanceAction(context),
-                  builder: (context, AsyncSnapshot<void> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return Consumer(
-                        builder: (context, ref, child) {
-                          final response = ref.select(
-                            targetPageProvider
-                                .select((state) => state.dateTimeSelected),
-                          );
-                          if (response!.day > DateTime.now().day) {
-                            return SizedBox(
-                                height: 200,
-                                child: Center(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Text(
-                                          "No puede llamar lista si no es sábado"),
-                                    ],
-                                  ),
-                                ));
-                          }
-
-                          return Consumer(builder: (context, ref, child) {
-                            final response = ref.select(
-                              targetPageProvider.select(
-                                  (state) => state.listUserDataAttendance),
-                            );
-                            if (response.isEmpty) {
-                              return Container(
-                                  height: 200, child: willPopScope());
-                            }
-                            return Container(
-                              width: double.maxFinite,
+                        if (response!.day > DateTime.now().day) {
+                          return SizedBox(
                               height: 200,
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: ListView(
-                                      children: itemsBuild(response),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                ],
-                              ),
-                            );
-                          });
-                        },
-                      );
-                    }
+                              child: Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                        "No puede llamar lista si no es sábado"),
+                                  ],
+                                ),
+                              ));
+                        }
 
-                    return Container(height: 200, child: willPopScope());
-                  },
-                )
-              ],
-            )
-          ],
-        ),
+                        return Consumer(builder: (context, ref, child) {
+                          final response = ref.select(
+                            targetPageProvider.select(
+                                (state) => state.listUserDataAttendance),
+                          );
+                          if (response.isEmpty) {
+                            return Container(
+                                height: 200, child: willPopScope());
+                          }
+                          return Container(
+                            width: double.maxFinite,
+                            height: 200,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: ListView(
+                                    children: itemsBuild(response),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                              ],
+                            ),
+                          );
+                        });
+                      },
+                    );
+                  }
+
+                  return Container(height: 200, child: willPopScope());
+                },
+              )
+            ],
+          )
+        ],
       ),
     );
   }

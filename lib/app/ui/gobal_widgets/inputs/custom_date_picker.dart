@@ -38,7 +38,7 @@ class _CustomImputDatePickerState extends State<CustomImputDatePicker> {
   Widget build(BuildContext context) {
     return FormField<DateTime>(
         validator: widget.validator,
-        initialValue: DateTime.now(),
+        //initialValue: DateTime.now(),
         autovalidateMode: AutovalidateMode.onUserInteraction,
         builder: (state) {
           DateTime? value = state.value;

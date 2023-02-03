@@ -29,12 +29,12 @@ class EeSsPage extends StatelessWidget {
               final state = watch.select(
                 eeSsProvider.select((state) => state),
               );
+              if (state.eess == null) {
+                return informationEESS(context);
+              }
 
               if (state.church == null) {
                 return informationChurch(eeSsProvider, context);
-              }
-              if (state.eess == null) {
-                return informationEESS(context);
               }
 
               return DefaultTabController(
@@ -141,8 +141,8 @@ class EeSsPage extends StatelessWidget {
     return eessInformation;
   }
 
-  showAlertDialog(
-      BuildContext contextFather, String text, String? message, provider) {
+  showAlertDialog(BuildContext contextFather, String text, String? message,
+      StateProvider<EeSsController, EeSsState> provider) {
     showDialog(
       barrierDismissible: false,
       context: contextFather,
@@ -180,7 +180,7 @@ class EeSsPage extends StatelessWidget {
                       children: [
                         SettingsWidget(
                           onChanged: (v) {
-                            provider.read.onChangedEESS(v);
+                            provider.read.onChangedEESSSelected(v);
                             log("se hace un on cahnged");
                           },
                           hint: 'Escoja una clase',
