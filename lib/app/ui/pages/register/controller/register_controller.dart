@@ -1,175 +1,75 @@
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
-import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/domain/models/country.dart';
 import 'package:ja_app/app/domain/models/userAvatar.dart';
-import 'package:ja_app/app/domain/models/user_data.dart';
-import 'package:ja_app/app/domain/responses/sign_up_response.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/dialogs.dart';
-import 'package:ja_app/app/ui/gobal_widgets/dialogs/progress_dialog.dart';
 import 'package:ja_app/app/ui/gobal_widgets/drop_dow/custom_dropDownButton%20copy.dart';
+import 'package:ja_app/app/ui/pages/register/controller/register_functions.dart';
 import 'package:ja_app/app/ui/pages/register/controller/register_state.dart';
-import 'package:ja_app/app/ui/pages/register/utils/permisson_list.dart';
-import 'package:ja_app/app/ui/routes/routes.dart';
-import 'package:ja_app/app/utils/email_service.dart';
-
-import '../../../../data/repositories/church_impl/church_repository.dart';
-import '../../../../data/repositories/resources_impl/resources_repository.dart';
-import '../../../../data/repositories/user_impl/login_impl/authentication_repository.dart';
-import '../../../../data/repositories/user_impl/register_impl/sign_up_repository.dart';
+import 'package:ja_app/app/ui/pages/register/register_page.dart';
+import '../../../../domain/models/tabBarUi.dart';
 import '../../../global_controllers/session_controller.dart';
+import '../register_page_avatar.dart';
+import '../register_page_personal.dart';
+import '../register_page_user.dart';
 
 class RegisterController extends StateNotifier<RegisterState> {
   final SessionController _sessionController;
+  List<TabBarUi> listTabBar = [];
+  late final RegisterFunctions registerFunctions;
   RegisterController(this._sessionController)
-      : super(RegisterState.initialState);
+      : super(RegisterState.initialState) {
+    registerFunctions = RegisterFunctions(state, _sessionController);
+    init();
+  }
   final GlobalKey<FormState> formKeyOne = GlobalKey();
 
   final GlobalKey<FormState> formKeyTwo = GlobalKey();
 
   late TabController tabController; // =  TabController(length: 3, vsync: this);
 
-  final _signUpRepository = Get.find<SignUpRepository>();
-
-  final _resourcesRepository = Get.find<ResourcesRepository>();
-  final _church = Get.find<ChurchRepository>();
-
-  final _authRepository = Get.find<AuthenticationRepository>();
-
-  List<UserAvatar> listAvatar = [];
-
-  getAvatar() {
-    List<UserAvatar> listAvatar = [];
-    String url =
-        "https://firebasestorage.googleapis.com/v0/b/ja-app-6430b.appspot.com/o/uploads%2Fdata%2Fuser%2F0%2Fcom.example.ja_app%2Fcache%2Fphoto_user%2F";
-    String newUrl;
-
-    for (var i = 0; i <= 18; i++) {
-      String name = "user_" + i.toString();
-      newUrl = url +
-          name +
-          ".png?alt=media&token=08b2edd7-f904-4d61-b59f-97520e4000b3";
-      var user =
-          UserAvatar(name: name, url: newUrl, isSelect: i == 0 ? true : false);
-
-      //if (user.isSelect == true) onUserAvatarChanged(user);
-      listAvatar.add(user);
-    }
-
-    onListAvatarChanged(listAvatar);
-  }
-
-  Future<SignUpResponse> submit() async {
-    final userData = UserData(
-      name: state.name,
-      lastName: state.lastName,
-      lastNameSecond: state.lastNameSecond,
-      nameSecond: state.nameSecond,
-      phone: state.phone,
-      userName: state.userName,
-      email: state.email,
-      password: state.password,
-      photoURL: state.userAvatar!.url,
-      birthDate: state.birthDate!,
-      listPermisson: [PermissonList.C],
-      bautizated: state.bautizatedCharacter.toString(),
-      country: state.country!,
-      gender: state.singingCharacter!.index.toString(),
+  init() async {
+    final one = RegisterPageAvatar(
+      providerListener: registerProvider,
     );
-    final response = await _signUpRepository.register(userData);
-    if (response.error == null && _sessionController.user == null) {
-      // _sessionController.setUser(response.user!, response.signUpData!);
-    }
-    return response;
+
+    final two = RegisterPagePersonal(
+      providerListener: registerProvider,
+    );
+
+    final three = RegisterPageUser(
+      providerListener: registerProvider,
+    );
+    listTabBar = [
+      TabBarUi(
+        "Mi EESS",
+        null,
+        one,
+        null,
+      ),
+      TabBarUi(
+        "Miembros",
+        null,
+        two,
+        "adminEESS",
+      ),
+      TabBarUi(
+        "Unidades",
+        null,
+        three,
+        null,
+      ),
+    ];
   }
 
-  Future<void> sendRegisterForm(BuildContext context) async {
-    FocusScope.of(context).unfocus();
-    final isValidForm = formKeyTwo.currentState!.validate();
-
-    if (isValidForm) {
-      ProgressDialog.show(context, double.infinity, double.infinity);
-      final response = await submit();
-
-      if (response.error != null) {
-        router.pop();
-        late String content;
-
-        switch (response.error) {
-          case SignUpError.tooManyRequests:
-            content = "Too many Requests";
-            break;
-          case SignUpError.emailAlreadyInUse:
-            content = "Email already in use";
-            break;
-          case SignUpError.weakPassword:
-            content = "weak password";
-            break;
-          case SignUpError.unknown:
-            content = "error unknown";
-            break;
-          case SignUpError.networkRequestFailed:
-            content = "network Request Failed";
-            break;
-          default:
-            break;
-        }
-        Dialogs.alert(context, title: "ERROR", content: content);
-      } else {
-        await sendEmail(
-            response.signUpData!.email,
-            "¡Su registro fue exitoso!\n Los datos mas importantes para su inicio de sesión:\n\tEmail: " +
-                response.signUpData!.email +
-                "\n\tContraseña: " +
-                response.signUpData!.password);
-        if (_sessionController.user != null) {
-          final user = await _authRepository.user;
-
-          if (user != null) {
-            //ProgressDialog.show(context, double.infinity, double.infinity);
-            final userMain = sessionProvider.read.userData;
-            await sessionProvider.read.signOut();
-            await _authRepository.singInWithEmailAndPassword(
-                userMain!.email, userMain.password);
-            final user = await _authRepository.user;
-            _sessionController.setUser(user!, userMain);
-          }
-          router.pop();
-          closePage(context);
-        } else {
-          router.pop();
-
-          _sessionController.setUser(response.user!, response.signUpData!);
-          router.pushNamedAndRemoveUntil(Routes.HOME);
-        }
-      }
-    } else {
-      Dialogs.alert(context, title: "ERROR", content: "Invalid fields");
-    }
-  }
-
-  sendEmail(email, text) async {
-    EmailService emailService = EmailService(
-        email, "Registro de miembro " + DateTime.now().toString(), text);
-    await emailService.sendEmail();
-  }
-
-  Future<void> uploadPfp(File file) async {
-    File uploadFile = file;
-    String path;
-
-    await FirebaseStorage.instance
-        .ref('uploads/${uploadFile.path}')
-        .putFile(uploadFile)
-        .then((p0) async {
-      await p0.ref.getDownloadURL().then((value) {
-        onImageURLChanged(value);
-      });
-    });
+  loadUserAvatar() async {
+    var listAvatars = await registerFunctions.getAvatars();
+    listAvatars.first.isSelect = true;
+    onListAvatarChanged(listAvatars);
+    onUserAvatarChanged(listAvatars.firstWhere((element) => element.isSelect));
+    log(listAvatars.firstWhere((element) => element.isSelect).url);
   }
 
   void onNameUserChanged(String text) {
@@ -245,6 +145,7 @@ class RegisterController extends StateNotifier<RegisterState> {
   }
 
   void onUserAvatarChanged(UserAvatar userAvatar) {
+    log("se sekecc");
     state = state.copyWith(userAvatar: userAvatar);
   }
 
@@ -257,30 +158,36 @@ class RegisterController extends StateNotifier<RegisterState> {
         state.copyWith(codeRegister: codeRegister == "" ? null : codeRegister);
   }
 
-  void nextPage(BuildContext context) {
-    onUserAvatarChanged(
-        state.listAvatar!.firstWhere((element) => element.isSelect == true));
+  onPressedBtnNextPageAvatar(BuildContext context) async {
     DefaultTabController.of(context)?.animateTo(1);
-
-    // _church.registerMemberChurchCodeAcess("wJM5lbqzjmOvsXFe3fap", "asdf125ZX");
   }
 
-  void nextPageSend(BuildContext context) {
+  onPressedBtnCancelPageAvatar(BuildContext context) async {
+    registerFunctions.closePage(context);
+  }
+
+  onPressedBtnNextPagePersonal(BuildContext context) async {
     final isValidForm = formKeyOne.currentState!.validate();
     if (isValidForm) {
       DefaultTabController.of(context)?.animateTo(2);
     }
   }
 
-  void lastPage(BuildContext context) {
+  onPressedBtnLastPagePersonal(BuildContext context) async {
     DefaultTabController.of(context)?.animateTo(0);
   }
 
-  void closePage(BuildContext context) {
-    Navigator.pop(context);
+  onPressedBtnRegisterPageUser(BuildContext context) async {
+    final isValidForm = formKeyTwo.currentState!.validate();
+
+    if (isValidForm) {
+      await registerFunctions.sendRegisterForm(context, state);
+    } else {
+      Dialogs.alert(context, title: "ERROR", content: "Invalid fields");
+    }
   }
 
-  void lastPagePersonal(BuildContext context) {
+  onPressedBtnLastPageUser(BuildContext context) async {
     DefaultTabController.of(context)?.animateTo(1);
   }
 

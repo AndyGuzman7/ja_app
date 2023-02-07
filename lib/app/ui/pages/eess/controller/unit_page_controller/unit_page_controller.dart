@@ -7,6 +7,7 @@ import 'package:ja_app/app/data/repositories/eess_impl/eess_repository.dart';
 import 'package:ja_app/app/data/repositories/unitOfAction_impl/unitOfAction_repository.dart';
 import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
 import 'package:ja_app/app/domain/models/eess/eess.dart';
+import 'package:ja_app/app/domain/models/eess/quarter.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/dialogs.dart';
@@ -67,7 +68,13 @@ class UnitPageController extends StateNotifier<UnitPageState> {
     final responseRegisterMember = await _unitOfAction
         .registerMemberUnitOfAction([state.userDataUnitOfActionCreate!.id],
             response!.idEESS, response.id);
-    await _targetVirtual.registerTargetVirtual(response.id);
+    var listQuarter = await _eess.getEESSConfigQuarter();
+
+    var dateTimeNow = DateTime.now();
+    var quater = listQuarter.firstWhere((element) => verificationDateQuarter(
+        element.startTime, element.endTime, dateTimeNow));
+
+    await _targetVirtual.registerTargetVirtual(response.id, quater.id);
     router.pop(context);
 
     if (response != null && responseRegisterMember) {
@@ -77,6 +84,14 @@ class UnitPageController extends StateNotifier<UnitPageState> {
     } else {
       Dialogs.alert(context, title: "Invalido", content: "Codigo invalido");
     }
+  }
+
+  verificationDateQuarter(
+      DateTime startTimeDate, DateTime endTimeDate, DateTime dateComparation) {
+    var d = startTimeDate.isBefore(dateComparation) &&
+        endTimeDate.isAfter(dateComparation);
+
+    return d;
   }
 
   onChangedListMembersSelected(UserData user) {

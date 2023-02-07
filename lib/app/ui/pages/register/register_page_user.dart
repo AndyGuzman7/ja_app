@@ -25,10 +25,9 @@ import '../../gobal_widgets/drop_dow/custom_dropDown.dart';
 import '../../gobal_widgets/inputs/custom_radioButton.dart';
 
 class RegisterPageUser extends StatefulWidget {
-  BuildContext context;
-  StateProvider<RegisterController, RegisterState> providerListener;
-  RegisterPageUser(
-      {required this.context, required this.providerListener, Key? key})
+  //BuildContext context;
+  final StateProvider<RegisterController, RegisterState> providerListener;
+  const RegisterPageUser({required this.providerListener, Key? key})
       : super(key: key);
 
   @override
@@ -43,23 +42,6 @@ class _RegisterPageUserState extends State<RegisterPageUser>
     return ProviderListener<RegisterController>(
         provider: widget.providerListener,
         builder: (_, controller) {
-          Row rowModel(widgetOne, widgetTwo) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: widgetOne,
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Expanded(child: widgetTwo),
-              ],
-            );
-          }
-
-          log("otra vez");
-
           return GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
             child: Form(
@@ -67,6 +49,14 @@ class _RegisterPageUserState extends State<RegisterPageUser>
               child: ListView(
                 padding: const EdgeInsets.all(15),
                 children: [
+                  Consumer(builder: (_, watch, __) {
+                    final s = watch.select(
+                      widget.providerListener
+                          .select((state) => state.userAvatar),
+                    );
+                    return SizedBox(
+                        width: 50, height: 50, child: Image.network(s!.url));
+                  }),
                   const CustomTitle2(
                     title: "Hola, Aun nesecitamos mas informacion",
                     subTitle: "Ingresa tu información de usuario",
@@ -75,7 +65,7 @@ class _RegisterPageUserState extends State<RegisterPageUser>
                   const SizedBox(
                     height: 20,
                   ),
-                  CustomImputField(
+                  /*CustomImputField(
                     icon: const Icon(Icons.person),
                     label: "Nombre de usuario (juanPe) Ejemplo",
                     onChanged: controller.onNameUserChanged,
@@ -84,7 +74,7 @@ class _RegisterPageUserState extends State<RegisterPageUser>
                       text = text!.replaceAll(" ", "");
                       return isValidName(text) ? null : "Nombre invalido";
                     },
-                  ),
+                  ),*/
                   CustomImputField(
                     icon: Icon(Icons.email),
                     label: "Email",
@@ -114,7 +104,7 @@ class _RegisterPageUserState extends State<RegisterPageUser>
                       watch.watch(
                         registerProvider.select((state) => state.password),
                       );
-                      log("comprobando contraseña");
+
                       return CustomImputField(
                         icon: Icon(Icons.security),
                         label: "Verificación contraseña",
@@ -142,12 +132,14 @@ class _RegisterPageUserState extends State<RegisterPageUser>
                       height: 48,
                       colorButton: const Color.fromARGB(255, 188, 188, 188),
                       textButton: 'Anterior',
-                      onPressed: () => controller.lastPagePersonal(context),
+                      onPressed: () =>
+                          controller.onPressedBtnLastPageUser(context),
                     ),
                     CustomButton(
                       height: 48,
                       textButton: 'Registrar',
-                      onPressed: () => controller.sendRegisterForm(context),
+                      onPressed: () =>
+                          controller.onPressedBtnRegisterPageUser(context),
                     ),
                   ),
                 ],
@@ -155,6 +147,21 @@ class _RegisterPageUserState extends State<RegisterPageUser>
             ),
           );
         });
+  }
+
+  Row rowModel(widgetOne, widgetTwo) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: widgetOne,
+        ),
+        const SizedBox(
+          width: 15,
+        ),
+        Expanded(child: widgetTwo),
+      ],
+    );
   }
 
   @override

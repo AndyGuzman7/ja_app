@@ -7,6 +7,8 @@ import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/target_virtual/target_virtual.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 
+import '../../../../../domain/models/eess/quarter.dart';
+
 class TargetPageState {
   final UnitOfAction? unitOfAction;
   final DateTime? dateTimeSelected;
@@ -18,11 +20,15 @@ class TargetPageState {
   final List<UserData> membersUnitOfAction;
   final List<UserDataAttendance> listUserDataAttendance;
   final List<DateTime>? listDateTimeMonth;
+  final List<Quarter> listQuarter;
+  final Quarter? quarter;
 
   final List<UserData> membersAttendance;
   final List<Attendance> attendanceList;
 
   TargetPageState({
+    required this.listQuarter,
+    required this.quarter,
     required this.dateTimeSelected,
     required this.listDateTimeMonth,
     required this.listUserDataAttendance,
@@ -38,6 +44,8 @@ class TargetPageState {
   });
 
   static TargetPageState get initialState => TargetPageState(
+        quarter: null,
+        listQuarter: [],
         dateTimeSelected: null,
         listDateTimeMonth: [],
         listUserDataAttendance: [],
@@ -53,6 +61,8 @@ class TargetPageState {
       );
 
   TargetPageState copyWith({
+    List<Quarter>? listQuarter,
+    Quarter? quarter,
     DateTime? dateTimeSelected,
     List<DateTime>? listDateTimeMonth,
     List<UserDataAttendance>? listUserDataAttendance,
@@ -68,6 +78,8 @@ class TargetPageState {
   }) {
     log("stado");
     return TargetPageState(
+      quarter: quarter ?? this.quarter,
+      listQuarter: listQuarter ?? this.listQuarter,
       dateTimeSelected: dateTimeSelected ?? this.dateTimeSelected,
       listDateTimeMonth: listDateTimeMonth ?? this.listDateTimeMonth,
       listUserDataAttendance:

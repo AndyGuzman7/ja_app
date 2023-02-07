@@ -8,6 +8,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:intl/intl.dart';
+import 'package:ja_app/app/domain/models/eess/quarter.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/target_virtual/target_virtual.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
@@ -71,131 +72,175 @@ class SectionTargetPageEESS extends StatelessWidget {
     }
 
     bool selected = true;
-    return Column(
-      children: [
-        // card("Nombre de Unidad", unitOfAction.name, null),
-        //Divider(),child: Center(
-        AnimatedContainer(
-          width: selected ? 200.0 : 100.0,
-          height: selected ? 100.0 : 200.0,
-          color: selected ? Colors.red : Colors.blue,
-          alignment:
-              selected ? Alignment.center : AlignmentDirectional.topCenter,
-          duration: const Duration(seconds: 2),
-          curve: Curves.fastOutSlowIn,
-          child: const FlutterLogo(size: 75),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 5,
-            left: 20,
-            right: 20,
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: CustomTitle2(title: "Asistencia"),
-              ),
-              Expanded(
-                child: CustomButton(
-                  icon: Icon(
-                    Icons.checklist_rounded,
-                    color: CustomColorPrimary().materialColor,
-                    size: 25,
-                  ),
-                  colorTextButton: CustomColorPrimary().materialColor,
-                  textButton: "LLamar Lista",
-                  colorBorderButton: CustomColorPrimary().materialColor,
-                  // width: 60,
-                  height: 48,
-                  colorButton: Colors.white,
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return contentSection(context);
+    return FutureBuilder(
+        future: targetPageProvider.read.getAttendanceAll(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            final Quarter? quarter = targetPageProvider.read.state.quarter;
+            return Column(children: [
+              itemButtonChilds(
+                  "Información",
+                  [
+                    rowCustom(
+                      atributeData2("Año", DateTime.now().year.toString()),
+                      atributeData2("Trimestre:", quarter!.name),
+                    ),
+                    atributeData("Nombre de la unidad",
+                        targetPageProvider.read.state.unitOfAction!.name),
+                    FutureBuilder(
+                      future: unitPageProvider.read.getUser(
+                          targetPageProvider.read.state.unitOfAction!.leader),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          return atributeData(
+                              "Maestro/a",
+                              snapshot.data.name +
+                                  " " +
+                                  snapshot.data.lastName);
+                        }
+                        return Container(
+                            height: 50,
+                            child: willPopScope(isColorBackground: false));
                       },
-                    );
-                  },
+                    ),
+                    atributeData("Inicio:",
+                        DateFormat.yMMMMd("ES").format(quarter.startTime)),
+                    atributeData("Cierre:",
+                        DateFormat.yMMMMd("ES").format(quarter.endTime)),
+                  ],
+                  null),
+              itemButtonChilds(
+                  "Ofrenda Misionera",
+                  [
+                    rowCustom(atributeData3("BLANCO\nSEMANAL", "00"),
+                        atributeData3("BLANCO 13°\nSÁBADO", "00")),
+                    atributeData4("23", "56"),
+                    atributeData2("Trimestre:", quarter!.name),
+                    atributeData("Nombre de la unidad",
+                        targetPageProvider.read.state.unitOfAction!.name),
+                    FutureBuilder(
+                      future: unitPageProvider.read.getUser(
+                          targetPageProvider.read.state.unitOfAction!.leader),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          return atributeData(
+                              "Maestro/a",
+                              snapshot.data.name +
+                                  " " +
+                                  snapshot.data.lastName);
+                        }
+                        return Container(
+                            height: 50,
+                            child: willPopScope(isColorBackground: false));
+                      },
+                    ),
+                    atributeData("Inicio:",
+                        DateFormat.yMMMMd("ES").format(quarter.startTime)),
+                    atributeData("Cierre:",
+                        DateFormat.yMMMMd("ES").format(quarter.endTime)),
+                  ],
+                  null),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 5,
+                  left: 20,
+                  right: 20,
                 ),
-              )
-            ],
-          ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: Row(
-            children: [
-              Expanded(
-                child: CustomImputField(
-                  icon: const Icon(Icons.search),
-                  label: "Busca por nombre o apellido",
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: CustomTitle2(title: "Asistencia"),
+                    ),
+                  ],
                 ),
               ),
-              IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.arrow_circle_left_outlined)),
-              Text("Enero"),
-              IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.arrow_circle_right_outlined)),
-              CustomButton(
-                textButton: "Hoy",
-                width: 65,
-                height: 48,
-                onPressed: () {},
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: CustomButton(
+                        icon: Icon(
+                          Icons.checklist_rounded,
+                          color: CustomColorPrimary().materialColor,
+                          size: 25,
+                        ),
+                        colorTextButton: CustomColorPrimary().materialColor,
+                        textButton: "LLamar Lista",
+                        colorBorderButton: CustomColorPrimary().materialColor,
+                        // width: 60,
+                        height: 48,
+                        colorButton: Colors.white,
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return contentSection(context);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.arrow_circle_left_outlined)),
+                    Text(quarter!.name),
+                    IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.arrow_circle_right_outlined)),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-        Divider(),
+              Divider(),
+              SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columnSpacing: 1,
+                    headingRowHeight: 80,
+                    //sortColumnIndex: 2,
+                    //sortAscending: false,
+                    columns: [
+                      DataColumn(
+                          label: Container(
+                        child: Text("Miembros"),
+                        width: 200,
+                      )),
+                      dataColumnCustom(),
+                      dataColumnCustom(),
+                      dataColumnCustom(),
+                      dataColumnCustom(),
+                      dataColumnCustom(),
+                      dataColumnCustom(),
+                      dataColumnCustom(),
+                      dataColumnCustom(),
+                      dataColumnCustom(),
+                      dataColumnCustom(),
+                      dataColumnCustom(),
+                      dataColumnCustom(),
+                    ],
+                    rows: [
+                      DataRow(selected: true, cells: [
+                        DataCell(Text("Andres"), showEditIcon: true),
+                        DataCell(Text("Cruz")),
+                        DataCell(Text("Cruz")),
+                        DataCell(Text("Cruz")),
+                        DataCell(Text("28")),
+                        DataCell(Text("Cruz")),
+                        DataCell(Text("Cruz")),
+                        DataCell(Text("Cruz")),
+                        DataCell(Text("28")),
+                        DataCell(Text("Cruz")),
+                        DataCell(Text("Cruz")),
+                        DataCell(Text("Cruz")),
+                        DataCell(Text("28"))
+                      ]),
+                    ],
+                  ))
+            ]);
+          }
+          return Text("sas");
+        }
 
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            columnSpacing: 1,
-            headingRowHeight: 80,
-            //sortColumnIndex: 2,
-            //sortAscending: false,
-            columns: [
-              DataColumn(
-                  label: Container(
-                child: Text("Miembros"),
-                width: 200,
-              )),
-              dataColumnCustom(),
-              dataColumnCustom(),
-              dataColumnCustom(),
-              dataColumnCustom(),
-              dataColumnCustom(),
-              dataColumnCustom(),
-              dataColumnCustom(),
-              dataColumnCustom(),
-              dataColumnCustom(),
-              dataColumnCustom(),
-              dataColumnCustom(),
-              dataColumnCustom(),
-            ],
-            rows: [
-              DataRow(selected: true, cells: [
-                DataCell(Text("Andres"), showEditIcon: true),
-                DataCell(Text("Cruz")),
-                DataCell(Text("Cruz")),
-                DataCell(Text("Cruz")),
-                DataCell(Text("28")),
-                DataCell(Text("Cruz")),
-                DataCell(Text("Cruz")),
-                DataCell(Text("Cruz")),
-                DataCell(Text("28")),
-                DataCell(Text("Cruz")),
-                DataCell(Text("Cruz")),
-                DataCell(Text("Cruz")),
-                DataCell(Text("28"))
-              ]),
-            ],
-          ),
-        )
         /*Padding(
           padding: const EdgeInsets.only(top: 5),
           child: Row(children: [
@@ -226,7 +271,191 @@ class SectionTargetPageEESS extends StatelessWidget {
         SizedBox(
           height: 10,
         ),*/
+
+        );
+  }
+
+  itemButtonChilds(text, List<Widget> children, Icon? icon,
+      {Color color = const Color.fromARGB(255, 63, 62, 62)}) {
+    icon = icon != null
+        ? Icon(
+            icon.icon,
+            color: color,
+          )
+        : null;
+
+    return ExpansionTile(
+        leading: icon,
+        title: Text(
+          text,
+          style: TextStyle(fontSize: 20, color: color),
+        ),
+        children: children);
+  }
+
+  Widget rowCustom(widget1, widget2) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.min,
+      // ignore: prefer_const_literals_to_create_immutables
+      children: [
+        Expanded(
+          child: widget1,
+        ),
+        Expanded(
+          child: widget2,
+        ),
       ],
+    );
+  }
+
+  Widget atributeData(String text1, String text2) {
+    return Container(
+      margin: EdgeInsets.all(5),
+      color: Color.fromARGB(255, 246, 245, 245),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          // ignore: prefer_const_literals_to_create_immutables
+          children: [
+            Expanded(
+                child: CustomTitle2(
+              title: text1,
+              fontSize: 16,
+            )),
+            Expanded(
+                child: CustomTitle2(
+              title: text2,
+              fontSize: 16,
+              isBoldTitle: true,
+              textAlignTitle: TextAlign.right,
+            )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget atributeData2(String text1, String text2) {
+    return Container(
+      margin: EdgeInsets.all(5),
+      color: Color.fromARGB(255, 246, 245, 245),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomTitle2(
+              title: text1,
+              fontSize: 16,
+            ),
+            CustomTitle2(
+              title: text2,
+              fontSize: 16,
+              isBoldTitle: true,
+              textAlignTitle: TextAlign.left,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget atributeData3(String text1, String text2) {
+    return Container(
+      margin: EdgeInsets.all(5),
+      color: Color.fromARGB(255, 246, 245, 245),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
+        // ignore: prefer_const_literals_to_create_immutables
+        children: [
+          Expanded(
+              child: Container(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            color: CustomColorPrimary().materialColor,
+            child: CustomTitle2(
+              title: text1,
+              colorTitle: Colors.white,
+              fontSize: 14,
+            ),
+          )),
+          Container(
+            width: 70,
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: CustomTitle2(
+              title: text2,
+              fontSize: 14,
+              isBoldTitle: true,
+              textAlignTitle: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget atributeData4(String text1, String text2) {
+    return Container(
+      margin: EdgeInsets.all(5),
+      color: Color.fromARGB(255, 246, 245, 245),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
+        // ignore: prefer_const_literals_to_create_immutables
+        children: [
+          Expanded(
+            child: Container(
+              width: 70,
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: CustomTitle2(
+                title: text2,
+                fontSize: 14,
+                isBoldTitle: true,
+                textAlignTitle: TextAlign.center,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              width: 70,
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: CustomTitle2(
+                title: text2,
+                fontSize: 14,
+                isBoldTitle: true,
+                textAlignTitle: TextAlign.center,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              width: 70,
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: CustomTitle2(
+                title: text2,
+                fontSize: 14,
+                isBoldTitle: true,
+                textAlignTitle: TextAlign.center,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              width: 70,
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: CustomTitle2(
+                title: text2,
+                fontSize: 14,
+                isBoldTitle: true,
+                textAlignTitle: TextAlign.center,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

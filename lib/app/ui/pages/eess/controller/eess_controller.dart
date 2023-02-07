@@ -49,11 +49,13 @@ class EeSsController extends StateNotifier<EeSsState> {
     List<TabBarUi> listTabBar = [
       TabBarUi(
         "Mi EESS",
+        null,
         MainPageEess(provider: eeSsProvider),
         null,
       ),
       TabBarUi(
         "Miembros",
+        null,
         MembersPageEESS(
           providers: eeSsProvider,
         ),
@@ -61,6 +63,7 @@ class EeSsController extends StateNotifier<EeSsState> {
       ),
       TabBarUi(
         "Unidades",
+        null,
         UnitPageEESS(
           listPermissons: listPermisson,
         ),
@@ -68,6 +71,7 @@ class EeSsController extends StateNotifier<EeSsState> {
       ),
       TabBarUi(
         "Tarjeta",
+        null,
         const TargetPageEESS(),
         "adminEESS",
       ),

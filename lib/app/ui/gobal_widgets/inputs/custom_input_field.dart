@@ -101,18 +101,27 @@ class _CustomImputFieldState extends State<CustomImputField> {
                         ),
                       ),*/
                         ),
+                    textCapitalization: !widget.isPassword
+                        ? TextCapitalization.sentences
+                        : TextCapitalization.none,
                     onChanged: (text) {
+                      if (text != "" && !widget.isPassword) {
+                        text = text.toLowerCase();
+                        text = text[0].toUpperCase() + text.substring(1);
+                      }
                       if (widget.validator != null) {
-                        // ignore: invalid_use_of_protected_member
                         widget.isNoSpace
                             ? text = text.replaceAll(" ", "")
                             : null;
+                        //text = text.toLowerCase().substring(0
+
                         state.setValue(text);
                         state.validate();
                       }
                       if (widget.onChanged != null) {
                         widget.onChanged!(text);
                       }
+                      log(text);
                     },
                   ),
                 ),

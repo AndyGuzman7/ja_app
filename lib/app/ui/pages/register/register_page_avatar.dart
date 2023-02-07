@@ -1,22 +1,16 @@
-import 'dart:developer';
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/domain/models/userAvatar.dart';
 import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_button.dart';
 import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
-import 'package:ja_app/app/ui/pages/register/register_page.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
-
 import 'controller/register_controller.dart';
 import 'controller/register_state.dart';
 
 class RegisterPageAvatar extends StatefulWidget {
-  StateProvider<RegisterController, RegisterState> providerListener;
-  RegisterPageAvatar({
+  final StateProvider<RegisterController, RegisterState> providerListener;
+  const RegisterPageAvatar({
     Key? key,
     required this.providerListener,
   }) : super(key: key);
@@ -45,8 +39,6 @@ class _RegisterPageAvatarState extends State<RegisterPageAvatar>
       );
     }
 
-    log("nuevamente");
-    widget.providerListener.read.getAvatar();
     return Container(
       padding: const EdgeInsets.all(15),
       color: Colors.transparent,
@@ -62,103 +54,83 @@ class _RegisterPageAvatarState extends State<RegisterPageAvatar>
           const SizedBox(
             height: 10,
           ),
-          Expanded(
-            child: Consumer(builder: (_, ref, __) {
-              List<UserAvatar> list = ref
-                  .select(widget.providerListener.select((_) => _.listAvatar!));
+          FutureBuilder(
+              future: widget.providerListener.read.loadUserAvatar(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Expanded(
+                    child: Consumer(builder: (_, ref, __) {
+                      List<UserAvatar> list = ref.select(
+                          widget.providerListener.select((_) => _.listAvatar!));
 
-              return GridView.count(
-                mainAxisSpacing: 20,
-                crossAxisSpacing: 20,
-                crossAxisCount: 4,
-                children: buildPhotoItem(list, widget.providerListener),
-              );
-            }),
-          ),
+                      return GridView.count(
+                        mainAxisSpacing: 20,
+                        crossAxisSpacing: 20,
+                        crossAxisCount: 4,
+                        children: buildPhotoItem(list, widget.providerListener),
+                      );
+                    }),
+                  );
+                } else {
+                  return Text("Cargando ...");
+                }
+              }),
           rowModel(
               CustomButton(
                 height: 48,
                 colorButton: Color.fromARGB(255, 188, 188, 188),
                 textButton: 'Cancelar',
-                onPressed: () =>
-                    widget.providerListener.read.closePage(context),
+                onPressed: () => widget.providerListener.read
+                    .onPressedBtnCancelPageAvatar(context),
               ),
               CustomButton(
                 height: 48,
                 textButton: 'Siguiente',
-                onPressed: () => widget.providerListener.read.nextPage(context),
+                onPressed: () => widget.providerListener.read
+                    .onPressedBtnNextPageAvatar(context),
               ))
         ],
       ),
     );
   }
 
-/**
- * 
- * 
- * Column(
-      children: <Widget>[
-        CardScrollWidget(currentPage),
-        Positioned.fill(
-          child: PageView.builder(
-            itemCount: images.length,
-            controller: controller,
-            reverse: true,
-            itemBuilder: (context, index) {
-              return Container();
-            },
-          ),
-        )
-      ],
-    );
- * 
- * 
- */
-  void selectUserAvatar(UserAvatar i, List<UserAvatar> list, provider) {
-    List<UserAvatar> listNew = [];
-    for (var e in list) {
-      if (e.isSelect == true && e.name != i.name) {
-        e.isSelect = false;
-      }
-      if (e.name == i.name) {
-        e.isSelect = true;
-      }
-      UserAvatar f = UserAvatar(name: e.name, url: e.url, isSelect: e.isSelect);
-      listNew.add(f);
-    }
-    //provider.read.onUserAvatarChanged(i);
+  void selectUserAvatar(UserAvatar i, List<UserAvatar> list,
+      StateProvider<RegisterController, RegisterState> provider) {
+    List<UserAvatar> listNew = list.map((e) {
+      e.isSelect = e.name != i.name ? false : true;
+      return e;
+    }).toList();
+    provider.read.onUserAvatarChanged(i);
     provider.read.onListAvatarChanged(listNew);
   }
 
-  List<Widget> buildPhotoItem(List<UserAvatar> list, provider) {
-    List<Widget> lisWidgets = [];
-    for (UserAvatar item in list) {
-      lisWidgets.add(
-        Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: Image.network(item.url).image,
-              opacity: item.isSelect ? 0.2 : 1,
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: InkWell(
-            onTap: () => selectUserAvatar(item, list, provider),
-            child: Align(
-              alignment: Alignment.center,
-              child: item.isSelect
-                  ? Icon(
-                      Icons.check_circle_outline,
-                      size: 40,
-                      color: CustomColorPrimary().materialColor,
-                    )
-                  : null,
-            ),
-          ),
+  Widget containerImage(UserAvatar userAvatar, list, provider) {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: Image.network(userAvatar.url).image,
+          opacity: userAvatar.isSelect ? 0.2 : 1,
+          fit: BoxFit.cover,
         ),
-      );
-    }
-    return lisWidgets;
+      ),
+      child: InkWell(
+        onTap: () => selectUserAvatar(userAvatar, list, provider),
+        child: Align(
+          alignment: Alignment.center,
+          child: userAvatar.isSelect
+              ? Icon(
+                  Icons.check_circle_outline,
+                  size: 40,
+                  color: CustomColorPrimary().materialColor,
+                )
+              : null,
+        ),
+      ),
+    );
+  }
+
+  List<Widget> buildPhotoItem(List<UserAvatar> list, provider) {
+    return list.map((e) => containerImage(e, list, provider)).toList();
   }
 
   @override

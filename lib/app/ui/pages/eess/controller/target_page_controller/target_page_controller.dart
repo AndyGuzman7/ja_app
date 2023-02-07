@@ -9,6 +9,7 @@ import 'package:ja_app/app/data/repositories/eess_impl/eess_repository.dart';
 import 'package:ja_app/app/data/repositories/unitOfAction_impl/unitOfAction_repository.dart';
 import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
 import 'package:ja_app/app/domain/models/eess/eess.dart';
+import 'package:ja_app/app/domain/models/eess/quarter.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/target_virtual/target_virtual.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
@@ -18,7 +19,7 @@ import 'package:ja_app/app/ui/pages/eess/controller/eess_controller.dart';
 import 'package:ja_app/app/ui/pages/eess/controller/members_page_controller/members_page_state.dart';
 import 'package:ja_app/app/ui/pages/eess/controller/target_page_controller/target_page_state.dart';
 import 'package:ja_app/app/ui/pages/eess/eess_page.dart';
-
+import 'package:collection/collection.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
 
 import '../../../../../data/repositories/target_virtual/target_virtual_repository.dart';
@@ -168,6 +169,14 @@ class TargetPageController extends StateNotifier<TargetPageState> {
     attendanceList.where((element) => element.idMember == idMember);
 
     onChangedAttendaceList(attendanceList);
+  }
+
+  void onChangedQuarter(Quarter quarter) {
+    state = state.copyWith(quarter: quarter);
+  }
+
+  void onChangedListQuarter(List<Quarter> listQuarter) {
+    state = state.copyWith(listQuarter: listQuarter);
   }
 
   void changedStateUserDataAttendance(UserDataAttendance userDataAttendance) {
@@ -389,6 +398,38 @@ class TargetPageController extends StateNotifier<TargetPageState> {
     return dateSaturday;
   }
 
+  List<DateTime> getDatesNowV2(DateTime dte) {
+    final dateNow = dte;
+    final dayMonth = DateTime(dateNow.year, dateNow.month + 1, -1).day + 1; //31
+    final daysMin = (dayMonth - dateNow.day) + 1;
+
+    var daysMonth = List.generate(daysMin, (number) => dayMonth - number);
+
+    var daysSaturday = daysMonth.where((element) =>
+        DateTime(dateNow.year, dateNow.month, element).weekday == 6);
+    var dateSaturday = daysSaturday
+        .map((e) => DateTime(dateNow.year, dateNow.month, e))
+        .toList();
+
+    return dateSaturday;
+  }
+
+  getSaturdays(start, end) {
+    var list = getMonthsInTheDates(start, end);
+    print(list);
+    List<DateTime> listNew = [];
+    for (var element in list) {
+      listNew.addAll(getDatesNowV2(element));
+    }
+    print(start);
+    print(end);
+    print(listNew);
+
+    listNew =
+        listNew.where((e) => verificationDateQuarter(start, end, e)).toList();
+    print(listNew);
+  }
+
   Widget willPopScope({bool isColorBackground = true}) {
     return WillPopScope(
       child: Container(
@@ -404,6 +445,52 @@ class TargetPageController extends StateNotifier<TargetPageState> {
       ),
       onWillPop: () async => false,
     );
+  }
+
+  getAttendanceAll() async {
+    var listQuarter = await _eess.getEESSConfigQuarter();
+    onChangedListQuarter(listQuarter);
+    var dateTimeNow = DateTime.now();
+    Quarter? quater = listQuarter.firstWhereOrNull((element) =>
+        verificationDateQuarter(
+            element.startTime, element.endTime, dateTimeNow));
+    if (quater == null) return;
+    onChangedQuarter(quater);
+    getSaturdays(quater.startTime, quater.endTime);
+  }
+
+  List<DateTime> getMonthsInTheDates(DateTime start, DateTime end) {
+    List<DateTime> listDateTimes = [];
+    bool isok = false;
+    int month = start.month;
+    int year = start.year;
+    int day = 1;
+    while (!isok) {
+      if (month == end.month && year == end.year) {
+        isok = true;
+      }
+      listDateTimes.add(DateTime(year, month, day));
+
+      if (month == 12) {
+        month = 0;
+        year++;
+      }
+      month++;
+    }
+    return listDateTimes;
+  }
+
+  verificationDateQuarter(
+      DateTime startTimeDate, DateTime endTimeDate, DateTime dateComparation) {
+    startTimeDate = DateTime(
+        startTimeDate.year, startTimeDate.month, startTimeDate.day - 1);
+    endTimeDate =
+        DateTime(endTimeDate.year, endTimeDate.month, endTimeDate.day + 1);
+
+    var d = startTimeDate.isBefore(dateComparation) &&
+        endTimeDate.isAfter(dateComparation);
+
+    return d;
   }
 
   @override

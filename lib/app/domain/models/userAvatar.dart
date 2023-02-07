@@ -17,4 +17,14 @@ class UserAvatar {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{'name': name, 'url': url};
+
+  Map<String, dynamic> toJsonList(List<UserAvatar> list) {
+    Map<String, dynamic> d = {};
+    var s = list.map((e) => e.toJson());
+    for (var element in s) {
+      d.addAll(element);
+    }
+
+    return d;
+  }
 }

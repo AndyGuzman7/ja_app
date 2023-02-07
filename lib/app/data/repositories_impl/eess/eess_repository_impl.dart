@@ -6,6 +6,7 @@ import 'package:ja_app/app/data/repositories/eess_impl/eess_repository.dart';
 import 'package:ja_app/app/data/repositories_impl/church/church_repository_impl.dart';
 import 'package:ja_app/app/domain/models/church/church.dart';
 import 'package:ja_app/app/domain/models/eess/eess.dart';
+import 'package:ja_app/app/domain/models/eess/quarter.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/ui/pages/navigator_botton/color.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
@@ -203,6 +204,29 @@ class EESSRepositoryImpl extends EESSRepository {
       return null;
     } on bool catch (e) {
       return null;
+    }
+  }
+
+  @override
+  Future<List<Quarter>> getEESSConfigQuarter() async {
+    try {
+      List<Quarter> list = [];
+      DocumentSnapshot<Map<String, dynamic>> response =
+          await _firestore.collection("EESS_config").doc("quarter").get();
+
+      if (response.exists) {
+        response.data()!.forEach((key, value) {
+          log(value.toString());
+          list.add(Quarter.fromJson(value));
+          //print('$key: $value');
+          //listBrochures.add(Brochure.fromJson(value));
+          //log(value.toString());
+        });
+      }
+
+      return list;
+    } on bool catch (e) {
+      return [];
     }
   }
 

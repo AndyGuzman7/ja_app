@@ -202,14 +202,17 @@ class MembersPageEESS extends StatelessWidget {
     );
   }
 
-  itemsBuild(List<UserData> items) {
-    List<Widget> itemsWidgets = [];
+  List<Widget> itemsBuild(List<UserData> items) {
+    /*List<Widget> itemsWidgets = [];
     for (var element in items) {
       itemsWidgets.add(ItemMemberV3(element, false, (user) {
         membersPageProvider.read.onChangedListMembersSelected(user);
       }));
-    }
-    return itemsWidgets;
+    }*/
+    return items
+        .map((e) => ItemMemberV3(
+            e, false, membersPageProvider.read.onChangedListMembersSelected))
+        .toList();
   }
 
   showAlertDialogMembers(
@@ -233,7 +236,8 @@ class MembersPageEESS extends StatelessWidget {
             backgroundColor: Colors.white,
             content: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
               FutureBuilder(
-                  future: membersPageProvider.read.getMembersNoneEESS(),
+                  future: membersPageProvider.read.membersPageFunctions
+                      .getMembersNoneEESS(),
                   builder: (context, AsyncSnapshot<List<UserData>> snapshot) {
                     if (snapshot.hasData) {
                       if (snapshot.data!.isEmpty) {
@@ -263,7 +267,7 @@ class MembersPageEESS extends StatelessWidget {
                                   if (membersPageProvider
                                       .read.state.membersEESSNew.isNotEmpty) {
                                     await membersPageProvider.read
-                                        .onPressedAddMembers(context);
+                                        .onPressedBtnAddMembers(context);
                                     router.pop(context);
                                   }
                                 },
@@ -341,8 +345,8 @@ class MembersPageEESS extends StatelessWidget {
                   icon: Icon(Icons.person_add_alt),
                   height: 48,
                   textButton: 'Crear Miembro',
-                  onPressed: () {
-                    router.pushNamed(Routes.REGISTER);
+                  onPressed: () async {
+                    membersPageProvider.read.onPressedBtnCreateMember(context);
                   },
                 ),
                 SizedBox(

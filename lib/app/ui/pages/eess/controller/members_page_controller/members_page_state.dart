@@ -1,8 +1,3 @@
-import 'dart:developer';
-import 'dart:io';
-
-import 'package:flutter/material.dart';
-import 'package:ja_app/app/domain/models/eess/eess.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 
@@ -13,8 +8,10 @@ class MembersPageState {
   final UserData? userDataUnitOfActionCreate;
   final List<UserData> membersEESSNew;
   final List<UserData> membersEESS;
+  final List<UserData>? membersEESSNone;
 
   MembersPageState({
+    required this.membersEESSNone,
     required this.membersEESS,
     required this.membersEESSNew,
     required this.listUnitOfAction,
@@ -24,6 +21,7 @@ class MembersPageState {
   });
 
   static MembersPageState get initialState => MembersPageState(
+        membersEESSNone: [],
         membersEESS: [],
         membersEESSNew: [],
         listUnitOfAction: [],
@@ -33,6 +31,7 @@ class MembersPageState {
       );
 
   MembersPageState copyWith({
+    List<UserData>? membersEESSNone,
     List<UnitOfAction>? listUnitOfAction,
     UnitOfAction? unitOfAction,
     List<UserData>? membersEESS,
@@ -40,8 +39,8 @@ class MembersPageState {
     String? nameUnitOfActionCreate,
     UserData? userDataUnitOfActionCreate,
   }) {
-    log("stado");
     return MembersPageState(
+      membersEESSNone: membersEESSNone ?? this.membersEESSNone,
       membersEESS: membersEESS ?? this.membersEESS,
       membersEESSNew: membersEESSNew ?? this.membersEESSNew,
       unitOfAction: unitOfAction ?? this.unitOfAction,

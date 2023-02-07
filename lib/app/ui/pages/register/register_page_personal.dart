@@ -27,10 +27,8 @@ import '../../gobal_widgets/drop_dow/custom_dropDown.dart';
 import '../../gobal_widgets/inputs/custom_radioButton.dart';
 
 class RegisterPagePersonal extends StatefulWidget {
-  BuildContext context;
-  StateProvider<RegisterController, RegisterState> providerListener;
-  RegisterPagePersonal(
-      {required this.context, required this.providerListener, Key? key})
+  final StateProvider<RegisterController, RegisterState> providerListener;
+  const RegisterPagePersonal({required this.providerListener, Key? key})
       : super(key: key);
 
   @override
@@ -45,55 +43,6 @@ class _RegisterPagePersonalState extends State<RegisterPagePersonal>
     return ProviderListener<RegisterController>(
       provider: widget.providerListener,
       builder: (_, controller) {
-        Row rowModel(widgetOne, widgetTwo) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: widgetOne,
-              ),
-              const SizedBox(
-                width: 15,
-              ),
-              Expanded(child: widgetTwo),
-            ],
-          );
-        }
-
-        Row rowModelLeft(widgetOne, widgetTwo) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: widgetOne,
-              ),
-              const SizedBox(
-                width: 15,
-              ),
-              widgetTwo,
-            ],
-          );
-        }
-
-        Row rowModelThree(widgetOne, widgetTwo, widgetThree) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: widgetOne,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Expanded(child: widgetTwo),
-              const SizedBox(
-                width: 10,
-              ),
-              Expanded(child: widgetTwo),
-            ],
-          );
-        }
-
         return GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Form(
@@ -103,7 +52,6 @@ class _RegisterPagePersonalState extends State<RegisterPagePersonal>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                //padding: const EdgeInsets.all(15),
                 children: [
                   rowModelLeft(
                     const CustomTitle2(
@@ -116,14 +64,14 @@ class _RegisterPagePersonalState extends State<RegisterPagePersonal>
                         widget.providerListener
                             .select((state) => state.userAvatar),
                       );
-                      return Container(
+                      return SizedBox(
                           width: 50, height: 50, child: Image.network(s!.url));
                     }),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  Divider(),
+                  const Divider(),
                   Container(
                     padding: const EdgeInsets.only(top: 10),
                     child: const Text(
@@ -217,6 +165,13 @@ class _RegisterPagePersonalState extends State<RegisterPagePersonal>
                     onChanged: controller.onBirthDateChanged,
                     validator: (text) {
                       if (text == null) return "Es necesario una fecha";
+                      if (text.year == DateTime.now().year) {
+                        return "No es valido el año actual";
+                      }
+                      if ((DateTime.now().year - text.year) < 10) {
+                        log((text.year - DateTime.now().year).toString());
+                        return "Debe de ser mayor a 10 años";
+                      }
                     },
                   ),
                   SettingsWidget(
@@ -226,35 +181,20 @@ class _RegisterPagePersonalState extends State<RegisterPagePersonal>
                     },
                     hint: 'Pais',
                     items: [
-                      Country("Bolivia", "+591"),
-                      Country("Peru", "+51"),
-                      Country("Brasil", "+53")
+                      Country("Bolivia +591", "+591"),
+                      Country("Peru +51", "+51"),
+                      Country("Brasil +53", "+53")
                     ],
                     validator: (text) {
                       if (text == null) return "El Pais es necesario";
                       return null;
                     },
                   ),
-                  /* CustomDropDown(
-                    onChanged: (v) {
-                      controller.onCountryChanged(v);
-                    },
-                    hint: 'Pais',
-                    lisItems: [
-                      Country("Bolivia", "+591"),
-                      Country("Peru", "+51"),
-                      Country("Brasil", "+53")
-                    ],
-                    validator: (text) {
-                      if (text == null) return "El Pais es necesario";
-                      return null;
-                    },
-                  ),*/
                   CustomImputField(
                     inputType: TextInputType.phone,
                     onChanged: controller.onPhoneChanged,
                     icon: const Icon(Icons.phone),
-                    label: "+591 67893456 (ejemplo)",
+                    label: "67893456 (ejemplo, sin extensión)",
                     validator: (text) {
                       if (text == "") return "El celular es necesario";
                       text = text!.replaceAll(" ", "");
@@ -295,18 +235,20 @@ class _RegisterPagePersonalState extends State<RegisterPagePersonal>
                   const SizedBox(
                     height: 10,
                   ),
-                  Divider(),
+                  const Divider(),
                   rowModel(
                     CustomButton(
                       height: 48,
                       colorButton: Color.fromARGB(255, 188, 188, 188),
                       textButton: 'Anterior',
-                      onPressed: () => controller.lastPage(context),
+                      onPressed: () =>
+                          controller.onPressedBtnLastPagePersonal(context),
                     ),
                     CustomButton(
                       height: 48,
                       textButton: 'Siguiente',
-                      onPressed: () => controller.nextPageSend(context),
+                      onPressed: () =>
+                          controller.onPressedBtnNextPagePersonal(context),
                     ),
                   )
                 ],
@@ -315,6 +257,55 @@ class _RegisterPagePersonalState extends State<RegisterPagePersonal>
           ),
         );
       },
+    );
+  }
+
+  Row rowModel(widgetOne, widgetTwo) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: widgetOne,
+        ),
+        const SizedBox(
+          width: 15,
+        ),
+        Expanded(child: widgetTwo),
+      ],
+    );
+  }
+
+  Row rowModelLeft(widgetOne, widgetTwo) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: widgetOne,
+        ),
+        const SizedBox(
+          width: 15,
+        ),
+        widgetTwo,
+      ],
+    );
+  }
+
+  Row rowModelThree(widgetOne, widgetTwo, widgetThree) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: widgetOne,
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(child: widgetTwo),
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(child: widgetTwo),
+      ],
     );
   }
 

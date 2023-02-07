@@ -6,25 +6,50 @@ class TargetVirtual {
   final String? id;
   final String idUnitOfAction;
   final List<DayAtendance>? attendance;
+  final List<DayOffering> offeringQuarter;
+  final String idQuarter;
 
-  TargetVirtual(
-    this.id,
-    this.idUnitOfAction,
-    this.attendance,
-  );
+  TargetVirtual(this.id, this.idUnitOfAction, this.attendance,
+      this.offeringQuarter, this.idQuarter);
 
   factory TargetVirtual.fromJson(Map<String, dynamic> json) {
     return TargetVirtual(
-      json['id'],
-      json['idUnitOfAction'],
-      json['attendance'] != null ? List.castFrom(json['attendance']) : [],
-    );
+        json['id'],
+        json['idUnitOfAction'],
+        json['attendance'] != null ? List.castFrom(json['attendance']) : [],
+        json['offeringQuarter'] != null
+            ? List.castFrom(json['offeringQuarter'])
+            : [],
+        json['idQuarter']);
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'idUnitOfAction': idUnitOfAction,
         'attendance': attendance,
+        'idQuarter': idQuarter,
+        'offeringQuarter': offeringQuarter
+      };
+}
+
+class DayOffering {
+  double quatity;
+  DateTime date;
+  int day;
+  DayOffering(this.quatity, this.date, this.day);
+  factory DayOffering.fromJson(Map<String, dynamic> json) {
+    convert(date) {
+      DateTime dateTime = date.toDate();
+      return dateTime;
+    }
+
+    return DayOffering(json['quantity'], convert(json['date']), json['day']);
+  }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'quantity': quatity,
+        'date': date,
+        'day': day,
       };
 }
 

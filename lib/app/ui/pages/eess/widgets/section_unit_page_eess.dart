@@ -52,7 +52,9 @@ class SectionUnitPageEESS extends StatelessWidget {
                 height: 48,
                 colorButton: Colors.white,
                 onPressed: () {
-                  showAlertDialog(context, "", "");
+                  showAlertDialogMembers(context,
+                      "Mantenga presionado para seleccionar/deseleccionar", "");
+                  //showAlertDialog(context, "", "");
                   //router.pushNamed(Routes.REGISTER);
                 },
               )
@@ -458,14 +460,14 @@ class SectionUnitPageEESS extends StatelessWidget {
                 SizedBox(
                   height: 15,
                 ),
-                CustomButton(
+                /*CustomButton(
                   icon: Icon(Icons.person_add_alt),
                   height: 48,
                   textButton: 'Crear Miembro',
                   onPressed: () {
                     router.pushNamed(Routes.REGISTER);
                   },
-                ),
+                ),*/
                 SizedBox(
                   height: 15,
                 ),

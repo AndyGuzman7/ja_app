@@ -2,7 +2,7 @@ import 'package:ja_app/app/domain/models/target_virtual/target_virtual.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 
 abstract class TargetVirtualRepository {
-  Future<bool> registerTargetVirtual(String idUnitOfAction);
+  Future<bool> registerTargetVirtual(String idUnitOfAction, String idQuarter);
   Future<bool> isExistAttendanceNowByIdTrgetVirtual(
       String idTargetVirtual, DateTime dateTime);
 

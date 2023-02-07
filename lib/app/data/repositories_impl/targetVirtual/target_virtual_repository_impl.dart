@@ -9,6 +9,7 @@ import 'package:ja_app/app/domain/models/church/church.dart';
 import 'package:ja_app/app/domain/models/eess/eess.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/target_virtual/target_virtual.dart';
+import 'package:ja_app/app/ui/pages/navigator_botton/color.dart';
 
 import '../../../domain/models/user_data.dart';
 import '../../repositories/church_impl/church_repository.dart';
@@ -190,11 +191,59 @@ class TargetVirtualRepositoryImpl extends TargetVirtualRepository {
     }
   }
 
+  verificationDateQuarter(
+      DateTime startTimeDate, DateTime endTimeDate, DateTime dateComparation) {
+    var d = startTimeDate.isBefore(dateComparation) &&
+        endTimeDate.isAfter(dateComparation);
+
+    return d;
+  }
+
+  List<DateTime> getDatesNow() {
+    final dateNow = DateTime.now();
+    final dayMonth = DateTime(dateNow.year, dateNow.month + 1, -1).day + 1;
+
+    var daysMonth = List.generate(dayMonth, (number) => number + 1);
+
+    var daysSaturday = daysMonth.where((element) =>
+        DateTime(dateNow.year, dateNow.month, element).weekday == 6);
+    var dateSaturday = daysSaturday
+        .map((e) => DateTime(dateNow.year, dateNow.month, e))
+        .toList();
+
+    return dateSaturday;
+  }
+
+  List<DateTime> getDates(DateTime start, DateTime end) {
+    List<DateTime> listDateTimes = [];
+
+    bool isok = false;
+    int month = start.month;
+    int year = start.year;
+    while (!isok) {
+      var date = DateTime(start.year, month, 1);
+      listDateTimes.add(date);
+      if (month == 12) {
+        month = 1;
+        year++;
+      }
+      if (month == end.month && year == end.year) isok = true;
+    }
+    return listDateTimes;
+  }
+
   @override
-  Future<bool> registerTargetVirtual(String idUnitOfAction) async {
+  Future<bool> registerTargetVirtual(
+      String idUnitOfAction, String idQuarter) async {
     try {
       final id = _firestore.collection("EESS_targetVirtual").doc().id;
-      TargetVirtual targetVirtual = TargetVirtual(id, idUnitOfAction, null);
+      /*var listQuarter = await _eessRepositoryImpl.getEESSConfigQuarter();
+      var quater = listQuarter.firstWhere((element) => verificationDateQuarter(
+          element.startTime, element.endTime, DateTime.now()));*/
+
+      //List d = List.generate(13, (index) => DayOffering(0.0,))
+      TargetVirtual targetVirtual =
+          TargetVirtual(id, idUnitOfAction, [], [], idQuarter);
 
       final response = await _firestore
           .collection("EESS_targetVirtual")
@@ -332,6 +381,27 @@ class TargetVirtualRepositoryImpl extends TargetVirtualRepository {
     }
 
     return DayAtendance.fromJson(res.docs.first.data());
+  }
+
+  Future<List<DayAtendance>> getAttendanceQuarterByIdTargetVirtual(
+      String idTargetVirtual, String idQuarter) async {
+    // final dateNow = DateFormat.yMd("EN").format(dateTime);
+
+    DateFormat format = DateFormat("MM/dd/yyyy");
+    List<DayAtendance> list = [];
+    final res = await _firestore
+        .collection("EESS_unitOfAction_attendance")
+        .where("idQuarter", isEqualTo: idQuarter)
+        .where("idTargetVirtual", isEqualTo: idTargetVirtual)
+        .get();
+
+    if (res.docs.isEmpty) {
+      return [];
+    }
+    res.docs.forEach((element) {
+      list.add(DayAtendance.fromJson(element.data()));
+    });
+    return list;
   }
 
   @override

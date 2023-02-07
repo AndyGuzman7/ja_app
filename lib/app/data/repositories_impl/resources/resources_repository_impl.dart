@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ja_app/app/data/repositories_impl/name_nodes/name_nodes_user.dart';
@@ -36,19 +37,56 @@ class ResourcesRepositoryImpl extends ResourcesRepository {
   }
 
   @override
-  Future<bool> registerImageAvatar() async {
+  Future<bool> registerImageAvatar(List<UserAvatar> lis) async {
     List<UserAvatar> userAvatar = [];
     String jsonTags = jsonEncode(userAvatar);
     final e = userAvatar.map((e) => e.toJson()).toString();
     try {
       await _firestore
           .collection("resources")
-          .doc("images")
-          .collection(jsonTags);
+          .doc("avatar")
+          .set(toJsonList(lis));
 
       return true;
     } on bool catch (e) {
       return false;
     }
+  }
+
+  Map<String, dynamic> toJsonList(List<UserAvatar> list) {
+    Map<String, dynamic> d = {};
+    var s = list.map((e) {
+      return MapEntry(e.name, e.toJson());
+    });
+    d.addEntries(s);
+    /*for (var element in s) {
+      d.addEntries(element.value);
+    }*/
+
+    return d;
+  }
+
+  @override
+  Future<List<UserAvatar>> getUservAvatarAll() async {
+    List<UserAvatar>? listBrochures = [];
+    try {
+      DocumentSnapshot<Map<String, dynamic>> value =
+          await _firestore.collection("resources").doc("avatar").get();
+
+      if (value.exists) {
+        value.data()!.forEach((key, value) {
+          //log(value.toString());
+          listBrochures.add(UserAvatar.fromJson(value));
+          //print('$key: $value');
+          //listBrochures.add(Brochure.fromJson(value));
+          //log(value.toString());
+        });
+
+        return listBrochures;
+      }
+    } on FirebaseFirestore catch (e) {
+      return listBrochures;
+    }
+    return listBrochures;
   }
 }
