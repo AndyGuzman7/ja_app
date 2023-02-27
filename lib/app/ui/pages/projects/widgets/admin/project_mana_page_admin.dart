@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +7,8 @@ import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/domain/models/brochure.dart';
 import 'package:ja_app/app/domain/models/brochureSubscription.dart';
 import 'package:ja_app/app/domain/models/subscriptionProjectMana.dart';
-import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
 import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
-import 'package:ja_app/app/ui/pages/projects/project_mana_page.dart';
+
 import 'package:ja_app/app/ui/pages/projects/widgets/admin/controller/project_mana_page_admin_controller.dart';
 import 'package:ja_app/app/ui/pages/projects/widgets/admin/controller/project_mana_page_admin_state.dart';
 import 'package:ja_app/app/utils/MyColors.dart';

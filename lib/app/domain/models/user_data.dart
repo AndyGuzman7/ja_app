@@ -36,6 +36,8 @@ class UserData {
     required this.photoURL,
   });
 
+  get fullName => name + " " + lastName + " " + lastNameSecond!;
+
   factory UserData.fromJson(Map<String, dynamic> json) {
     DateTime toDate(timestamp) {
       Timestamp s = timestamp;

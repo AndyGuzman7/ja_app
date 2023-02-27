@@ -3,6 +3,14 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:intl/intl.dart';
+import 'package:ja_app/app/ui/gobal_widgets/inputs/validators.dart';
+
 class CustomImputField extends StatefulWidget {
   final void Function(String)? onChanged;
   final String label;
@@ -12,10 +20,12 @@ class CustomImputField extends StatefulWidget {
   final Icon? icon;
   final bool isNoSpace;
   final String? value;
+  final bool isCapitanize;
   const CustomImputField(
       {Key? key,
       this.onChanged,
       this.value,
+      this.isCapitanize = false,
       required this.label,
       this.inputType,
       this.icon,
@@ -30,12 +40,19 @@ class CustomImputField extends StatefulWidget {
 
 class _CustomImputFieldState extends State<CustomImputField> {
   late bool _obscureText;
+  String? value;
+  TextEditingController? s;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _obscureText = widget.isPassword;
+    if (widget.value == null) return;
+    value = widget.value!;
+    s = TextEditingController(text: value);
+    SchedulerBinding.instance
+        .addPostFrameCallback((_) => {widget.onChanged!(widget.value!)});
   }
 
   @override
@@ -44,9 +61,10 @@ class _CustomImputFieldState extends State<CustomImputField> {
     log(widget.label);
     return FormField<String>(
         validator: widget.validator,
-        initialValue: '',
+        initialValue: s != null ? s!.text : "",
         autovalidateMode: AutovalidateMode.onUserInteraction,
         builder: (state) {
+          value = null;
           return Padding(
             padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
             child: Column(
@@ -59,6 +77,7 @@ class _CustomImputFieldState extends State<CustomImputField> {
                   child: TextField(
                     obscureText: _obscureText,
                     keyboardType: widget.inputType,
+                    controller: s,
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(
                             right: 0, left: 10, top: 8.0, bottom: 8.0),
@@ -105,23 +124,17 @@ class _CustomImputFieldState extends State<CustomImputField> {
                         ? TextCapitalization.sentences
                         : TextCapitalization.none,
                     onChanged: (text) {
-                      if (text != "" && !widget.isPassword) {
-                        text = text.toLowerCase();
-                        text = text[0].toUpperCase() + text.substring(1);
-                      }
                       if (widget.validator != null) {
+                        // ignore: invalid_use_of_protected_member
                         widget.isNoSpace
                             ? text = text.replaceAll(" ", "")
                             : null;
-                        //text = text.toLowerCase().substring(0
-
                         state.setValue(text);
                         state.validate();
                       }
                       if (widget.onChanged != null) {
                         widget.onChanged!(text);
                       }
-                      log(text);
                     },
                   ),
                 ),

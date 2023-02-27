@@ -37,10 +37,9 @@ class TargetPageEESS extends StatelessWidget {
       height: double.infinity,
       color: Colors.white,
       child: FutureBuilder(
-        future: targetPageProvider.read.loadPageData(),
+        future: targetPageProvider.read.initPageMain(),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            log("entra");
             return Consumer(builder: (_, watch, __) {
               final response = watch.select(
                 targetPageProvider.select((state) => state.listUnitOfAction),
@@ -68,43 +67,25 @@ class TargetPageEESS extends StatelessWidget {
                                 //value: snapshot.data!.first,
                                 onChanged: (v) {
                                   targetPageProvider.read
-                                      .onChangedUnitOfAction(v);
+                                      .onChangedUnitOfActionSelected(v);
                                 },
                                 hint: 'Unidad de Acción',
                               ),
                             ),
-                            /*SizedBox(
-                              width: 20,
-                            ),
-                            CustomButton(
-                              icon: Icon(
-                                Icons.add_circle_outline_sharp,
-                                color: CustomColorPrimary().materialColor,
-                                size: 25,
-                              ),
-                              colorBorderButton:
-                                  CustomColorPrimary().materialColor,
-                              width: 60,
-                              height: 48,
-                              colorButton: Colors.white,
-                              onPressed: () {
-                                //targetPageProvider.read.sendEmail();
-                                // dialogWidget(context);
-                              },
-                            )*/
                           ],
                         ),
                       ),
                       Divider(),
                       Consumer(builder: (_, watch, __) {
-                        final targetVirtual = watch.select(
+                        final unitOfAction = watch.select(
                           targetPageProvider
-                              .select((state) => state.targetVirtualSelected),
+                              .select((state) => state.unitOfActionSelected),
                         );
-                        if (targetVirtual != null) {
+                        if (unitOfAction != null) {
                           return SingleChildScrollView(
                             child: SectionTargetPageEESS(
-                                targetVirtual: targetVirtual),
+                              uniOfAction: unitOfAction,
+                            ),
                           );
                         } else {
                           return SizedBox();
@@ -120,25 +101,11 @@ class TargetPageEESS extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "No existe unidades de Acción\npresione el boton para crear una.",
+                      "No existe unidades de Acción",
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(
                       height: 20,
-                    ),
-                    CustomButton(
-                      icon: Icon(
-                        Icons.add_circle_outline_sharp,
-                        color: CustomColorPrimary().materialColor,
-                        size: 25,
-                      ),
-                      colorBorderButton: CustomColorPrimary().materialColor,
-                      width: 60,
-                      height: 48,
-                      colorButton: Colors.white,
-                      onPressed: () {
-                        //dialogWidget(context);
-                      },
                     ),
                   ],
                 );
@@ -151,85 +118,6 @@ class TargetPageEESS extends StatelessWidget {
       ),
     );
   }
-/*
-  dialogWidget(BuildContext context) {
-    return CustomDialogSimple(context, "Añadir Unidad de Acción",
-        content: FutureBuilder<List<UserData>?>(
-          future: targetPageProvider.read.getMembersNoneUnitOfAction(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final List<UserData> list = snapshot.data!;
-              return Form(
-                key: targetPageProvider.read.formKeyRegisterUnitOfAction,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CustomImputField(
-                      onChanged: targetPageProvider
-                          .read.onChangedNameCreateUnitOfAction,
-                      label: "Nombre Unidad de Acción",
-                      isNoSpace: false,
-                      validator: (text) {
-                        if (text == "") return "El nombre es necesario";
-                        //text = text!.replaceAll(" ", "");
-                        if (text!.substring(text.length - 1, text.length) ==
-                            " ") {
-                          text = text.replaceRange(text.length, null, "");
-                          log(text);
-                        }
-                        return null;
-                      },
-                    ),
-                    SettingsWidget(
-                      onChanged: (v) {
-                        targetPageProvider.read
-                            .onChangedUserDateCreateUnitOfAction(v);
-                      },
-                      hint: 'Lider de Unidad de Acción',
-                      items: list,
-                      validator: (text) {
-                        if (text == null) return "Seleccione un lider";
-                        return null;
-                      },
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              return Text("Cargando...");
-            }
-          },
-        ),
-        actions: [
-          Row(
-            children: [
-              Expanded(
-                child: CustomButton(
-                  height: 48,
-                  textButton: 'Cancelar',
-                  colorTextButton: Colors.white,
-                  colorButton: Color.fromARGB(255, 204, 201, 201),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              Expanded(
-                  child: CustomButton(
-                height: 48,
-                textButton: 'Registrar',
-                onPressed: () {
-                  targetPageProvider.read
-                      .onPressedRegisterUnitOfAction(context);
-                },
-              ))
-            ],
-          )
-        ]).showAlertDialog();
-  }*/
 
   Widget willPopScope() {
     return WillPopScope(

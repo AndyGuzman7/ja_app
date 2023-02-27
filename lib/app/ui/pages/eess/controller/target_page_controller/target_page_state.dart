@@ -10,92 +10,158 @@ import 'package:ja_app/app/domain/models/user_data.dart';
 import '../../../../../domain/models/eess/quarter.dart';
 
 class TargetPageState {
-  final UnitOfAction? unitOfAction;
+  final UnitOfAction? unitOfActionSelected;
   final DateTime? dateTimeSelected;
   final TargetVirtual? targetVirtualSelected;
   final List<UnitOfAction> listUnitOfAction;
-  final String? nameUnitOfActionCreate;
-  final UserData? userDataUnitOfActionCreate;
-  final List<UserData> membersEESSNew;
-  final List<UserData> membersUnitOfAction;
-  final List<UserDataAttendance> listUserDataAttendance;
-  final List<DateTime>? listDateTimeMonth;
+
+  final List<UserData> membersUnitOfActionSelected;
+  final List<UserDataAttendance>? listUserDataAttendance;
+  final List<DateTime>? listSaturdayDateMonth;
   final List<Quarter> listQuarter;
   final Quarter? quarter;
+  final double? quantitiy;
+  final double? white1, white2;
 
   final List<UserData> membersAttendance;
   final List<Attendance> attendanceList;
+  final List<DayOffering> listDayOffering;
+  final DayOffering? dayOffering;
+
+  final List<UserDataAttendances>? listUserDataAttendances;
 
   TargetPageState({
+    required this.listUserDataAttendances,
+    required this.white1,
+    required this.white2,
+    required this.quantitiy,
+    required this.listDayOffering,
+    required this.dayOffering,
     required this.listQuarter,
     required this.quarter,
     required this.dateTimeSelected,
-    required this.listDateTimeMonth,
+    required this.listSaturdayDateMonth,
     required this.listUserDataAttendance,
     required this.membersAttendance,
     required this.targetVirtualSelected,
     required this.attendanceList,
-    required this.membersUnitOfAction,
-    required this.membersEESSNew,
+    required this.membersUnitOfActionSelected,
     required this.listUnitOfAction,
-    required this.userDataUnitOfActionCreate,
-    required this.nameUnitOfActionCreate,
-    required this.unitOfAction,
+    required this.unitOfActionSelected,
   });
 
   static TargetPageState get initialState => TargetPageState(
+        listUserDataAttendances: [],
+        white1: 0.0,
+        white2: 0.0,
+        quantitiy: 0.0,
+        dayOffering: null,
+        listDayOffering: [],
         quarter: null,
         listQuarter: [],
         dateTimeSelected: null,
-        listDateTimeMonth: [],
-        listUserDataAttendance: [],
+        listSaturdayDateMonth: [],
+        listUserDataAttendance: null,
         targetVirtualSelected: null,
         attendanceList: [],
         membersAttendance: [],
-        membersUnitOfAction: [],
-        membersEESSNew: [],
+        membersUnitOfActionSelected: [],
         listUnitOfAction: [],
-        nameUnitOfActionCreate: null,
-        userDataUnitOfActionCreate: null,
-        unitOfAction: null,
+        unitOfActionSelected: null,
       );
 
-  TargetPageState copyWith({
-    List<Quarter>? listQuarter,
-    Quarter? quarter,
-    DateTime? dateTimeSelected,
-    List<DateTime>? listDateTimeMonth,
-    List<UserDataAttendance>? listUserDataAttendance,
-    List<UserData>? membersAttendance,
-    TargetVirtual? targetVirtualSelected,
-    List<Attendance>? attendanceList,
-    List<UnitOfAction>? listUnitOfAction,
-    UnitOfAction? unitOfAction,
-    List<UserData>? membersUnitOfAction,
-    List<UserData>? membersEESSNew,
-    String? nameUnitOfActionCreate,
-    UserData? userDataUnitOfActionCreate,
-  }) {
+  TargetPageState copyWith(
+      {List<Quarter>? listQuarter,
+      List<UserDataAttendances>? listUserDataAttendances,
+      Quarter? quarter,
+      DateTime? dateTimeSelected,
+      List<DateTime>? listSaturdayDateMonth,
+      List<UserDataAttendance>? listUserDataAttendance,
+      List<UserData>? membersAttendance,
+      TargetVirtual? targetVirtualSelected,
+      List<Attendance>? attendanceList,
+      List<UnitOfAction>? listUnitOfAction,
+      UnitOfAction? unitOfActionSelected,
+      List<UserData>? membersUnitOfAction,
+      List<UserData>? membersEESSNew,
+      String? nameUnitOfActionCreate,
+      UserData? userDataUnitOfActionCreate,
+      List<DayOffering>? listDayOffering,
+      DayOffering? dayOffering,
+      double? white1,
+      white2,
+      double? quantitiy}) {
     log("stado");
     return TargetPageState(
+      listUserDataAttendances:
+          listUserDataAttendances ?? this.listUserDataAttendances,
+      white1: white1 ?? this.white1,
+      white2: white2 ?? this.white2,
+      quantitiy: quantitiy ?? this.quantitiy,
+      dayOffering: dayOffering ?? this.dayOffering,
+      listDayOffering: listDayOffering ?? this.listDayOffering,
       quarter: quarter ?? this.quarter,
       listQuarter: listQuarter ?? this.listQuarter,
       dateTimeSelected: dateTimeSelected ?? this.dateTimeSelected,
-      listDateTimeMonth: listDateTimeMonth ?? this.listDateTimeMonth,
+      listSaturdayDateMonth:
+          listSaturdayDateMonth ?? this.listSaturdayDateMonth,
       listUserDataAttendance:
           listUserDataAttendance ?? this.listUserDataAttendance,
       membersAttendance: membersAttendance ?? this.membersAttendance,
       targetVirtualSelected:
           targetVirtualSelected ?? this.targetVirtualSelected,
       attendanceList: attendanceList ?? this.attendanceList,
-      membersUnitOfAction: membersUnitOfAction ?? this.membersUnitOfAction,
-      membersEESSNew: membersEESSNew ?? this.membersEESSNew,
-      unitOfAction: unitOfAction ?? this.unitOfAction,
+      membersUnitOfActionSelected:
+          membersUnitOfAction ?? this.membersUnitOfActionSelected,
+      unitOfActionSelected: unitOfActionSelected ?? this.unitOfActionSelected,
       listUnitOfAction: listUnitOfAction ?? this.listUnitOfAction,
-      nameUnitOfActionCreate:
-          nameUnitOfActionCreate ?? this.nameUnitOfActionCreate,
-      userDataUnitOfActionCreate:
-          userDataUnitOfActionCreate ?? this.userDataUnitOfActionCreate,
+    );
+  }
+
+  TargetPageState copyWithNull(
+      {List<Quarter>? listQuarter,
+      List<UserDataAttendances>? listUserDataAttendances,
+      Quarter? quarter,
+      DateTime? dateTimeSelected,
+      List<DateTime>? listSaturdayDateMonth,
+      List<UserDataAttendance>? listUserDataAttendance,
+      List<UserData>? membersAttendance,
+      TargetVirtual? targetVirtualSelected,
+      List<Attendance>? attendanceList,
+      List<UnitOfAction>? listUnitOfAction,
+      UnitOfAction? unitOfActionSelected,
+      List<UserData>? membersUnitOfAction,
+      List<UserData>? membersEESSNew,
+      String? nameUnitOfActionCreate,
+      UserData? userDataUnitOfActionCreate,
+      List<DayOffering>? listDayOffering,
+      DayOffering? dayOffering,
+      double? white1,
+      white2,
+      double? quantitiy}) {
+    log("stado");
+    return TargetPageState(
+      listUserDataAttendances:
+          listUserDataAttendances ?? this.listUserDataAttendances,
+      white1: white1 ?? this.white1,
+      white2: white2 ?? this.white2,
+      quantitiy: quantitiy ?? this.quantitiy,
+      dayOffering: dayOffering ?? this.dayOffering,
+      listDayOffering: listDayOffering ?? this.listDayOffering,
+      quarter: quarter ?? this.quarter,
+      listQuarter: listQuarter ?? this.listQuarter,
+      dateTimeSelected: dateTimeSelected ?? this.dateTimeSelected,
+      listSaturdayDateMonth:
+          listSaturdayDateMonth ?? this.listSaturdayDateMonth,
+      listUserDataAttendance: listUserDataAttendance,
+      membersAttendance: membersAttendance ?? this.membersAttendance,
+      targetVirtualSelected:
+          targetVirtualSelected ?? this.targetVirtualSelected,
+      attendanceList: attendanceList ?? this.attendanceList,
+      membersUnitOfActionSelected:
+          membersUnitOfAction ?? this.membersUnitOfActionSelected,
+      unitOfActionSelected: unitOfActionSelected ?? this.unitOfActionSelected,
+      listUnitOfAction: listUnitOfAction ?? this.listUnitOfAction,
     );
   }
 

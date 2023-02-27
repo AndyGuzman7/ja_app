@@ -31,6 +31,8 @@ class ChurchRepositoryImpl extends ChurchRepository {
           .collection("church")
           .where("codeAccess", isEqualTo: code)
           .get();
+      log(code);
+      log(response.docs.length.toString());
 
       if (response.docChanges.isNotEmpty) {
         return Church.fromJson(response.docs.elementAt(0).data());

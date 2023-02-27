@@ -16,6 +16,7 @@ class LoginController extends SimpleNotifier {
 
   LoginController(this._sessonController);
   void onEmailChanged(String text) {
+    log("el cambio dice + " + text);
     _email = text;
   }
 

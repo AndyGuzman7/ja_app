@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
 import 'package:ja_app/app/ui/gobal_widgets/background/backgroundImage.dart';
 import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_button.dart';
@@ -55,16 +56,16 @@ class LoginPage extends StatelessWidget {
                         ),
                         CustomImputField(
                           label: "correo",
+                          //value: "hola",
                           icon: const Icon(Icons.email),
                           onChanged: controller.onEmailChanged,
                           inputType: TextInputType.emailAddress,
-                          validator: (text) {
-                            if (isValidEmail(text!)) {
-                              return null;
-                            }
-
-                            return "Email Invalido";
-                          },
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                                errorText: "No se permite vacios"),
+                            FormBuilderValidators.email(
+                                errorText: "No es un email valido")
+                          ]),
                         ),
                         /*CustomImputDatePicker(
                               label: 'Date birth day',
@@ -81,13 +82,10 @@ class LoginPage extends StatelessWidget {
                           label: "Contraseña",
                           onChanged: controller.onPasswordChanged,
                           isPassword: true,
-                          validator: (text) {
-                            if (text!.trim().length >= 6) {
-                              return null;
-                            }
-
-                            return "Contraseña invalida";
-                          },
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                                errorText: "No se permite vacios"),
+                          ]),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,

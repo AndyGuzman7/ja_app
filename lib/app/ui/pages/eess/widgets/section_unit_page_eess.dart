@@ -14,6 +14,7 @@ import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_input_field.dart';
 import 'package:ja_app/app/ui/gobal_widgets/item/item_list_view.dart';
 import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
 import 'package:ja_app/app/ui/pages/church/controller/church_controller.dart';
+import 'package:ja_app/app/ui/pages/eess/controller/target_page_controller/target_page_controller.dart';
 import 'package:ja_app/app/ui/pages/eess/eess_page.dart';
 import 'package:ja_app/app/ui/pages/eess/widgets/unit_page_eess.dart';
 import 'package:ja_app/app/ui/pages/studentes_list/widgets/item_member.dart';
@@ -52,9 +53,9 @@ class SectionUnitPageEESS extends StatelessWidget {
                 height: 48,
                 colorButton: Colors.white,
                 onPressed: () {
-                  showAlertDialogMembers(context,
-                      "Mantenga presionado para seleccionar/deseleccionar", "");
-                  //showAlertDialog(context, "", "");
+                  /* showAlertDialogMembers(context,
+                      "Mantenga presionado para seleccionar/deseleccionar", "");*/
+                  showAlertDialog(context, "", "");
                   //router.pushNamed(Routes.REGISTER);
                 },
               )
@@ -460,14 +461,14 @@ class SectionUnitPageEESS extends StatelessWidget {
                 SizedBox(
                   height: 15,
                 ),
-                /*CustomButton(
+                CustomButton(
                   icon: Icon(Icons.person_add_alt),
                   height: 48,
                   textButton: 'Crear Miembro',
                   onPressed: () {
-                    router.pushNamed(Routes.REGISTER);
+                    unitPageProvider.read.onPressedBtnCreateMember(context);
                   },
-                ),*/
+                ),
                 SizedBox(
                   height: 15,
                 ),

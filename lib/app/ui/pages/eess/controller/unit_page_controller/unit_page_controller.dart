@@ -20,6 +20,7 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
 
+import '../../../../../data/repositories/church_impl/church_repository.dart';
 import '../../../../../data/repositories/target_virtual/target_virtual_repository.dart';
 import '../../../../global_controllers/session_controller.dart';
 
@@ -41,6 +42,7 @@ class UnitPageController extends StateNotifier<UnitPageState> {
   final GlobalKey<FormState> formKeyRegisterUnitOfAction = GlobalKey();
 
   final _eess = Get.find<EESSRepository>();
+  final _church = Get.find<ChurchRepository>();
   final _unitOfAction = Get.find<UnitOfActionRepository>();
   UnitPageController(this._sessionController, this._eeSsController)
       : super(UnitPageState.initialState);
@@ -208,6 +210,42 @@ class UnitPageController extends StateNotifier<UnitPageState> {
     final response = await getUnitOfActionByEESS();
     onChangedListUnitOfAction(response);
     //return response;
+  }
+
+  onPressedBtnCreateMember(context) async {
+    UserData userData = await router.pushNamed(Routes.REGISTER);
+    ProgressDialog.show(context, double.infinity, double.infinity);
+    final result = await createMemberToEESS(userData);
+    if (result) await loadPageData();
+    router.pop();
+  }
+
+  registerMembersToChurch(String idMember) async {
+    final idEESS = _eeSsController.state.eess!.id;
+    final idChurch = await _church.getChurchByEESS(idEESS!);
+
+    final response = await _church.registerMemberChurch(idMember, idChurch!.id);
+    return response;
+  }
+
+  Future<bool> registerMembersToEESS(List<String> list) async {
+    final idEESS = _eeSsController.state.eess!.id;
+    final response = await _eess.registerMembersEESS(list, idEESS!);
+    return response;
+  }
+
+  createMemberToEESS(UserData userData) async {
+    final responseChurch = await registerMembersToChurch(userData.id);
+    final idEESS = _eeSsController.state.eess!.id;
+    final String idUnitOfAction = state.unitOfAction!.id;
+    if (!responseChurch) return false;
+    final response = await registerMembersToEESS([userData.id]);
+    if (!response) return false;
+
+    final responseUnit = await _unitOfAction
+        .registerMemberUnitOfAction([userData.id], idEESS!, idUnitOfAction);
+    if (!responseUnit) return false;
+    return response;
   }
 
   Future verificationPersmissons(List<String> listPermisson) async {

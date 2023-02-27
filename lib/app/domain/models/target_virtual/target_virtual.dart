@@ -8,19 +8,47 @@ class TargetVirtual {
   final List<DayAtendance>? attendance;
   final List<DayOffering> offeringQuarter;
   final String idQuarter;
+  final double whiteTSOffering;
+  final double whiteWeeklyOffering;
 
-  TargetVirtual(this.id, this.idUnitOfAction, this.attendance,
-      this.offeringQuarter, this.idQuarter);
+  TargetVirtual(
+      this.id,
+      this.idUnitOfAction,
+      this.attendance,
+      this.offeringQuarter,
+      this.idQuarter,
+      this.whiteTSOffering,
+      this.whiteWeeklyOffering);
 
   factory TargetVirtual.fromJson(Map<String, dynamic> json) {
+    List<DayOffering> convertList(List json) {
+      log(json.toString());
+      //Map<String, dynamic> jsons = json;
+      List<DayOffering> list = [];
+      //json.map((key, value) => null)
+      return json.map((e) => DayOffering.fromJson(e)).toList();
+
+      /* json.forEach((key, value) {
+        list.add(DayOffering.fromJson(value));
+      });
+      /*json.forEach((value) {
+        list.add(UnitOfAction.fromJson(value));
+        //print('$value');
+        //listBrochures.add(Brochure.fromJson(value));
+      });*/*/
+      //return list;
+    }
+
     return TargetVirtual(
         json['id'],
         json['idUnitOfAction'],
         json['attendance'] != null ? List.castFrom(json['attendance']) : [],
         json['offeringQuarter'] != null
-            ? List.castFrom(json['offeringQuarter'])
+            ? convertList(List.castFrom(json['offeringQuarter']))
             : [],
-        json['idQuarter']);
+        json['idQuarter'],
+        json['whiteTSOffering'].toDouble(),
+        json['whiteWeeklyOffering'].toDouble());
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -28,7 +56,9 @@ class TargetVirtual {
         'idUnitOfAction': idUnitOfAction,
         'attendance': attendance,
         'idQuarter': idQuarter,
-        'offeringQuarter': offeringQuarter
+        'offeringQuarter': offeringQuarter.map((e) => e.toJson()).toList(),
+        'whiteTSOffering': whiteTSOffering,
+        'whiteWeeklyOffering': whiteWeeklyOffering
       };
 }
 
@@ -104,16 +134,31 @@ class DayAtendance {
 class Attendance {
   String idMember;
   String state;
-  Attendance(this.idMember, this.state);
+  DateTime? dateTime;
+  Attendance(this.idMember, this.state, this.dateTime);
 
   factory Attendance.fromJson(Map<String, dynamic> json) {
-    return Attendance(json['idMember'], json['state']);
+    convert(date) {
+      if (date == null) return null;
+      DateTime dateTime = date.toDate();
+      return dateTime;
+    }
+
+    return Attendance(
+        json['idMember'], json['state'], convert(json['datetime']));
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'idMember': idMember,
         'state': state,
+        'datetime': DateTime.now()
       };
+}
+
+class UserDataAttendances {
+  UserData user;
+  List<Attendance?> attendance;
+  UserDataAttendances(this.user, this.attendance);
 }
 
 class UserDataAttendance {
