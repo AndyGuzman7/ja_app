@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:ja_app/app/domain/models/eess/quarter.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/ui/gobal_widgets/load/load.dart';
-import 'package:ja_app/app/ui/pages/eess/widgets/unit_page_eess.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/widgets/unit_page_eess.dart';
 
 import '../../../gobal_widgets/atribute_data/atribute_data.dart';
 import '../../../gobal_widgets/row/row_custom.dart';

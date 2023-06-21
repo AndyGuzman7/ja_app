@@ -8,8 +8,8 @@ import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/ui/gobal_widgets/load/load.dart';
 import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
-import 'package:ja_app/app/ui/pages/eess/widgets/widget_date.dart';
-import 'package:ja_app/app/ui/pages/eess/widgets/widget_table_attendance.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/widgets/widget_date.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/widgets/widget_table_attendance.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
 import 'package:ja_app/app/utils/date_controller.dart';
 

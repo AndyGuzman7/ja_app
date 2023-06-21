@@ -6,8 +6,8 @@ import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/dialogs.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/progress_dialog.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/eess_controller.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/unit_page_controller/unit_page_state.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/controller/sabbatical_school_controller.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/controller/unit_page_controller/unit_page_state.dart';
 import 'package:ja_app/app/utils/email_service.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
 import '../../../../../data/repositories/church_repository/church_repository.dart';
@@ -19,7 +19,7 @@ import '../../../../global_controllers/session_controller.dart';
 
 class UnitPageController extends StateNotifier<UnitPageState> {
   final SessionController _sessionController;
-  final EeSsController _eeSsController;
+  final SabbaticalSchoolController _eeSsController;
 
   List<UserData> membersSelected = [];
   String? _routeName;

@@ -10,19 +10,19 @@ import 'package:ja_app/app/domain/models/tabBarUi.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/dialogs.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/progress_dialog.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/eess_state.dart';
-import 'package:ja_app/app/ui/pages/eess/eess_page.dart';
-import 'package:ja_app/app/ui/pages/eess/widgets/main_page_eess.dart';
-import 'package:ja_app/app/ui/pages/eess/widgets/members_page_eess.dart';
-import 'package:ja_app/app/ui/pages/eess/widgets/target_page_eess.dart';
-import 'package:ja_app/app/ui/pages/eess/widgets/unit_page_eess.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/controller/sabbatical_school_state.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/sabbatical_school_page.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/widgets/main_page_eess.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
 import '../../../../data/repositories/church_repository/church_repository.dart';
 import '../../../../data/repositories/eess_repository/eess_repository.dart';
 import '../../../../data/repositories/unitOfAction_repository/unitOfAction_repository.dart';
 import '../../../global_controllers/session_controller.dart';
+import '../widgets/members_page_eess.dart';
+import '../widgets/target_page_eess.dart';
+import '../widgets/unit_page_eess.dart';
 
-class EeSsController extends StateNotifier<EeSsState> {
+class SabbaticalSchoolController extends StateNotifier<SabbaticalSchoolState> {
   SessionController _sessionController;
   List<UserData> membersSelected = [];
   String? _routeName;
@@ -36,7 +36,8 @@ class EeSsController extends StateNotifier<EeSsState> {
   final _church = Get.find<ChurchRepository>();
   final _eess = Get.find<EESSRepository>();
   final _unitOfAction = Get.find<UnitOfActionRepository>();
-  EeSsController(this._sessionController) : super(EeSsState.initialState) {
+  SabbaticalSchoolController(this._sessionController)
+      : super(SabbaticalSchoolState.initialState) {
     init();
   }
 
@@ -47,14 +48,14 @@ class EeSsController extends StateNotifier<EeSsState> {
       TabBarUi(
         "Mi EESS",
         null,
-        MainPageEess(provider: eeSsProvider),
+        MainPageEess(provider: sabbaticalSchoolProvider),
         null,
       ),
       TabBarUi(
         "Miembros",
         null,
         MembersPageEESS(
-          providers: eeSsProvider,
+          providers: sabbaticalSchoolProvider,
         ),
         ["adminEESS"],
       ),

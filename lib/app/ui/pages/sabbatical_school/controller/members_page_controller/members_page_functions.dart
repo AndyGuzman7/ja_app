@@ -1,18 +1,18 @@
 import 'dart:developer';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/controller/sabbatical_school_controller.dart';
 import '../../../../../data/repositories/church_repository/church_repository.dart';
 import '../../../../../data/repositories/eess_repository/eess_repository.dart';
 import '../../../../../data/repositories/unitOfAction_repository/unitOfAction_repository.dart';
 import '../../../../../domain/models/user_data.dart';
-import '../eess_controller.dart';
 
 class MembersPageFunctions {
   final _eess = Get.find<EESSRepository>();
   final _unitOfAction = Get.find<UnitOfActionRepository>();
   final _church = Get.find<ChurchRepository>();
 
-  final EeSsController _eeSsController;
+  final SabbaticalSchoolController _eeSsController;
   MembersPageFunctions(this._eeSsController);
 
   Future<bool> registerMembersToEESS(List<String> list) async {

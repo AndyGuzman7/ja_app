@@ -1,28 +1,22 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
-import 'package:ja_app/app/ui/gobal_widgets/inputs/CustomTextField.dart';
 import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_button.dart';
 import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_input_field.dart';
 import 'package:ja_app/app/ui/gobal_widgets/item/item_list_view.dart';
 import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/eess_state.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/members_page_controller/members_page_controller.dart';
-import 'package:ja_app/app/ui/pages/eess/eess_page.dart';
-import 'package:ja_app/app/ui/pages/eess/widgets/unit_page_eess.dart';
-import 'package:ja_app/app/ui/pages/studentes_list/widgets/item_member.dart';
-import 'package:ja_app/app/ui/routes/routes.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/controller/sabbatical_school_controller.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/controller/sabbatical_school_state.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/sabbatical_school_page.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
-import '../controller/eess_controller.dart';
+import '../../studentes_list/widgets/item_member.dart';
+import '../controller/members_page_controller/members_page_controller.dart';
 
 class MembersPageEESS extends StatelessWidget {
-  final StateProvider<EeSsController, EeSsState> providers;
+  final StateProvider<SabbaticalSchoolController, SabbaticalSchoolState>
+      providers;
   const MembersPageEESS({Key? key, required this.providers}) : super(key: key);
 
   @override
@@ -111,7 +105,7 @@ class MembersPageEESS extends StatelessWidget {
                                     Consumer(
                                       builder: (_, watch, __) {
                                         final title = watch.select(
-                                          eeSsProvider.select(
+                                          sabbaticalSchoolProvider.select(
                                               (state) => state.titleSearch),
                                         );
 
@@ -197,7 +191,7 @@ class MembersPageEESS extends StatelessWidget {
     return PopupMenuItem(
       child: Text(title),
       onTap: () {
-        eeSsProvider.read.onChangedTitleSearch(title);
+        sabbaticalSchoolProvider.read.onChangedTitleSearch(title);
       },
     );
   }

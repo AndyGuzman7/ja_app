@@ -7,50 +7,53 @@ import 'package:ja_app/app/domain/models/eess/eess.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
 import 'package:ja_app/app/ui/gobal_widgets/drop_dow/custom_dropDown.dart';
 import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_button.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/eess_controller.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/eess_state.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/controller/sabbatical_school_state.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
 
-final eeSsProvider = StateProvider<EeSsController, EeSsState>(
-    (_) => EeSsController(sessionProvider.read),
-    autoDispose: true);
+import 'controller/sabbatical_school_controller.dart';
 
-class EeSsPage extends StatelessWidget {
-  const EeSsPage({Key? key}) : super(key: key);
+final sabbaticalSchoolProvider =
+    StateProvider<SabbaticalSchoolController, SabbaticalSchoolState>(
+        (_) => SabbaticalSchoolController(sessionProvider.read),
+        autoDispose: true);
+
+class SabbaticalSchoolPage extends StatelessWidget {
+  const SabbaticalSchoolPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: eeSsProvider.read.getChurchAndEESS(),
+      future: sabbaticalSchoolProvider.read.getChurchAndEESS(),
       builder: (context, AsyncSnapshot<void> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Consumer(
             builder: (_, watch, __) {
               final state = watch.select(
-                eeSsProvider.select((state) => state),
+                sabbaticalSchoolProvider.select((state) => state),
               );
               if (state.eess == null) {
                 return informationEESS(context);
               }
 
               if (state.church == null) {
-                return informationChurch(eeSsProvider, context);
+                return informationChurch(sabbaticalSchoolProvider, context);
               }
 
               return DefaultTabController(
-                length: eeSsProvider.read.state.listTabr.length,
+                length: sabbaticalSchoolProvider.read.state.listTabr.length,
                 child: Scaffold(
                   resizeToAvoidBottomInset: false,
                   backgroundColor: Colors.blueGrey[50],
                   appBar: AppBar(
                     title: const Text("Escuela Sábatica"),
                     bottom: TabBar(
-                      tabs: eeSsProvider.read.state.listTabr,
+                      tabs: sabbaticalSchoolProvider.read.state.listTabr,
                     ),
                   ),
                   body: TabBarView(
                       physics: const NeverScrollableScrollPhysics(),
-                      children: eeSsProvider.read.state.listTabBarView),
+                      children:
+                          sabbaticalSchoolProvider.read.state.listTabBarView),
                 ),
               );
             },
@@ -127,7 +130,7 @@ class EeSsPage extends StatelessWidget {
                     context,
                     "Registro en una clase de Escuela sábatica",
                     "Introduce el codigo de registro",
-                    eeSsProvider);
+                    sabbaticalSchoolProvider);
               },
               textButton: "Pertenecer a una clase",
               height: 48,
@@ -141,8 +144,12 @@ class EeSsPage extends StatelessWidget {
     return eessInformation;
   }
 
-  showAlertDialog(BuildContext contextFather, String text, String? message,
-      StateProvider<EeSsController, EeSsState> provider) {
+  showAlertDialog(
+      BuildContext contextFather,
+      String text,
+      String? message,
+      StateProvider<SabbaticalSchoolController, SabbaticalSchoolState>
+          provider) {
     showDialog(
       barrierDismissible: false,
       context: contextFather,
@@ -174,7 +181,7 @@ class EeSsPage extends StatelessWidget {
                 if (snapshot.hasData) {
                   final List<EESS> list = snapshot.data!;
                   return Form(
-                    key: eeSsProvider.read.formKey,
+                    key: sabbaticalSchoolProvider.read.formKey,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -219,7 +226,7 @@ class EeSsPage extends StatelessWidget {
                   height: 48,
                   textButton: 'Registrar',
                   onPressed: () {
-                    eeSsProvider.read.onRegisterEESS(contextFather);
+                    sabbaticalSchoolProvider.read.onRegisterEESS(contextFather);
                   },
                 ))
               ],

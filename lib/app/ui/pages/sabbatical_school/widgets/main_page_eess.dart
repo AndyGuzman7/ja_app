@@ -1,34 +1,25 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
-import 'package:ja_app/app/domain/models/country.dart';
-import 'package:ja_app/app/domain/models/eess/eess.dart';
-import 'package:ja_app/app/ui/gobal_widgets/drop_dow/custom_dropDown.dart';
-import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_button.dart';
-import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_input_field.dart';
 import 'package:ja_app/app/ui/gobal_widgets/text/custom_paragraph.dart';
 import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
-import 'package:ja_app/app/ui/pages/eess/eess_page.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/controller/sabbatical_school_controller.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/controller/sabbatical_school_state.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/sabbatical_school_page.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
 
-import '../../../../domain/models/church/church.dart';
-import '../controller/eess_controller.dart';
-import '../controller/eess_state.dart';
-
 class MainPageEess extends StatelessWidget {
-  final StateProvider<EeSsController, EeSsState> provider;
+  final StateProvider<SabbaticalSchoolController, SabbaticalSchoolState>
+      provider;
   const MainPageEess({Key? key, required this.provider}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (_, watch, __) {
       final eess = watch.select(
-        eeSsProvider.select((state) => state.eess),
+        sabbaticalSchoolProvider.select((state) => state.eess),
       );
 
       return SizedBox(

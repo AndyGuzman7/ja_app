@@ -7,7 +7,7 @@ import 'package:ja_app/app/domain/models/eess/eess.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 
-class EeSsState {
+class SabbaticalSchoolState {
   final String? imageUser;
   final Church? church;
   final List<Tab> listTabr;
@@ -29,7 +29,7 @@ class EeSsState {
   final String? nameUnitOfActionCreate;
   final UserData? userDataUnitOfActionCreate;
 
-  EeSsState({
+  SabbaticalSchoolState({
     required this.church,
     required this.listUnitOfAction,
     required this.userDataUnitOfActionCreate,
@@ -49,7 +49,7 @@ class EeSsState {
     required this.titleSearch,
   });
 
-  static EeSsState get initialState => EeSsState(
+  static SabbaticalSchoolState get initialState => SabbaticalSchoolState(
         church: null,
         listUnitOfAction: [],
         nameUnitOfActionCreate: null,
@@ -69,7 +69,7 @@ class EeSsState {
         titleSearch: null,
       );
 
-  EeSsState copyWith({
+  SabbaticalSchoolState copyWith({
     Church? church,
     List<UnitOfAction>? listUnitOfAction,
     UnitOfAction? unitOfAction,
@@ -88,7 +88,7 @@ class EeSsState {
     String? nameUnitOfActionCreate,
     UserData? userDataUnitOfActionCreate,
   }) {
-    return EeSsState(
+    return SabbaticalSchoolState(
       church: church ?? this.church,
       listUnitOfAction: listUnitOfAction ?? this.listUnitOfAction,
       nameUnitOfActionCreate:

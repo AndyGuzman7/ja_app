@@ -8,23 +8,24 @@ import 'package:ja_app/app/domain/models/target_virtual/target_virtual.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/dialogs.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/progress_dialog.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/eess_controller.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/target_page_controller/target_page_functions.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/target_page_controller/target_page_state.dart';
-import 'package:ja_app/app/ui/pages/eess/eess_page.dart';
 import 'package:collection/collection.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/controller/sabbatical_school_controller.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/controller/target_page_controller/target_page_functions.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/controller/target_page_controller/target_page_state.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/sabbatical_school_page.dart';
 import 'package:ja_app/app/utils/date_controller.dart';
 import '../../../../../data/repositories/target_virtual_repository/target_virtual_repository.dart';
 import '../../../../../data/repositories/unitOfAction_repository/unitOfAction_repository.dart';
 import '../../../../global_controllers/session_controller.dart';
 
 final targetPageProvider = StateProvider<TargetPageController, TargetPageState>(
-    (_) => TargetPageController(sessionProvider.read, eeSsProvider.read),
+    (_) => TargetPageController(
+        sessionProvider.read, sabbaticalSchoolProvider.read),
     autoDispose: true);
 
 class TargetPageController extends StateNotifier<TargetPageState> {
   final SessionController sessionController;
-  final EeSsController _eeSsController;
+  final SabbaticalSchoolController _eeSsController;
   final GlobalKey<FormState> formKeyOfferingWhites = GlobalKey();
 
   final GlobalKey<FormState> formKeyOffering = GlobalKey();

@@ -4,22 +4,23 @@ import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/progress_dialog.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/eess_controller.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/members_page_controller/members_page_functions.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/members_page_controller/members_page_state.dart';
-import 'package:ja_app/app/ui/pages/eess/eess_page.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/controller/members_page_controller/members_page_functions.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/controller/sabbatical_school_controller.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/sabbatical_school_page.dart';
 import '../../../../../data/repositories/eess_repository/eess_repository.dart';
 import '../../../../global_controllers/session_controller.dart';
 import '../../../../routes/routes.dart';
+import 'members_page_state.dart';
 
 final membersPageProvider =
     StateProvider<MembersPageController, MembersPageState>(
-        (_) => MembersPageController(sessionProvider.read, eeSsProvider.read),
+        (_) => MembersPageController(
+            sessionProvider.read, sabbaticalSchoolProvider.read),
         autoDispose: true);
 
 class MembersPageController extends StateNotifier<MembersPageState> {
   final SessionController sessionController;
-  final EeSsController _eeSsController;
+  final SabbaticalSchoolController _eeSsController;
   final GlobalKey<FormState> formKeyRegisterUnitOfAction = GlobalKey();
   final _eess = Get.find<EESSRepository>();
   late final MembersPageFunctions membersPageFunctions;

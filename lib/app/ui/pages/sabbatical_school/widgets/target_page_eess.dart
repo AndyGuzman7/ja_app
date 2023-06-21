@@ -15,12 +15,7 @@ import 'package:ja_app/app/ui/gobal_widgets/drop_dow/custom_dropDown.dart';
 import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_button.dart';
 import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_input_field.dart';
 import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/members_page_controller/members_page_state.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/unit_page_controller/unit_page_controller.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/unit_page_controller/unit_page_state.dart';
-import 'package:ja_app/app/ui/pages/eess/eess_page.dart';
-import 'package:ja_app/app/ui/pages/eess/widgets/section_target_page_eess.dart';
-import 'package:ja_app/app/ui/pages/eess/widgets/section_unit_page_eess.dart';
+import 'package:ja_app/app/ui/pages/sabbatical_school/widgets/section_target_page_eess.dart';
 import 'package:ja_app/app/ui/pages/studentes_list/widgets/item_member.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
 
