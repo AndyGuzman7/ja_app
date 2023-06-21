@@ -1,14 +1,15 @@
 import 'package:flutter_meedu/meedu.dart';
-import 'package:ja_app/app/data/repositories/user_impl/login_impl/authentication_repository.dart';
-import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
+
+import '../../../data/repositories/login_repository/login_repository.dart';
+import '../../../data/repositories/user_repository/user_repository.dart';
 
 class SplashController extends SimpleNotifier {
   final SessionController _sessionController;
   String? _routeName;
   String? get routeName => _routeName;
-  final _authRepository = Get.find<AuthenticationRepository>();
+  final _authRepository = Get.find<LoginRepository>();
   final _userRepository = Get.find<UserRepository>();
 
   SplashController(this._sessionController) {

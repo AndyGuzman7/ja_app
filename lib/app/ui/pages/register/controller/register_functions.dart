@@ -10,10 +10,9 @@ import 'package:ja_app/app/ui/pages/register/controller/register_state.dart';
 import 'package:ja_app/app/ui/pages/register/utils/permisson_list.dart';
 import 'package:ja_app/app/utils/email_service.dart';
 
-import '../../../../data/repositories/church_impl/church_repository.dart';
-import '../../../../data/repositories/resources_impl/resources_repository.dart';
-import '../../../../data/repositories/user_impl/login_impl/authentication_repository.dart';
-import '../../../../data/repositories/user_impl/register_impl/sign_up_repository.dart';
+import '../../../../data/repositories/login_repository/login_repository.dart';
+import '../../../../data/repositories/register_repository/register_repository.dart';
+import '../../../../data/repositories/resources_repository/resources_repository.dart';
 import '../../../../domain/models/user_data.dart';
 import '../../../../domain/responses/sign_up_response.dart';
 import '../../../gobal_widgets/dialogs/dialogs.dart';
@@ -28,16 +27,15 @@ class RegisterFunctions {
 
   late TabController tabController; // =  TabController(length: 3, vsync: this);
 
-  final _signUpRepository = Get.find<SignUpRepository>();
+  final _signUpRepository = Get.find<RegisterRepository>();
   final _resources = Get.find<ResourcesRepository>();
 
-  final _authRepository = Get.find<AuthenticationRepository>();
+  final _authRepository = Get.find<LoginRepository>();
   RegisterFunctions(this.state, this._sessionController);
 
   Future<List<UserAvatar>> getAvatars() async {
     List<UserAvatar> listAvatar = await _resources.getUservAvatarAll();
     return listAvatar;
-   
   }
 
   Future<SignUpResponse> submit(state) async {

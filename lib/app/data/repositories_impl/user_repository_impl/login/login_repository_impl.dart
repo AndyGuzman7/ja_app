@@ -2,22 +2,20 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_meedu/meedu.dart';
+import 'package:ja_app/app/data/repositories_impl/user_repository_impl/user_repository_impl.dart';
 import 'package:ja_app/app/domain/responses/reset_password_response.dart';
 import 'package:ja_app/app/domain/responses/sign_in_response.dart';
-import 'package:ja_app/app/ui/pages/reset_password/controller/reset_password_controller.dart';
 
-import '../../../repositories/user_impl/login_impl/authentication_repository.dart';
-import '../user_repository_impl.dart';
+import '../../../repositories/login_repository/login_repository.dart';
 
-class AuthenticationRepositoryImpl implements AuthenticationRepository {
+class LoginRepositoryImpl implements LoginRepository {
   late final FirebaseAuth _auth;
   late final FirebaseFirestore _firestore;
   late final UserRepositoryImpl _userRepository;
   User? _user;
   final Completer<void> _completer = Completer();
 
-  AuthenticationRepositoryImpl(FirebaseAuth auth, FirebaseFirestore firestore) {
+  LoginRepositoryImpl(FirebaseAuth auth, FirebaseFirestore firestore) {
     _auth = auth;
     _firestore = firestore;
     _userRepository = UserRepositoryImpl(_firestore);

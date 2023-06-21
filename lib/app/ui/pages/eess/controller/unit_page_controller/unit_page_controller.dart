@@ -1,27 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:ja_app/app/data/repositories/eess_impl/eess_repository.dart';
-import 'package:ja_app/app/data/repositories/unitOfAction_impl/unitOfAction_repository.dart';
-import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
-import 'package:ja_app/app/domain/models/eess/eess.dart';
-import 'package:ja_app/app/domain/models/eess/quarter.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/dialogs.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/progress_dialog.dart';
 import 'package:ja_app/app/ui/pages/eess/controller/eess_controller.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/members_page_controller/members_page_state.dart';
 import 'package:ja_app/app/ui/pages/eess/controller/unit_page_controller/unit_page_state.dart';
 import 'package:ja_app/app/utils/email_service.dart';
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
-
-import '../../../../../data/repositories/church_impl/church_repository.dart';
-import '../../../../../data/repositories/target_virtual/target_virtual_repository.dart';
+import '../../../../../data/repositories/church_repository/church_repository.dart';
+import '../../../../../data/repositories/eess_repository/eess_repository.dart';
+import '../../../../../data/repositories/target_virtual_repository/target_virtual_repository.dart';
+import '../../../../../data/repositories/unitOfAction_repository/unitOfAction_repository.dart';
+import '../../../../../data/repositories/user_repository/user_repository.dart';
 import '../../../../global_controllers/session_controller.dart';
 
 class UnitPageController extends StateNotifier<UnitPageState> {

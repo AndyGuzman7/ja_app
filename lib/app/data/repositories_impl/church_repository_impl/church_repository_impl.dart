@@ -1,9 +1,8 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ja_app/app/data/repositories/church_repository/church_repository.dart';
 import 'package:ja_app/app/domain/models/church/church.dart';
-
-import '../../repositories/church_impl/church_repository.dart';
 
 class ChurchRepositoryImpl extends ChurchRepository {
   final FirebaseFirestore _firestore;

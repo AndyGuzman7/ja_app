@@ -1,18 +1,10 @@
 import 'dart:developer';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
-import 'package:ja_app/app/data/repositories/church_impl/church_repository.dart';
-
-import '../../../../../data/repositories/eess_impl/eess_repository.dart';
-import '../../../../../data/repositories/unitOfAction_impl/unitOfAction_repository.dart';
-import '../../../../../data/repositories/user_impl/user_repository.dart';
+import '../../../../../data/repositories/church_repository/church_repository.dart';
+import '../../../../../data/repositories/eess_repository/eess_repository.dart';
+import '../../../../../data/repositories/unitOfAction_repository/unitOfAction_repository.dart';
 import '../../../../../domain/models/user_data.dart';
-import '../../../../global_controllers/session_controller.dart';
-import '../../../../gobal_widgets/dialogs/dialogs.dart';
-import '../../../../gobal_widgets/dialogs/progress_dialog.dart';
-import '../../../../routes/routes.dart';
 import '../eess_controller.dart';
 
 class MembersPageFunctions {

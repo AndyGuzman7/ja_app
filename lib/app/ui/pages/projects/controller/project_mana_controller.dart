@@ -1,14 +1,13 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
-import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/domain/models/brochure.dart';
 import 'package:ja_app/app/domain/models/brochureSubscription.dart';
-import 'package:ja_app/app/data/repositories/project_mana_impl/project_mana_repository.dart';
-import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
 import 'package:ja_app/app/ui/pages/projects/controller/project_mana_state.dart';
+
+import '../../../../data/repositories/project_mana_repository/project_mana_repository.dart';
+import '../../../../data/repositories/user_repository/user_repository.dart';
 
 class ProjectManaController extends StateNotifier<ProjectManaState> {
   final SessionController _sessonController;

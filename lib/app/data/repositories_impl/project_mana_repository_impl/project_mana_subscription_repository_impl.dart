@@ -1,20 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_meedu/meedu.dart';
+import 'package:ja_app/app/data/repositories/project_mana_repository/project_mana_subscription_repository.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/domain/models/brochure.dart';
 import 'package:ja_app/app/domain/models/brochureSubscription.dart';
 import 'package:ja_app/app/domain/models/subscriptionProjectMana.dart';
-import 'package:ja_app/app/data/repositories/project_mana_impl/project_mana_repository.dart';
-import 'package:ja_app/app/data/repositories/project_mana_impl/project_mana_subscription_repository.dart';
-import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
 
-class ProjectManaRepositorySubscription
+import '../../repositories/project_mana_repository/project_mana_repository.dart';
+import '../../repositories/user_repository/user_repository.dart';
+
+class ProjectManaSubscriptionRepositoryImpl
     extends ProjectManaSubsccriptionRepository {
   final FirebaseFirestore _firestore;
   final _projectManaRepository = Get.find<ProjectManaRepository>();
   final _userRepository = Get.find<UserRepository>();
 
-  ProjectManaRepositorySubscription(this._firestore);
+  ProjectManaSubscriptionRepositoryImpl(this._firestore);
 
   @override
   Future<List<SubscriptionProjectMana>> getSubscriptionsProjectMana() async {

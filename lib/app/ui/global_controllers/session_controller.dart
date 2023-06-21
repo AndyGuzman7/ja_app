@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_meedu/meedu.dart';
-import 'package:ja_app/app/data/repositories/user_impl/login_impl/authentication_repository.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
+
+import '../../data/repositories/login_repository/login_repository.dart';
 
 class SessionController extends SimpleNotifier {
   User? _user;
@@ -9,7 +10,7 @@ class SessionController extends SimpleNotifier {
   User? get user => _user;
   UserData? get userData => _userData;
 
-  final _auth = Get.find<AuthenticationRepository>();
+  final _auth = Get.find<LoginRepository>();
 
   void setUser(User user, UserData userData) {
     _user = user;

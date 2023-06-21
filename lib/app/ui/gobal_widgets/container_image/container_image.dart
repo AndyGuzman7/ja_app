@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
+import 'package:ja_app/app/ui/pages/photoUpload.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
-import 'package:ja_app/pages/photoUpload.dart';
 
 class ContainerImage1 extends StatelessWidget {
   final dynamic controller;

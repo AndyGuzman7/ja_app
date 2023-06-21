@@ -1,6 +1,3 @@
-import 'package:ja_app/app/data/repositories/church_impl/church_repository.dart';
-import 'package:ja_app/app/domain/models/user_data.dart';
-
 class Church {
   String id;
   String codeAccess;

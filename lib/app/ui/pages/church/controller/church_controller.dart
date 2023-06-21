@@ -5,7 +5,7 @@ import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
 import 'package:ja_app/app/domain/models/church/church.dart';
 
-import '../../../../data/repositories/church_impl/church_repository.dart';
+import '../../../../data/repositories/church_repository/church_repository.dart';
 import '../../../global_controllers/session_controller.dart';
 import '../../../gobal_widgets/dialogs/dialogs.dart';
 import '../../../gobal_widgets/dialogs/progress_dialog.dart';

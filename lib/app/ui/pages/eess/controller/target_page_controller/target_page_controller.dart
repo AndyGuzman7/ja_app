@@ -2,9 +2,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
-import 'package:ja_app/app/data/repositories/eess_impl/eess_repository.dart';
-import 'package:ja_app/app/data/repositories/unitOfAction_impl/unitOfAction_repository.dart';
-import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
 import 'package:ja_app/app/domain/models/eess/quarter.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/target_virtual/target_virtual.dart';
@@ -12,14 +9,13 @@ import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/dialogs.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/progress_dialog.dart';
 import 'package:ja_app/app/ui/pages/eess/controller/eess_controller.dart';
-import 'package:ja_app/app/ui/pages/eess/controller/members_page_controller/members_page_controller.dart';
 import 'package:ja_app/app/ui/pages/eess/controller/target_page_controller/target_page_functions.dart';
 import 'package:ja_app/app/ui/pages/eess/controller/target_page_controller/target_page_state.dart';
 import 'package:ja_app/app/ui/pages/eess/eess_page.dart';
 import 'package:collection/collection.dart';
-import 'package:ja_app/app/ui/pages/eess/widgets/unit_page_eess.dart';
 import 'package:ja_app/app/utils/date_controller.dart';
-import '../../../../../data/repositories/target_virtual/target_virtual_repository.dart';
+import '../../../../../data/repositories/target_virtual_repository/target_virtual_repository.dart';
+import '../../../../../data/repositories/unitOfAction_repository/unitOfAction_repository.dart';
 import '../../../../global_controllers/session_controller.dart';
 
 final targetPageProvider = StateProvider<TargetPageController, TargetPageState>(

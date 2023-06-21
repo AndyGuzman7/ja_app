@@ -21,7 +21,6 @@ import 'package:ja_app/app/ui/pages/register/register_page.dart';
 import 'package:ja_app/app/utils/email_validator.dart';
 
 import 'package:ja_app/app/utils/name_validator.dart';
-import 'package:ja_app/pages/photoUpload.dart';
 
 import '../../gobal_widgets/drop_dow/custom_dropDown.dart';
 import '../../gobal_widgets/inputs/custom_radioButton.dart';

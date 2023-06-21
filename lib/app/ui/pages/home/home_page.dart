@@ -1,23 +1,17 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
-import 'package:ja_app/app/data/repositories/user_impl/login_impl/authentication_repository.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
-import 'package:ja_app/app/ui/gobal_widgets/inputs/custom_button.dart';
 import 'package:ja_app/app/ui/gobal_widgets/side_menu/side_menu.dart';
-import 'package:ja_app/app/ui/gobal_widgets/text/custom_title.dart';
 import 'package:ja_app/app/ui/pages/home/controller/home_controller.dart';
 import 'package:ja_app/app/ui/pages/home/controller/home_state.dart';
 import 'package:ja_app/app/ui/pages/home/widgets/calendar_page_home.dart';
-import 'package:ja_app/app/ui/pages/home/widgets/item_button.dart';
 import 'package:ja_app/app/ui/pages/home/widgets/main_page_home.dart';
 import 'package:ja_app/app/ui/pages/home/widgets/noticies_page_home.dart';
-import 'package:ja_app/app/ui/routes/routes.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
 
 final homeProvider = StateProvider<HomeController, HomeState>(

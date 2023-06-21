@@ -1,13 +1,9 @@
 import 'dart:developer';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
-import 'package:ja_app/app/data/repositories/user_impl/login_impl/authentication_repository.dart';
-import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
-import 'package:ja_app/app/ui/pages/navigator_botton/navigator_botton.dart';
 
+import '../../../../data/repositories/user_repository/user_repository.dart';
 import 'home_state.dart';
 
 class HomeController extends StateNotifier<HomeState> {

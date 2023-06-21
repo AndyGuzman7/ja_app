@@ -1,12 +1,10 @@
 import 'dart:developer';
-
 import 'package:flutter_meedu/meedu.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/utils/date_controller.dart';
-
-import '../../../../../data/repositories/eess_impl/eess_repository.dart';
-import '../../../../../data/repositories/target_virtual/target_virtual_repository.dart';
-import '../../../../../data/repositories/unitOfAction_impl/unitOfAction_repository.dart';
+import '../../../../../data/repositories/eess_repository/eess_repository.dart';
+import '../../../../../data/repositories/target_virtual_repository/target_virtual_repository.dart';
+import '../../../../../data/repositories/unitOfAction_repository/unitOfAction_repository.dart';
 import '../../../../../domain/models/eess/quarter.dart';
 import '../../../../../domain/models/target_virtual/target_virtual.dart';
 import '../../../../../domain/models/user_data.dart';

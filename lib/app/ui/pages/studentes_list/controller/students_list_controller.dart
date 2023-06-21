@@ -1,9 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter_meedu/meedu.dart';
-import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/global_controllers/session_controller.dart';
+
+import '../../../../data/repositories/user_repository/user_repository.dart';
 
 class StudentsListController extends SimpleNotifier {
   final userRepository = Get.find<UserRepository>();

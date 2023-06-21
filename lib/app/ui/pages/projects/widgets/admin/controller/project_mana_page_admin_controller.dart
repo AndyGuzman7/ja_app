@@ -1,14 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter_meedu/meedu.dart';
-import 'package:ja_app/app/domain/models/user_data.dart';
-import 'package:ja_app/app/domain/models/brochure.dart';
-import 'package:ja_app/app/domain/models/brochureSubscription.dart';
 import 'package:ja_app/app/domain/models/subscriptionProjectMana.dart';
-import 'package:ja_app/app/data/repositories/project_mana_impl/project_mana_repository.dart';
-import 'package:ja_app/app/data/repositories/project_mana_impl/project_mana_subscription_repository.dart';
-import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
 import 'package:ja_app/app/ui/pages/projects/widgets/admin/controller/project_mana_page_admin_state.dart';
+
+import '../../../../../../data/repositories/project_mana_repository/project_mana_repository.dart';
+import '../../../../../../data/repositories/project_mana_repository/project_mana_subscription_repository.dart';
+import '../../../../../../data/repositories/user_repository/user_repository.dart';
 
 class ProjectManaAdminController extends StateNotifier<ProjectManaAdminState> {
   ProjectManaAdminController() : super(ProjectManaAdminState.initialState);

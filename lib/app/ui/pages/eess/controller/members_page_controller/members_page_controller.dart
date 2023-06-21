@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
-import 'package:ja_app/app/data/repositories/eess_impl/eess_repository.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
 import 'package:ja_app/app/ui/gobal_widgets/dialogs/progress_dialog.dart';
@@ -9,6 +8,7 @@ import 'package:ja_app/app/ui/pages/eess/controller/eess_controller.dart';
 import 'package:ja_app/app/ui/pages/eess/controller/members_page_controller/members_page_functions.dart';
 import 'package:ja_app/app/ui/pages/eess/controller/members_page_controller/members_page_state.dart';
 import 'package:ja_app/app/ui/pages/eess/eess_page.dart';
+import '../../../../../data/repositories/eess_repository/eess_repository.dart';
 import '../../../../global_controllers/session_controller.dart';
 import '../../../../routes/routes.dart';
 

@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:ja_app/app/data/repositories_impl/church/church_repository_impl.dart';
+import 'package:ja_app/app/data/repositories_impl/church_repository_impl/church_repository_impl.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
-import 'package:ja_app/app/data/repositories/user_impl/register_impl/sign_up_repository.dart';
 import 'package:ja_app/app/domain/responses/sign_up_response.dart';
 
-class SignUpRepositoryImpl extends SignUpRepository {
+import '../../../repositories/register_repository/register_repository.dart';
+
+class RegisterRepositoryImpl extends RegisterRepository {
   late final FirebaseAuth _auth;
   late final FirebaseFirestore _firestore;
   late final ChurchRepositoryImpl _churchRepositoryImpl;
   User? user;
 
-  SignUpRepositoryImpl(FirebaseAuth auth, firestore) {
+  RegisterRepositoryImpl(FirebaseAuth auth, firestore) {
     _auth = auth;
     _firestore = firestore;
     _churchRepositoryImpl = ChurchRepositoryImpl(_firestore);

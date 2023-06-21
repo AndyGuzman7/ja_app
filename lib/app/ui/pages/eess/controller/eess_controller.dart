@@ -3,9 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:flutter_meedu/ui.dart';
-import 'package:ja_app/app/data/repositories/church_impl/church_repository.dart';
-import 'package:ja_app/app/data/repositories/eess_impl/eess_repository.dart';
-import 'package:ja_app/app/data/repositories/unitOfAction_impl/unitOfAction_repository.dart';
 import 'package:ja_app/app/domain/models/church/church.dart';
 import 'package:ja_app/app/domain/models/eess/eess.dart';
 import 'package:ja_app/app/domain/models/eess/unitOfAction.dart';
@@ -20,9 +17,9 @@ import 'package:ja_app/app/ui/pages/eess/widgets/members_page_eess.dart';
 import 'package:ja_app/app/ui/pages/eess/widgets/target_page_eess.dart';
 import 'package:ja_app/app/ui/pages/eess/widgets/unit_page_eess.dart';
 import 'package:ja_app/app/ui/routes/routes.dart';
-
-import '../../../../data/repositories/user_impl/login_impl/authentication_repository.dart';
-import '../../../../data/repositories_impl/user/user_repository_impl.dart';
+import '../../../../data/repositories/church_repository/church_repository.dart';
+import '../../../../data/repositories/eess_repository/eess_repository.dart';
+import '../../../../data/repositories/unitOfAction_repository/unitOfAction_repository.dart';
 import '../../../global_controllers/session_controller.dart';
 
 class EeSsController extends StateNotifier<EeSsState> {

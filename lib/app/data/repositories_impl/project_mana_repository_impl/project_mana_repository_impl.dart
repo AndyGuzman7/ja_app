@@ -1,11 +1,7 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ja_app/app/data/repositories/project_mana_repository/project_mana_repository.dart';
 import 'package:ja_app/app/domain/models/brochure.dart';
 import 'package:ja_app/app/domain/models/brochureSubscription.dart';
-import 'package:ja_app/app/data/repositories/project_mana_impl/project_mana_repository.dart';
-
-import 'package:firebase_database/firebase_database.dart';
 
 class ProjectManaRepositoryImpl implements ProjectManaRepository {
   final FirebaseFirestore _firestore;
@@ -43,7 +39,6 @@ class ProjectManaRepositoryImpl implements ProjectManaRepository {
           .get();
 
       if (value.exists) {
-        log(value.data().toString());
         BrochureSubscription brochureSubscription =
             BrochureSubscription.fromJson(value.data()!);
         return brochureSubscription;

@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ja_app/app/data/repositories/user_repository/user_repository.dart';
 import 'package:ja_app/app/data/repositories_impl/name_nodes/name_nodes_user.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
-import 'package:ja_app/app/data/repositories/user_impl/user_repository.dart';
 
 class UserRepositoryImpl extends UserRepository {
   final FirebaseFirestore _firestore;

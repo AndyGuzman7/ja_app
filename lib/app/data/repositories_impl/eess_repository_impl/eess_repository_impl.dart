@@ -2,8 +2,8 @@ import 'dart:developer';
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ja_app/app/data/repositories/eess_impl/eess_repository.dart';
-import 'package:ja_app/app/data/repositories_impl/church/church_repository_impl.dart';
+import 'package:ja_app/app/data/repositories/eess_repository/eess_repository.dart';
+import 'package:ja_app/app/data/repositories_impl/church_repository_impl/church_repository_impl.dart';
 import 'package:ja_app/app/domain/models/church/church.dart';
 import 'package:ja_app/app/domain/models/eess/eess.dart';
 import 'package:ja_app/app/domain/models/eess/quarter.dart';
@@ -12,7 +12,6 @@ import 'package:ja_app/app/ui/pages/navigator_botton/color.dart';
 import 'package:ja_app/app/utils/MyColors.dart';
 
 import '../../../domain/models/user_data.dart';
-import '../../repositories/church_impl/church_repository.dart';
 
 class EESSRepositoryImpl extends EESSRepository {
   final FirebaseFirestore _firestore;

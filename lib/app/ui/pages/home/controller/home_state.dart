@@ -1,10 +1,4 @@
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:ja_app/app/domain/models/country.dart';
 import 'package:ja_app/app/domain/models/user_data.dart';
-import 'package:ja_app/app/ui/gobal_widgets/drop_dow/custom_dropDownButton%20copy.dart';
-
-import '../../../../domain/models/userAvatar.dart';
 
 class HomeState {
   final UserData? user;
