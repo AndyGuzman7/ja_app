@@ -94,6 +94,22 @@ class NavigatorDrawer extends StatelessWidget {
         children: children);
   }
 
+  itemButtonChildsAdmin(text, List<Widget> children, Icon icon,
+      {Color color = const Color.fromARGB(255, 63, 62, 62)}) {
+    icon = Icon(
+      icon.icon,
+      color: color,
+    );
+
+    return ExpansionTile(
+        leading: icon,
+        title: Text(
+          text,
+          style: TextStyle(fontSize: 16, color: color),
+        ),
+        children: children);
+  }
+
   itemChild(text, onTap) {
     return ListTile(
       //style: ListTileStyle.drawer,
@@ -107,6 +123,43 @@ class NavigatorDrawer extends StatelessWidget {
         textAlign: TextAlign.start,
       ),
       onTap: onTap,
+    );
+  }
+
+  itemChildAdmin(text, onTap, List<Widget> childrenAdmin) {
+    Widget child = ListTile(
+      //style: ListTileStyle.drawer,
+      leading: Padding(
+        padding: EdgeInsets.only(left: 50),
+        child: Container(child: Text('-')),
+      ),
+      title: Text(
+        text,
+        style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 59, 59, 59)),
+        textAlign: TextAlign.start,
+      ),
+      onTap: onTap,
+    );
+    if (childrenAdmin != null) {
+      Color color = const Color.fromARGB(255, 63, 62, 62);
+      child = ExpansionTile(
+          leading: Padding(
+            padding: EdgeInsets.only(left: 50),
+            child: Container(child: Text('-')),
+          ),
+          title: Text(
+            text,
+            style: TextStyle(fontSize: 16, color: color),
+          ),
+          children: childrenAdmin);
+    }
+
+    return child;
+  }
+
+  PopupMenuItem _buildPopupMenuItem(String title) {
+    return PopupMenuItem(
+      child: Text(title),
     );
   }
 
@@ -147,6 +200,8 @@ class NavigatorDrawer extends StatelessWidget {
   }
 
   builderMenuItems(BuildContext context) {
+    bool isP = sideMenuProvider.read.sessionController.userData!
+        .getPermisson("adminEESS");
     return Expanded(
       child: SingleChildScrollView(
         child: Wrap(
@@ -172,6 +227,11 @@ class NavigatorDrawer extends StatelessWidget {
                     router.pushNamed(Routes.EESS);
                   },
                 ),
+                isP
+                    ? itemChild("Gestión EESS", () {
+                        router.pushNamed(Routes.ADMINEESS);
+                      })
+                    : const SizedBox()
               ],
               const Icon(Icons.other_houses_outlined),
             ),

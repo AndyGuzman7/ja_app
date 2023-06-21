@@ -36,6 +36,10 @@ class UserData {
     required this.photoURL,
   });
 
+  bool getPermisson(String permisson) {
+    return listPermisson.contains(permisson);
+  }
+
   get fullName => name + " " + lastName + " " + lastNameSecond!;
 
   factory UserData.fromJson(Map<String, dynamic> json) {

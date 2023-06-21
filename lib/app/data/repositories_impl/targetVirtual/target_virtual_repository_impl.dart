@@ -495,7 +495,12 @@ class TargetVirtualRepositoryImpl extends TargetVirtualRepository {
   Future<bool> registerMemberToAttendance(
       List<Attendance> listAttendance, String idAttendaance) async {
     try {
-      final s = listAttendance.map((e) => e.toJson()).toList();
+      //final s = listAttendance.map((e) => e.toJson()).toList();
+
+      listAttendance = listAttendance.map((e) {
+        e.dateTime = DateTime.now();
+        return e;
+      }).toList();
       await _firestore
           .collection("EESS_unitOfAction_attendance")
           .doc(idAttendaance)

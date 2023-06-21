@@ -32,19 +32,50 @@ class TargetPageController extends StateNotifier<TargetPageState> {
   final GlobalKey<FormState> formKeyOfferingWhites = GlobalKey();
 
   final GlobalKey<FormState> formKeyOffering = GlobalKey();
+
+  final _unitOfAction = Get.find<UnitOfActionRepository>();
   final GlobalKey<FormState> formKeyAttendance = GlobalKey();
   final TargetPageFunctions targetPageFunctions = TargetPageFunctions();
   final _targetVirtual = Get.find<TargetVirtualRepository>();
   TargetPageController(this.sessionController, this._eeSsController)
       : super(TargetPageState.initialState);
 
-  initPageMain() async {
+  initPageMain(List<String> listPermissons) async {
     String? idEESS = _eeSsController.state.eess!.id;
     final response =
         await targetPageFunctions.getListUnitOfActionByEESS(idEESS!);
     onChangedListUnitOfAction(response);
     if (response.isNotEmpty) {
+      bool isTeacher = listPermissons.contains("teacherUnit");
+      log("es profe " + isTeacher.toString());
+      if (isTeacher) {
+        final idUser = sessionController.userData!.id;
+        final isLeader = await _unitOfAction.isLeaderToUnitOfAction(idUser);
+
+        if (isLeader != null) {
+          onChangedUnitOfActionSelected(isLeader);
+          return;
+        }
+        return;
+      }
       onChangedUnitOfActionSelected(response.first);
+    }
+  }
+
+  verificationPermissons(List<String> listPermissons) async {
+    bool isAdmin = listPermissons.contains("adminEESS");
+    if (isAdmin) return;
+
+    bool isTeacher = listPermissons.contains("isTeacher");
+    if (isTeacher) {
+      final idUser = sessionController.userData!.id;
+      final isLeader = await _unitOfAction.isLeaderToUnitOfAction(idUser);
+
+      if (isLeader != null) {
+        onChangedUnitOfActionSelected(isLeader);
+        //onChangedUnitOfAction(isLeader);
+        return;
+      }
     }
   }
 

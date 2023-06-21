@@ -30,7 +30,7 @@ class RegisterController extends StateNotifier<RegisterState> {
 
   late TabController tabController; // =  TabController(length: 3, vsync: this);
 
-  init() async {
+  void init() async {
     final one = RegisterPageAvatar(
       providerListener: registerProvider,
     );
@@ -53,7 +53,7 @@ class RegisterController extends StateNotifier<RegisterState> {
         "Miembros",
         null,
         two,
-        "adminEESS",
+        ["adminEESS"],
       ),
       TabBarUi(
         "Unidades",
@@ -195,4 +195,9 @@ class RegisterController extends StateNotifier<RegisterState> {
   void dispose() {
     super.dispose();
   }
+
+
+
+
+
 }

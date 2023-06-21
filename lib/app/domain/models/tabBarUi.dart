@@ -5,7 +5,7 @@ class TabBarUi {
   late final Widget tabBarView;
   final Icon? icon;
   String? nameTabBar;
-  final String? permissons;
+  final List<String>? permissons;
   Widget children;
 
   TabBarUi(

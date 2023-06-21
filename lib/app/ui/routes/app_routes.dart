@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ja_app/app/ui/pages/adminEESS/admin_eess_page.dart';
 import 'package:ja_app/app/ui/pages/church/church_page.dart';
 import 'package:ja_app/app/ui/pages/eess/eess_page.dart';
 import 'package:ja_app/app/ui/pages/home/home_page.dart';
@@ -23,5 +24,6 @@ Map<String, Widget Function(BuildContext)> get appRoutes => {
       Routes.LIST_ESTUDENTS: (_) => StudentsListPage(),
       Routes.PROJECTS: (_) => ProjectManaPage(),
       Routes.EESS: (_) => EeSsPage(),
-      Routes.CHURCH: (_) => ChurchPage()
+      Routes.CHURCH: (_) => ChurchPage(),
+      Routes.ADMINEESS: (_) => AdminEESSPage()
     };

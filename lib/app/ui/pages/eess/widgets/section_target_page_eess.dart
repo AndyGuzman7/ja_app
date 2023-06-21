@@ -37,8 +37,10 @@ import '../../../gobal_widgets/row/row_custom.dart';
 import '../../home/widgets/item_button.dart';
 
 class SectionTargetPageEESS extends StatelessWidget {
+  final List<String> listPermissons;
   UnitOfAction uniOfAction;
-  SectionTargetPageEESS({
+  SectionTargetPageEESS(
+    this.listPermissons, {
     required this.uniOfAction,
     Key? key,
   }) : super(key: key);

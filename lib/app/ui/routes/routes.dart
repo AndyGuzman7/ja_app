@@ -8,4 +8,5 @@ abstract class Routes {
   static const String PROJECTS = '/projects-page';
   static const String EESS = '/eess-page';
   static const String CHURCH = '/church-page';
+  static const String ADMINEESS = '/admin-eess-page';
 }

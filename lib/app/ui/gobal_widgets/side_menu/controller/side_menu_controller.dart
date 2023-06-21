@@ -6,13 +6,11 @@ import 'package:ja_app/app/ui/gobal_widgets/side_menu/controller/side_menu_state
 import 'package:ja_app/app/ui/routes/routes.dart';
 
 class SideMenuController extends StateNotifier<SideMenuState> {
-  SessionController _sessionController;
+  SessionController sessionController;
   String? _routeName;
   String? get routeName => _routeName;
-  final _authRepository = Get.find<AuthenticationRepository>();
-  final _userRepository = Get.find<UserRepositoryImpl>();
 
-  SideMenuController(this._sessionController)
+  SideMenuController(this.sessionController)
       : super(SideMenuState.initialState) {}
 
   init() {}

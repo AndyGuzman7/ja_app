@@ -59,7 +59,7 @@ class EeSsController extends StateNotifier<EeSsState> {
         MembersPageEESS(
           providers: eeSsProvider,
         ),
-        "adminEESS",
+        ["adminEESS"],
       ),
       TabBarUi(
         "Unidades",
@@ -72,8 +72,8 @@ class EeSsController extends StateNotifier<EeSsState> {
       TabBarUi(
         "Tarjeta",
         null,
-        const TargetPageEESS(),
-        "adminEESS",
+        TargetPageEESS(listPermisson),
+        ["adminEESS", "teacherUnit"],
       ),
     ];
 
@@ -85,8 +85,18 @@ class EeSsController extends StateNotifier<EeSsState> {
       onChangedListTabBarView(listTabBar.map((e) => e.tabBarView).toList());
       return;
     }
+
     List<TabBarUi> listTBNew =
         listTabBar.where((value) => value.permissons == null).toList();
+    bool permissonTeacher = listPermisson.contains("teacherUnit");
+    if (permissonTeacher) {
+      listTBNew.add(TabBarUi(
+        "Tarjeta",
+        null,
+        TargetPageEESS(listPermisson),
+        ["adminEESS", "teacherUnit"],
+      ));
+    }
 
     onChangedListTabBar(listTBNew.map((e) => e.tabBar).toList());
     onChangedListTabBarView(listTBNew.map((e) => e.tabBarView).toList());
