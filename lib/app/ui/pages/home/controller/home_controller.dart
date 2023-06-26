@@ -10,20 +10,17 @@ class HomeController extends StateNotifier<HomeState> {
   final userRepository = Get.find<UserRepository>();
   final SessionController sessionController;
 
-  HomeController(this.sessionController) : super(HomeState.initialState) {}
+  HomeController(this.sessionController) : super(HomeState.initialState) {
+    init();
+  }
 
-  Future<UserData?> getUser() async {
-    UserData? data;
-    try {
-      data = await userRepository.getUser(sessionController.user!.uid);
-      return data!;
-    } catch (e) {
-      return null;
-    }
+  init() {
+    UserData? data = sessionController.userData;
+    onChangedUser(data!);
   }
 
   void onChangedUser(UserData user) {
-    state = state.copyWith(user: user);
+    state = state.copyWith(userData: user);
   }
 
   void onChangedCurrentTab(int currentTab) {

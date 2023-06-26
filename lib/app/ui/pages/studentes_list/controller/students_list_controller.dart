@@ -13,7 +13,7 @@ class StudentsListController extends SimpleNotifier {
   Future<List<UserData?>> getUsers() async {
     List<UserData?> data;
     try {
-      log(sessionController.user!.toString());
+      log(sessionController.userData!.toString());
       data = await userRepository.getUsers();
 
       return data;

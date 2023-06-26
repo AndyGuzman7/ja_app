@@ -17,7 +17,7 @@ class ProjectManaController extends StateNotifier<ProjectManaState> {
 
   ProjectManaController(this._sessonController)
       : super(ProjectManaState.initialState) {
-    onIdUserChanged(_sessonController.user!.uid);
+    onIdUserChanged(_sessonController.userData!.userFirebase!.uid);
   }
 
   Future<List<Brochure>?> getBrochures() async {

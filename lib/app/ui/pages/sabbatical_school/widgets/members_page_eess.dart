@@ -65,7 +65,7 @@ class MembersPageEESS extends StatelessWidget {
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.only(left: 20),
-                              child: CustomImputField(
+                              child: CustomInputField(
                                 icon: const Icon(Icons.search),
                                 label: "Busca por nombre o apellido",
                                 /* validator: (text) {

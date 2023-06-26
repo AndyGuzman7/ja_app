@@ -242,7 +242,8 @@ class ProjectManaPage extends StatelessWidget {
                                 child: CustomTitle2(
                                   title: 'Proyecto Maná Espacio Joven HdFe',
                                   subTitle: 'Miembro Espacio Joven: ' +
-                                      sessionProvider.read.user!.displayName!,
+                                      sessionProvider.read.userData!
+                                          .userFirebase!.displayName!,
                                   //colorSubTitle: CustomColorPrimary().materialColor,
                                 ),
                               ),

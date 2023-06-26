@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ja_app/app/ui/pages/adminEESS/admin_eess_page.dart';
+import 'package:ja_app/app/ui/pages/admin_sabbatical_school/admin_sabbatical_school_page.dart';
 import 'package:ja_app/app/ui/pages/church/church_page.dart';
 import 'package:ja_app/app/ui/pages/home/home_page.dart';
 import 'package:ja_app/app/ui/pages/login/login_page.dart';
-import 'package:ja_app/app/ui/pages/login/prueba.dart';
 import 'package:ja_app/app/ui/pages/navigator_botton/navigator_buttonv2.dart';
 import 'package:ja_app/app/ui/pages/projects/project_mana_page.dart';
 import 'package:ja_app/app/ui/pages/register/register_page.dart';

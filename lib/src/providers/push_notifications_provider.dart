@@ -8,7 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class PushNotificationService {
-  //falta elimianr la sesion del token a l finalizar el driver su sesion
+  /*//falta elimianr la sesion del token a l finalizar el driver su sesion
   static FirebaseMessaging messaging = FirebaseMessaging.instance;
   static String? token;
   static StreamController<RemoteMessage> _messageStream =
@@ -118,5 +118,6 @@ class PushNotificationService {
 
   static closeStreams() {
     _messageStream.close();
-  }
+  }*/
+}*/
 }

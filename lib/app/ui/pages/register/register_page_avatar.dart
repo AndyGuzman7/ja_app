@@ -24,20 +24,6 @@ class _RegisterPageAvatarState extends State<RegisterPageAvatar>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    Row rowModel(widgetOne, widgetTwo) {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: widgetOne,
-          ),
-          const SizedBox(
-            width: 15,
-          ),
-          Expanded(child: widgetTwo),
-        ],
-      );
-    }
 
     return Container(
       padding: const EdgeInsets.all(15),
@@ -91,6 +77,21 @@ class _RegisterPageAvatarState extends State<RegisterPageAvatar>
               ))
         ],
       ),
+    );
+  }
+
+  Row rowModel(widgetOne, widgetTwo) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: widgetOne,
+        ),
+        const SizedBox(
+          width: 15,
+        ),
+        Expanded(child: widgetTwo),
+      ],
     );
   }
 

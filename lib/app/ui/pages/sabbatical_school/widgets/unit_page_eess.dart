@@ -183,9 +183,9 @@ class UnitPageEESS extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: SettingsWidgetV2(
+                  child: SettingsWidget(
                     items: response,
-                    value: true,
+                    //value: true,
                     //value: snapshot.data!.first,
                     onChanged: (v) {
                       unitPageProvider.read.onChangedUnitOfAction(v);
@@ -249,7 +249,7 @@ class UnitPageEESS extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    CustomImputField(
+                    CustomInputField(
                       onChanged:
                           unitPageProvider.read.onChangedNameCreateUnitOfAction,
                       label: "Nombre Unidad de Acción",

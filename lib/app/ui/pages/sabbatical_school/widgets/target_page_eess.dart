@@ -93,9 +93,9 @@ class TargetPageEESS extends StatelessWidget {
                           child: Row(
                             children: [
                               Expanded(
-                                child: SettingsWidgetV2(
+                                child: SettingsWidget(
                                   items: response,
-                                  value: true,
+                                  //value: true,
                                   //value: snapshot.data!.first,
                                   onChanged: (v) {
                                     targetPageProvider.read

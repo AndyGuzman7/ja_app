@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ja_app/app/domain/models/country.dart';
 
 class UserData {
@@ -9,6 +10,7 @@ class UserData {
   String bautizated;
   String? nameSecond, lastNameSecond;
   DateTime birthDate;
+  User? userFirebase;
   List<String> listPermisson;
   /*
     - usuario normal
@@ -34,6 +36,7 @@ class UserData {
     required this.password,
     required this.listPermisson,
     required this.photoURL,
+    this.userFirebase,
   });
 
   bool getPermisson(String permisson) {

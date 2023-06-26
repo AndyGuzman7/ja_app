@@ -75,7 +75,7 @@ class _RegisterPageUserState extends State<RegisterPageUser>
                       return isValidName(text) ? null : "Nombre invalido";
                     },
                   ),*/
-                  CustomImputField(
+                  CustomInputField(
                     icon: Icon(Icons.email),
                     label: "Email",
                     inputType: TextInputType.emailAddress,
@@ -86,7 +86,7 @@ class _RegisterPageUserState extends State<RegisterPageUser>
                       return isValidEmail(text) ? null : "Email invalido";
                     },
                   ),
-                  CustomImputField(
+                  CustomInputField(
                     icon: Icon(Icons.security),
                     label: "Contraseña",
                     isPassword: true,
@@ -105,7 +105,7 @@ class _RegisterPageUserState extends State<RegisterPageUser>
                         registerProvider.select((state) => state.password),
                       );
 
-                      return CustomImputField(
+                      return CustomInputField(
                         icon: Icon(Icons.security),
                         label: "Verificación contraseña",
                         onChanged: controller.onVPasswordChanged,

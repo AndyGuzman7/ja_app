@@ -21,7 +21,6 @@ class SplashPage extends StatelessWidget {
         if (routeName != null) {
           Navigator.pushReplacementNamed(context, routeName);
         }
-        print("${controller.routeName}");
       },
       builder: (_, __) {
         return const Scaffold(
@@ -32,25 +31,4 @@ class SplashPage extends StatelessWidget {
       },
     );
   }
-
-/*
-class SplashPage extends StatefulWidget {
-  SplashPage({Key? key}) : super(key: key);
-
-  @override
-  State<SplashPage> createState() => _SplashPageState();
-}
-
-class _SplashPageState extends State<SplashPage> {
-  @override
-  Widget build(BuildContext context) {
-    print("object");
-    final _controller = SplashController();
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-  }
-}*/
 }

@@ -95,15 +95,15 @@ class RegisterFunctions {
               "\n\tContraseña: " +
               response.signUpData!.password);
 
-      if (_sessionController.user != null) {
-        final userNew = await _authRepository.user;
+      if (_sessionController.userData != null) {
+        final userNew = await _authRepository.userData;
         if (userNew != null) {
           final userMain = sessionProvider.read.userData;
           await sessionProvider.read.signOut();
-          await _authRepository.singInWithEmailAndPassword(
+          await _authRepository.signInWithEmailAndPassword(
               userMain!.email, userMain.password);
-          final user = await _authRepository.user;
-          _sessionController.setUser(user!, userMain);
+          final user = await _authRepository.userData;
+          _sessionController.setUser(userMain);
         }
         router.pop();
         router.pop<UserData>(response.signUpData);
@@ -111,7 +111,7 @@ class RegisterFunctions {
       } else {
         router.pop();
 
-        _sessionController.setUser(response.user!, response.signUpData!);
+        _sessionController.setUser(response.signUpData!);
         router.pushNamedAndRemoveUntil(Routes.HOME);
       }
     }

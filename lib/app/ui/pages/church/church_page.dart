@@ -50,7 +50,7 @@ class ChurchPage extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CustomImputField(
+                CustomInputField(
                   onChanged: churchProvider.read.onChangedCodeAccess,
                   label: "Codigo de registro",
                   validator: (text) {

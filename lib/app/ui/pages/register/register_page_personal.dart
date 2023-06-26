@@ -78,7 +78,7 @@ class _RegisterPagePersonalState extends State<RegisterPagePersonal>
                       style: TextStyle(fontSize: 17),
                     ),
                   ),
-                  CustomImputField(
+                  CustomInputField(
                     icon: const Icon(Icons.person),
                     label: "Primer nombre",
                     onChanged: controller.onNameChanged,
@@ -88,7 +88,7 @@ class _RegisterPagePersonalState extends State<RegisterPagePersonal>
                       return isValidName(text) ? null : "Nombre invalido";
                     },
                   ),
-                  CustomImputField(
+                  CustomInputField(
                     icon: const Icon(Icons.person),
                     label: "Segundo nombre (si cuenta con uno)",
                     onChanged: controller.onNameSecondChanged,
@@ -99,7 +99,7 @@ class _RegisterPagePersonalState extends State<RegisterPagePersonal>
                       }
                     },
                   ),
-                  CustomImputField(
+                  CustomInputField(
                     icon: const Icon(Icons.person),
                     label: "Primer apellido",
                     validator: (text) {
@@ -109,7 +109,7 @@ class _RegisterPagePersonalState extends State<RegisterPagePersonal>
                     },
                     onChanged: controller.onlastNameChanged,
                   ),
-                  CustomImputField(
+                  CustomInputField(
                     icon: const Icon(Icons.person),
                     label: "Segundo apellido (si cuenta con uno)",
                     validator: (text) {
@@ -189,7 +189,7 @@ class _RegisterPagePersonalState extends State<RegisterPagePersonal>
                       return null;
                     },
                   ),
-                  CustomImputField(
+                  CustomInputField(
                     inputType: TextInputType.phone,
                     onChanged: controller.onPhoneChanged,
                     icon: const Icon(Icons.phone),

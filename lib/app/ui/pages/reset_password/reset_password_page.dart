@@ -38,7 +38,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  CustomImputField(
+                  CustomInputField(
                     onChanged: controller.onEmailChanged,
                     label: 'Email',
                     inputType: TextInputType.emailAddress,

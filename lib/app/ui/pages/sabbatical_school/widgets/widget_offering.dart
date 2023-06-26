@@ -175,8 +175,9 @@ class WidgetOffering extends StatelessWidget {
             ),
             Form(
               key: targetPageProvider.read.formKeyOffering,
-              child: CustomImputField(
-                value: targetPageProvider.read.state.quantitiy.toString(),
+              child: CustomInputField(
+                initialValue:
+                    targetPageProvider.read.state.quantitiy.toString(),
                 inputType: TextInputType.number,
                 onChanged: (s) {
                   if (s != "" && s != ".") {
@@ -293,14 +294,14 @@ class WidgetOffering extends StatelessWidget {
                       })
                     ]),
               ),
-              CustomImputField(
+              CustomInputField(
                 inputType: TextInputType.number,
                 onChanged: (s) {
                   if (s != "" && s != ".") {
                     targetPageProvider.read.onChangedOnWhite1(double.parse(s));
                   }
                 },
-                value: targetPageProvider.read.state.white1.toString(),
+                initialValue: targetPageProvider.read.state.white1.toString(),
                 icon: const Icon(Icons.attach_money_outlined),
                 label: "Blanco Semanal (ejemplo 30.4)",
                 validator: (text) {
@@ -309,14 +310,14 @@ class WidgetOffering extends StatelessWidget {
                   //return isValidPhone(text) ? null : "Celular Invalido";
                 },
               ),
-              CustomImputField(
+              CustomInputField(
                 inputType: TextInputType.number,
                 onChanged: (s) {
                   if (s != "" && s != ".") {
                     targetPageProvider.read.onChangedWhite2(double.parse(s));
                   }
                 },
-                value: targetPageProvider.read.state.white2.toString(),
+                initialValue: targetPageProvider.read.state.white2.toString(),
                 icon: const Icon(Icons.attach_money_outlined),
                 label: "Blanco 13° Sábado (ejemplo 30.4)",
                 validator: (text) {

@@ -30,7 +30,7 @@ class MainPageHome extends StatelessWidget {
       children: [
         Consumer(
           builder: (_, watch, __) {
-            final user = watch.select(provider.select((p0) => p0.user));
+            final user = watch.select(provider.select((p0) => p0.userData));
 
             return Container(
               margin: const EdgeInsets.all(20),
@@ -133,7 +133,7 @@ class MainPageHome extends StatelessWidget {
             crossAxisSpacing: 20,
             crossAxisCount: 2,
             children:
-                getItemButtons(searchPermisson(provider.read.state.user!)),
+                getItemButtons(searchPermisson(provider.read.state.userData!)),
           ),
         ),
       ],

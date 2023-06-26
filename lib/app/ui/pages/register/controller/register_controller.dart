@@ -44,19 +44,19 @@ class RegisterController extends StateNotifier<RegisterState> {
     );
     listTabBar = [
       TabBarUi(
-        "Mi EESS",
+        "Mi Avatar",
         null,
         one,
         null,
       ),
       TabBarUi(
-        "Miembros",
+        "Mi Información",
         null,
         two,
-        ["adminEESS"],
+        null,
       ),
       TabBarUi(
-        "Unidades",
+        "Mi Usuario",
         null,
         three,
         null,
@@ -195,9 +195,4 @@ class RegisterController extends StateNotifier<RegisterState> {
   void dispose() {
     super.dispose();
   }
-
-
-
-
-
 }

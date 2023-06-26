@@ -9,7 +9,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
 
   injectDependencies();
-  await PushNotificationService.initializedApp();
+  //await PushNotificationService.initializedApp();
 
   ErrorWidget.builder = (FlutterErrorDetails details) {
     bool inDebug = false;
